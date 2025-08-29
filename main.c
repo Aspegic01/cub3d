@@ -70,27 +70,27 @@ int	read_map(char *map_file)
 		return (-1);
 	}
 	
-	// printf("\nMap loaded successfully!\n");
-	// printf("Found all 6 elements: NO, SO, WE, EA, F, C\n");
-	// printf("Map dimensions: %d x %d\n", map->width, map->height);
+	printf("\nMap loaded successfully!\n");
+	printf("Found all 6 elements: NO, SO, WE, EA, F, C\n");
+	printf("Map dimensions: %d x %d\n", map->width, map->height);
 	
-	// // Print loaded textures and colors
-	// printf("\nLoaded textures:\n");
-	// printf("North: %s\n", map->textures.north ? map->textures.north : "NULL");
-	// printf("South: %s\n", map->textures.south ? map->textures.south : "NULL");
-	// printf("West: %s\n", map->textures.west ? map->textures.west : "NULL");
-	// printf("East: %s\n", map->textures.east ? map->textures.east : "NULL");
+	// Print loaded textures and colors
+	printf("\nLoaded textures:\n");
+	printf("North: %s\n", map->textures.north ? map->textures.north : "NULL");
+	printf("South: %s\n", map->textures.south ? map->textures.south : "NULL");
+	printf("West: %s\n", map->textures.west ? map->textures.west : "NULL");
+	printf("East: %s\n", map->textures.east ? map->textures.east : "NULL");
 	
-	// printf("\nLoaded colors:\n");
-	// printf("Floor: RGB(%d, %d, %d)\n", map->colors.floor_r, map->colors.floor_g, map->colors.floor_b);
-	// printf("Ceiling: RGB(%d, %d, %d)\n", map->colors.ceiling_r, map->colors.ceiling_g, map->colors.ceiling_b);
+	printf("\nLoaded colors:\n");
+	printf("Floor: RGB(%d, %d, %d)\n", map->colors.floor_r, map->colors.floor_g, map->colors.floor_b);
+	printf("Ceiling: RGB(%d, %d, %d)\n", map->colors.ceiling_r, map->colors.ceiling_g, map->colors.ceiling_b);
 	
-	// // Print the loaded map for verification
-	// printf("\nLoaded map:\n");
-	// for (int i = 0; i < map->height; i++)
-	// {
-	// 	printf("%s\n", map->grid[i]);
-	// }
+	// Print the loaded map for verification
+	printf("\nLoaded map:\n");
+	for (int i = 0; i < map->height; i++)
+	{
+		printf("%s\n", map->grid[i]);
+	}
 	
 	free_textures(map);
 	free_map_grid(map);

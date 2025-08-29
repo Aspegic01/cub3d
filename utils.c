@@ -141,11 +141,7 @@ int	load_map_data(char *map_file, t_map *map)
 			if (line_count >= 6)
 			{
 				if (!store_map_line(line, map, map_line_index))
-				{
-					free(line);
-					close(fd);
-					return (0);
-				}
+					return (free(line), close(fd), 0);
 				map_line_index++;
 			}
 			line_count++;
@@ -153,6 +149,5 @@ int	load_map_data(char *map_file, t_map *map)
 		free(line);
 		line = get_next_line(fd);
 	}
-	close(fd);
-	return (1);
+	return (close(fd), 1);
 }
