@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/08/28 13:57:17 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/08/31 14:31:26 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,47 @@ int	check_side_walls(t_map *map)
 	return (1);
 }
 
+int	is_valid_neighbor(t_map *map, int row, int col)
+{
+	if (row < 0 || row >= map->height || col < 0)
+		return (0);
+	if (col >= (int)ft_strlen(map->grid[row]))
+		return (0);
+	return (map->grid[row][col] == '1' || map->grid[row][col] == '0' ||
+			map->grid[row][col] == 'N' || map->grid[row][col] == 'S' ||
+			map->grid[row][col] == 'E' || map->grid[row][col] == 'W');
+}
+
+int	validate_walkable_spaces(t_map *map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < map->height)
+	{
+		j = 0;
+		while (j < (int)ft_strlen(map->grid[i]))
+		{
+			if (map->grid[i][j] == '0' || map->grid[i][j] == 'N' ||
+				map->grid[i][j] == 'S' || map->grid[i][j] == 'E' ||
+				map->grid[i][j] == 'W')
+			{
+				if (!is_valid_neighbor(map, i - 1, j) ||
+					!is_valid_neighbor(map, i + 1, j) ||
+					!is_valid_neighbor(map, i, j - 1) ||
+					!is_valid_neighbor(map, i, j + 1))
+				{
+					return (ft_putstr_fd("Error\nMap not valid: walkable space not properly enclosed\n", 2), 0);
+				}
+			}
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+
 int	check_map_surrounded_by_walls(t_map *map)
 {
 	if (!map || !map->grid || map->height == 0)
@@ -118,6 +159,8 @@ int	check_map_surrounded_by_walls(t_map *map)
 		return (ft_putstr_fd("Error\nMap not closed: last row\n", 2), 0);
 	if (!check_side_walls(map))
 		return (ft_putstr_fd("Error\nMap not closed: side walls\n", 2), 0);
+	if (!validate_walkable_spaces(map))
+		return (0);
 	return (1);
 }
 
@@ -141,7 +184,11 @@ int	load_map_data(char *map_file, t_map *map)
 			if (line_count >= 6)
 			{
 				if (!store_map_line(line, map, map_line_index))
-					return (free(line), close(fd), 0);
+				{
+					free(line);
+					close(fd);
+					return (0);
+				}
 				map_line_index++;
 			}
 			line_count++;
@@ -149,5 +196,6 @@ int	load_map_data(char *map_file, t_map *map)
 		free(line);
 		line = get_next_line(fd);
 	}
-	return (close(fd), 1);
+	close(fd);
+	return (1);
 }

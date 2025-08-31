@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 10:00:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/08/28 13:53:52 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/08/31 14:31:26 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int     load_map_data(char *map_file, t_map *map);
 int     is_valid_map_char(char c);
 int     check_first_last_row(t_map *map, int row);
 int     check_side_walls(t_map *map);
+int     is_valid_neighbor(t_map *map, int row, int col);
+int     validate_walkable_spaces(t_map *map);
 int     check_map_surrounded_by_walls(t_map *map);
 
 // Texture and color loading functions
