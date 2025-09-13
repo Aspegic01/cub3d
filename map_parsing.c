@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/08/31 14:32:01 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/09/10 11:09:19 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ t_map	*init_map(void)
 	map->colors.floor_g = -1;
 	map->colors.floor_b = -1;
 	map->colors.ceiling_r = -1;
-	map->colors.ceiling_g = -1;
 	map->colors.ceiling_b = -1;
+	map->colors.ceiling_g = -1;
 	return (map);
 }
 
@@ -84,9 +84,8 @@ int	process_line(char *line, t_map *map, int fd)
 		}
 		else if (line[0] != ' ' && line[0] != '\t')
 		{
-			free(line);
-			free_textures(map);
 			free(map);
+			free_textures(map);
 			close(fd);
 			return (ft_putstr_fd("Error\nInvalid element in configuration\n", 2), -1);
 		}
@@ -120,5 +119,6 @@ int	validate_final_map(t_map *map)
 		free(map);
 		return (ft_putstr_fd("Error\nNo map found\n", 2), -1);
 	}
+	
 	return (0);
 }

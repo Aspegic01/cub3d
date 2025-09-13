@@ -6,7 +6,7 @@
 #    By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/27 10:15:47 by mlabrirh          #+#    #+#              #
-#    Updated: 2025/08/28 13:46:53 by mlabrirh         ###   ########.fr        #
+#    Updated: 2025/09/04 11:29:22 by mlabrirh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,10 +18,14 @@ SRCS = main.c \
        texture_loader.c \
        player_init.c \
        utils.c \
+       window.c \
        ./get_next_line/get_next_line.c \
        ./get_next_line/get_next_line_utils.c
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
+MLX_DIR = ./minilibx-linux
+MLX = $(MLX_DIR)/libmlx.a
+MLX_FLAGS = -lmlx -lXext -lX11 -lm
 
 OBJS = $(SRCS:.c=.o)
 
@@ -30,8 +34,11 @@ all: $(NAME)
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
+$(MLX):
+	make -C $(MLX_DIR)
+
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) -L$(MLX_DIR) $(MLX_FLAGS)
 clean:
 	rm -f $(OBJS)
 	make clean -C $(LIBFT_DIR)

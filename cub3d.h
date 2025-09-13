@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 10:00:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/08/31 14:31:26 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/09/10 11:01:04 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,22 @@
 # include <stdbool.h>
 # include "./get_next_line/get_next_line.h"
 # include "./libft/libft.h"
+# include "./minilibx-linux/mlx.h"
+
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 768
+# define WIN_TITLE "Cub3D"
+
+typedef struct s_game
+{
+    void    *mlx;
+    void    *win;
+    void    *img;
+    char    *addr;
+    int     bits_per_pixel;
+    int     line_length;
+    int     endian;
+}               t_game;
 
 typedef struct s_player
 {
@@ -61,7 +77,7 @@ typedef struct s_map
 }               t_map;
 
 int     init_game(char *map_file);
-int     read_map(char *map_file);
+t_map   *read_map(char *map_file);
 
 // Map parsing functions
 t_map   *init_map(void);
@@ -95,6 +111,13 @@ void    free_map_grid(t_map *map);
 void    free_game(void);
 void    free_map(void);
 void    free_player(void);
+
+// Window and game functions
+int     init_window(t_game *game);
+int     close_window(t_game *game);
+int     handle_keypress(int keycode, t_game *game);
+void    render_frame(t_game *game);
+int     game_loop(t_game *game);
 
 
 
