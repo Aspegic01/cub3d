@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/10 10:26:43 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/10 10:27:39 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,35 +200,24 @@ int	load_map_data(char *map_file, t_map *map)
 	return (1);
 }
 
-/* Check if a character is walkable (0, N, S, E, W) */
 static int is_walkable_char(char c)
 {
     return (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W');
 }
 
-/* Check if a space is adjacent to a walkable area */
 static int is_space_adjacent_to_walkable(t_map *map, int i, int j)
 {
-    // Check above (if not at top row)
     if (i > 0 && is_walkable_char(map->grid[i - 1][j]))
         return (1);
-    
-    // Check below (if not at bottom row)
     if (i < map->height - 1 && is_walkable_char(map->grid[i + 1][j]))
         return (1);
-    
-    // Check left (if not at leftmost column)
     if (j > 0 && is_walkable_char(map->grid[i][j - 1]))
         return (1);
-    
-    // Check right (if not at end of string)
     if (map->grid[i][j + 1] && is_walkable_char(map->grid[i][j + 1]))
         return (1);
-    
     return (0);
 }
 
-/* Process one pass over the map to convert spaces to walkable areas */
 static int process_spaces_once(t_map *map)
 {
     int i, j;
@@ -255,7 +244,6 @@ static int process_spaces_once(t_map *map)
     return (changed);
 }
 
-/* Main function to fix spaces in the map */
 void fix_zero_space_to_zero(t_map *map)
 {
     int changed;
