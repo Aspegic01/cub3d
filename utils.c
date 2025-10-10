@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/10 10:22:23 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/10 10:26:43 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,47 +200,69 @@ int	load_map_data(char *map_file, t_map *map)
 	return (1);
 }
 
-void fix_zero_space_to_zero(t_map *map)
+/* Check if a character is walkable (0, N, S, E, W) */
+static int is_walkable_char(char c)
+{
+    return (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W');
+}
+
+/* Check if a space is adjacent to a walkable area */
+static int is_space_adjacent_to_walkable(t_map *map, int i, int j)
+{
+    // Check above (if not at top row)
+    if (i > 0 && is_walkable_char(map->grid[i - 1][j]))
+        return (1);
+    
+    // Check below (if not at bottom row)
+    if (i < map->height - 1 && is_walkable_char(map->grid[i + 1][j]))
+        return (1);
+    
+    // Check left (if not at leftmost column)
+    if (j > 0 && is_walkable_char(map->grid[i][j - 1]))
+        return (1);
+    
+    // Check right (if not at end of string)
+    if (map->grid[i][j + 1] && is_walkable_char(map->grid[i][j + 1]))
+        return (1);
+    
+    return (0);
+}
+
+/* Process one pass over the map to convert spaces to walkable areas */
+static int process_spaces_once(t_map *map)
 {
     int i, j;
     int changed;
     
-    // Multiple passes to handle cascading spaces
-    do {
-        changed = 0;
-        for (i = 0; i < map->height; i++)
+    changed = 0;
+    i = 0;
+    
+    while (i < map->height)
+    {
+        j = 0;
+        while (j < map->width && map->grid[i][j])
         {
-            for (j = 0; j < map->width && map->grid[i][j]; j++)
+            if (map->grid[i][j] == ' ' && is_space_adjacent_to_walkable(map, i, j))
             {
-                if (map->grid[i][j] == ' ')
-                {
-                    // Check if space is adjacent to a 0 or player (N,S,E,W)
-                    if ((i > 0 && (map->grid[i-1][j] == '0' || 
-                                  map->grid[i-1][j] == 'N' || 
-                                  map->grid[i-1][j] == 'S' || 
-                                  map->grid[i-1][j] == 'E' || 
-                                  map->grid[i-1][j] == 'W')) ||
-                        (i < map->height-1 && (map->grid[i+1][j] == '0' || 
-                                              map->grid[i+1][j] == 'N' || 
-                                              map->grid[i+1][j] == 'S' || 
-                                              map->grid[i+1][j] == 'E' || 
-                                              map->grid[i+1][j] == 'W')) ||
-                        (j > 0 && (map->grid[i][j-1] == '0' || 
-                                  map->grid[i][j-1] == 'N' || 
-                                  map->grid[i][j-1] == 'S' || 
-                                  map->grid[i][j-1] == 'E' || 
-                                  map->grid[i][j-1] == 'W')) ||
-                        (map->grid[i][j+1] && (map->grid[i][j+1] == '0' || 
-                                             map->grid[i][j+1] == 'N' || 
-                                             map->grid[i][j+1] == 'S' || 
-                                             map->grid[i][j+1] == 'E' || 
-                                             map->grid[i][j+1] == 'W')))
-                    {
-                        map->grid[i][j] = '0';
-                        changed = 1;
-                    }
-                }
+                map->grid[i][j] = '0';
+                changed = 1;
             }
+            j++;
         }
-    } while (changed); // Repeat until no more changes
+        i++;
+    }
+    
+    return (changed);
+}
+
+/* Main function to fix spaces in the map */
+void fix_zero_space_to_zero(t_map *map)
+{
+    int changed;
+    
+    changed = 1;
+    while (changed)
+    {
+        changed = process_spaces_once(map);
+    }
 }
