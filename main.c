@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 09:58:35 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/09/10 13:30:42 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/10 10:22:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,10 @@ static int	setup_map_grid(char *map_file, t_map *map)
 		free_map_grid(map);
 		return (ft_putstr_fd("Error\nFailed to load map data\n", 2), -1);
 	}
+	
+	// Fix spaces inside the map
+	fix_zero_space_to_zero(map);
+	
 	return (0);
 }
 

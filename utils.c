@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/10 09:25:45 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/10 10:22:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,4 +198,49 @@ int	load_map_data(char *map_file, t_map *map)
 	}
 	close(fd);
 	return (1);
+}
+
+void fix_zero_space_to_zero(t_map *map)
+{
+    int i, j;
+    int changed;
+    
+    // Multiple passes to handle cascading spaces
+    do {
+        changed = 0;
+        for (i = 0; i < map->height; i++)
+        {
+            for (j = 0; j < map->width && map->grid[i][j]; j++)
+            {
+                if (map->grid[i][j] == ' ')
+                {
+                    // Check if space is adjacent to a 0 or player (N,S,E,W)
+                    if ((i > 0 && (map->grid[i-1][j] == '0' || 
+                                  map->grid[i-1][j] == 'N' || 
+                                  map->grid[i-1][j] == 'S' || 
+                                  map->grid[i-1][j] == 'E' || 
+                                  map->grid[i-1][j] == 'W')) ||
+                        (i < map->height-1 && (map->grid[i+1][j] == '0' || 
+                                              map->grid[i+1][j] == 'N' || 
+                                              map->grid[i+1][j] == 'S' || 
+                                              map->grid[i+1][j] == 'E' || 
+                                              map->grid[i+1][j] == 'W')) ||
+                        (j > 0 && (map->grid[i][j-1] == '0' || 
+                                  map->grid[i][j-1] == 'N' || 
+                                  map->grid[i][j-1] == 'S' || 
+                                  map->grid[i][j-1] == 'E' || 
+                                  map->grid[i][j-1] == 'W')) ||
+                        (map->grid[i][j+1] && (map->grid[i][j+1] == '0' || 
+                                             map->grid[i][j+1] == 'N' || 
+                                             map->grid[i][j+1] == 'S' || 
+                                             map->grid[i][j+1] == 'E' || 
+                                             map->grid[i][j+1] == 'W')))
+                    {
+                        map->grid[i][j] = '0';
+                        changed = 1;
+                    }
+                }
+            }
+        }
+    } while (changed); // Repeat until no more changes
 }

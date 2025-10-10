@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 10:00:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/10 09:25:45 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/10 10:22:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,9 @@ void    free_map_grid(t_map *map);
 void    free_game(void);
 void    free_map(void);
 void    free_player(void);
+
+// Map utility functions
+void    fix_zero_space_to_zero(t_map *map);
 
 // Window and game functions
 int     init_window(t_game *game);
