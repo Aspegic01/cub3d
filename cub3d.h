@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 10:00:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/10 10:22:23 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,6 @@
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 768
 # define WIN_TITLE "Cub3D"
-
-typedef struct s_game
-{
-    void    *mlx;
-    void    *win;
-    void    *img;
-    char    *addr;
-    int     bits_per_pixel;
-    int     line_length;
-    int     endian;
-}               t_game;
 
 typedef struct s_player
 {
@@ -75,6 +64,18 @@ typedef struct s_map
     t_textures  textures;
     t_colors    colors;
 }               t_map;
+
+typedef struct s_game
+{
+    void    *mlx;
+    void    *win;
+    void    *img;
+    char    *addr;
+    int     bits_per_pixel;
+    int     line_length;
+    int     endian;
+    t_map   *map;
+}               t_game;
 
 int     init_game(char *map_file);
 t_map   *read_map(char *map_file);

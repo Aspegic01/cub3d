@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 09:58:35 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/10 10:22:23 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ static int	parse_map_file(char *map_file, t_map *map)
 		if (result == -1)
 		{
 			free(line);
-			// close(fd);
-			// free(map);
+			close(fd);
 			return (-1);
 		}
 		free(line);
@@ -53,8 +52,6 @@ static int	setup_map_grid(char *map_file, t_map *map)
 		free_map_grid(map);
 		return (ft_putstr_fd("Error\nFailed to load map data\n", 2), -1);
 	}
-	
-	// Fix spaces inside the map
 	fix_zero_space_to_zero(map);
 	
 	return (0);
@@ -88,6 +85,7 @@ t_map	*read_map(char *map_file)
 		return (NULL);
 	if (setup_map_grid(map_file, map) == -1)
 	{
+		free_map_grid(map);
 		free_textures(map);
 		free(map);
 		return (NULL);
@@ -99,27 +97,27 @@ t_map	*read_map(char *map_file)
 		free(map);
 		return (NULL);
 	}
-	// printf("\nMap loaded successfully!\n");
-	// printf("Found all 6 elements: NO, SO, WE, EA, F, C\n");
-	// printf("Map dimensions: %d x %d\n", map->width, map->height);
+	printf("\nMap loaded successfully!\n");
+	printf("Found all 6 elements: NO, SO, WE, EA, F, C\n");
+	printf("Map dimensions: %d x %d\n", map->width, map->height);
 	
-	// // Print loaded textures and colors
-	// printf("\nLoaded textures:\n");
-	// printf("North: %s\n", map->textures.north ? map->textures.north : "NULL");
-	// printf("South: %s\n", map->textures.south ? map->textures.south : "NULL");
-	// printf("West: %s\n", map->textures.west ? map->textures.west : "NULL");
-	// printf("East: %s\n", map->textures.east ? map->textures.east : "NULL");
+	// Print loaded textures and colors
+	printf("\nLoaded textures:\n");
+	printf("North: %s\n", map->textures.north ? map->textures.north : "NULL");
+	printf("South: %s\n", map->textures.south ? map->textures.south : "NULL");
+	printf("West: %s\n", map->textures.west ? map->textures.west : "NULL");
+	printf("East: %s\n", map->textures.east ? map->textures.east : "NULL");
 	
-	// printf("\nLoaded colors:\n");
-	// printf("Floor: RGB(%d, %d, %d)\n", map->colors.floor_r, map->colors.floor_g, map->colors.floor_b);
-	// printf("Ceiling: RGB(%d, %d, %d)\n", map->colors.ceiling_r, map->colors.ceiling_g, map->colors.ceiling_b);
+	printf("\nLoaded colors:\n");
+	printf("Floor: RGB(%d, %d, %d)\n", map->colors.floor_r, map->colors.floor_g, map->colors.floor_b);
+	printf("Ceiling: RGB(%d, %d, %d)\n", map->colors.ceiling_r, map->colors.ceiling_g, map->colors.ceiling_b);
 	
-	// // Print the loaded map for verification
-	// printf("\nLoaded map:\n");
-	// for (int i = 0; i < map->height; i++)
-	// {
-	// 	printf("%s\n", map->grid[i]);
-	// }
+	// Print the loaded map for verification
+	printf("\nLoaded map:\n");
+	for (int i = 0; i < map->height; i++)
+	{
+		printf("%s\n", map->grid[i]);
+	}
 	
 	// Don't free the map here - return it to be used by the window
 	return (map);
@@ -138,13 +136,11 @@ int main(int ac, char *av[])
     map = read_map(av[1]);
     if (!map)
     {
-        // free_textures(map);
-        free_map_grid(map);
-        free(map);
-	// printf("sadasda");
         return (1);
     }
     printf("Map dimensions: %dx%d\n", map->width, map->height);
+    
+    game.map = map;  // Store map in game structure
     
     if (init_window(&game) == -1)
     {
@@ -155,6 +151,9 @@ int main(int ac, char *av[])
     }
     
     mlx_loop(game.mlx);
+    
+    // This cleanup code will never be reached because mlx_loop only exits via exit()
+    // The cleanup is now handled in close_window function
     free_textures(map);
     free_map_grid(map);
     free(map);

@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/10 09:25:45 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ int	process_line(char *line, t_map *map, int fd)
 		{
 			if (!load_texture(line, map))
 			{
-				free(line);
 				free_textures(map);
 				free(map);
 				close(fd);
@@ -84,8 +83,8 @@ int	process_line(char *line, t_map *map, int fd)
 		}
 		else if (line[0] != ' ' && line[0] != '\t')
 		{
-			free(map);
 			free_textures(map);
+			free(map);
 			close(fd);
 			return (ft_putstr_fd("Error\nInvalid element in configuration\n", 2), -1);
 		}
@@ -94,7 +93,6 @@ int	process_line(char *line, t_map *map, int fd)
 	{
 		if (!validate_map_line(line))
 		{
-			free(line);
 			free_textures(map);
 			free(map);
 			close(fd);

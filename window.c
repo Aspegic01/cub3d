@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/04 11:30:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/09/10 11:05:40 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 
 int	close_window(t_game *game)
 {
+	if (game->map)
+	{
+		free_textures(game->map);
+		free_map_grid(game->map);
+		free(game->map);
+	}
 	if (game->win)
 		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
