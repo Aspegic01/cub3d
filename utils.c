@@ -6,15 +6,15 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/10 10:27:39 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/18 09:48:52 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	allocate_map_grid(t_map *map)
+int allocate_map_grid(t_map *map)
 {
-	int	i;
+	int i;
 
 	map->grid = malloc(sizeof(char *) * (map->height + 1));
 	if (!map->grid)
@@ -28,10 +28,10 @@ int	allocate_map_grid(t_map *map)
 	return (1);
 }
 
-int	store_map_line(char *line, t_map *map, int line_index)
+int store_map_line(char *line, t_map *map, int line_index)
 {
-	int	len;
-	int	i;
+	int len;
+	int i;
 
 	len = ft_strlen(line);
 	if (line[len - 1] == '\n')
@@ -51,9 +51,9 @@ int	store_map_line(char *line, t_map *map, int line_index)
 	return (1);
 }
 
-void	free_map_grid(t_map *map)
+void free_map_grid(t_map *map)
 {
-	int	i;
+	int i;
 
 	if (!map || !map->grid)
 		return;
@@ -67,15 +67,15 @@ void	free_map_grid(t_map *map)
 	map->grid = NULL;
 }
 
-int	is_valid_map_char(char c)
+int is_valid_map_char(char c)
 {
-	return (c == '1' || c == '0' || c == 'N' || c == 'S' || 
+	return (c == '1' || c == '0' || c == 'N' || c == 'S' ||
 			c == 'E' || c == 'W' || c == ' ');
 }
 
-int	check_first_last_row(t_map *map, int row)
+int check_first_last_row(t_map *map, int row)
 {
-	int	j;
+	int j;
 
 	j = 0;
 	while (j < (int)ft_strlen(map->grid[row]))
@@ -87,10 +87,10 @@ int	check_first_last_row(t_map *map, int row)
 	return (1);
 }
 
-int	check_side_walls(t_map *map)
+int check_side_walls(t_map *map)
 {
-	int	i;
-	int	len;
+	int i;
+	int len;
 
 	i = 0;
 	while (i < map->height)
@@ -108,7 +108,7 @@ int	check_side_walls(t_map *map)
 	return (1);
 }
 
-int	is_valid_neighbor(t_map *map, int row, int col)
+int is_valid_neighbor(t_map *map, int row, int col)
 {
 	if (row < 0 || row >= map->height || col < 0)
 		return (0);
@@ -119,10 +119,10 @@ int	is_valid_neighbor(t_map *map, int row, int col)
 			map->grid[row][col] == 'E' || map->grid[row][col] == 'W');
 }
 
-int	validate_walkable_spaces(t_map *map)
+int validate_walkable_spaces(t_map *map)
 {
-	int	i;
-	int	j;
+	int i;
+	int j;
 
 	i = 0;
 	while (i < map->height)
@@ -149,7 +149,7 @@ int	validate_walkable_spaces(t_map *map)
 	return (1);
 }
 
-int	check_map_surrounded_by_walls(t_map *map)
+int check_map_surrounded_by_walls(t_map *map)
 {
 	if (!map || !map->grid || map->height == 0)
 		return (0);
@@ -164,12 +164,12 @@ int	check_map_surrounded_by_walls(t_map *map)
 	return (1);
 }
 
-int	load_map_data(char *map_file, t_map *map)
+int load_map_data(char *map_file, t_map *map)
 {
-	int		fd;
-	char	*line;
-	int		line_count;
-	int		map_line_index;
+	int fd;
+	char *line;
+	int line_count;
+	int map_line_index;
 
 	fd = open(map_file, O_RDONLY);
 	if (fd < 0)
@@ -202,55 +202,55 @@ int	load_map_data(char *map_file, t_map *map)
 
 static int is_walkable_char(char c)
 {
-    return (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W');
+	return (c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W');
 }
 
 static int is_space_adjacent_to_walkable(t_map *map, int i, int j)
 {
-    if (i > 0 && is_walkable_char(map->grid[i - 1][j]))
-        return (1);
-    if (i < map->height - 1 && is_walkable_char(map->grid[i + 1][j]))
-        return (1);
-    if (j > 0 && is_walkable_char(map->grid[i][j - 1]))
-        return (1);
-    if (map->grid[i][j + 1] && is_walkable_char(map->grid[i][j + 1]))
-        return (1);
-    return (0);
+	if (i > 0 && is_walkable_char(map->grid[i - 1][j]))
+		return (1);
+	if (i < map->height - 1 && is_walkable_char(map->grid[i + 1][j]))
+		return (1);
+	if (j > 0 && is_walkable_char(map->grid[i][j - 1]))
+		return (1);
+	if (map->grid[i][j + 1] && is_walkable_char(map->grid[i][j + 1]))
+		return (1);
+	return (0);
 }
 
 static int process_spaces_once(t_map *map)
 {
-    int i, j;
-    int changed;
-    
-    changed = 0;
-    i = 0;
-    
-    while (i < map->height)
-    {
-        j = 0;
-        while (j < map->width && map->grid[i][j])
-        {
-            if (map->grid[i][j] == ' ' && is_space_adjacent_to_walkable(map, i, j))
-            {
-                map->grid[i][j] = '0';
-                changed = 1;
-            }
-            j++;
-        }
-        i++;
-    }
-    
-    return (changed);
+	int i, j;
+	int changed;
+
+	changed = 0;
+	i = 0;
+
+	while (i < map->height)
+	{
+		j = 0;
+		while (j < map->width && map->grid[i][j])
+		{
+			if (map->grid[i][j] == ' ' && is_space_adjacent_to_walkable(map, i, j))
+			{
+				map->grid[i][j] = '0';
+				changed = 1;
+			}
+			j++;
+		}
+		i++;
+	}
+
+	return (changed);
 }
 
 void fix_zero_space_to_zero(t_map *map)
 {
-    int changed;
-    
-    changed = 1;
-    while (changed)
-    {
-        changed = process_spaces_once(map);
-    }
+	int changed;
+
+	changed = 1;
+	while (changed)
+	{
+		changed = process_spaces_once(map);
+	}
 }
