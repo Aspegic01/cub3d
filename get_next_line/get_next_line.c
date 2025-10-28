@@ -3,15 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrirh <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 12:42:11 by mlabrirh          #+#    #+#             */
-/*   Updated: 2024/11/29 11:14:57 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/25 11:40:02 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+static char *gnl_buffer = NULL;
 
+void	gnl_free_buffer(void)
+{
+	if (gnl_buffer)
+	{
+		free(gnl_buffer);
+		gnl_buffer = NULL;
+	}
+}
 char	*read_from_fd(int fd, char **buffer)
 {
 	char	*new_buffer;
@@ -67,19 +76,17 @@ char	*extract_line(char **buffer)
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
-
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (!buffer)
-		buffer = ft_strdup("");
-	if (!read_from_fd(fd, &buffer))
+	if (!gnl_buffer)
+		gnl_buffer = ft_strdup("");
+	if (!read_from_fd(fd, &gnl_buffer))
 		return (NULL);
-	if (!buffer || buffer[0] == '\0')
+	if (!gnl_buffer || gnl_buffer[0] == '\0')
 	{
-		free(buffer);
-		buffer = NULL;
+		free(gnl_buffer);
+		gnl_buffer = NULL;
 		return (NULL);
 	}
-	return (extract_line(&buffer));
+	return (extract_line(&gnl_buffer));
 }

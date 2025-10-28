@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/08/28 13:46:53 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/28 22:48:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,50 @@ char	*extract_path(char *line)
 	return (path);
 }
 
+// bool ft_isnum(char *rgb)
+// {
+// 	int i = 0;
+//
+// 	if (!rgb || rgb[0] == '\0')
+// 		return false; // empty string is not a number
+//
+// 	while (rgb[i])
+// 	{
+// 		if (!ft_isdigit((unsigned char)rgb[i]))
+// 			return false; // non-digit character found
+// 		i++;
+// 	}
+// 	return true; // all digits
+// }
+
+void	free_rgb(char **rgb)
+{
+	int	i;
+
+	i = 0;
+	while (rgb[i])
+		free(rgb[i++]);
+	free(rgb);
+}
+
+static int	is_valid_rgb_token(char *s)
+{
+	int	i;
+
+	if (!s)
+		return (0);
+	i = 0;
+	while (s[i] && (s[i] == ' ' || s[i] == '\t'))
+		i++;
+	if (!s[i] || !ft_isdigit((unsigned char)s[i]))
+		return (0);
+	while (s[i] && ft_isdigit((unsigned char)s[i]))
+		i++;
+	while (s[i] && (s[i] == ' ' || s[i] == '\t' || s[i] == '\n'))
+		i++;
+	return (s[i] == '\0');
+}
+
 int	parse_color(char *line, int *r, int *g, int *b)
 {
 	char	**rgb;
@@ -49,14 +93,25 @@ int	parse_color(char *line, int *r, int *g, int *b)
 		i++;
 	rgb = ft_split(line + i, ',');
 	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
+	{
+		if (rgb)
+			free_rgb(rgb);
 		return (0);
+	}
+	if (rgb[3])
+	{
+		free_rgb(rgb);
+		return (0);
+	}
+	if (!is_valid_rgb_token(rgb[0]) || !is_valid_rgb_token(rgb[1]) || !is_valid_rgb_token(rgb[2]))
+	{
+		free_rgb(rgb);
+		return (0);
+	}
 	*r = ft_atoi(rgb[0]);
 	*g = ft_atoi(rgb[1]);
 	*b = ft_atoi(rgb[2]);
-	i = 0;
-	while (rgb[i])
-		free(rgb[i++]);
-	free(rgb);
+	free_rgb(rgb);
 	if (*r < 0 || *r > 255 || *g < 0 || *g > 255 || *b < 0 || *b > 255)
 		return (0);
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 09:58:35 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/25 11:40:02 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,12 @@ static int	parse_map_file(char *map_file, t_map *map)
 	{
 		result = process_line(line, map, fd);
 		if (result == -1)
-			return (free(line), close(fd), -1);
+		{
+			free(line);
+			close(fd);
+			gnl_free_buffer();
+			return (-1);
+		}
 		free(line);
 		line = get_next_line(fd);
 	}

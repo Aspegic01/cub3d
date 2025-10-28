@@ -55,7 +55,7 @@ int	init_window(t_game *game)
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
 	
-	game->win = mlx_new_window(game->mlx, 1920, 1080, WIN_TITLE);
+	game->win = mlx_new_window(game->mlx, 1200, 600, WIN_TITLE);
 	if (!game->win)
 		return (ft_putstr_fd("Error\nFailed to create window\n", 2), -1);
 	mlx_hook(game->win, 2, 1L<<0, handle_keypress, game);
