@@ -6,11 +6,12 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/28 22:48:23 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/29 09:32:27 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include "libft/libft.h"
 
 char	*extract_path(char *line)
 {
@@ -81,17 +82,9 @@ static int	is_valid_rgb_token(char *s)
 	return (s[i] == '\0');
 }
 
-int	parse_color(char *line, int *r, int *g, int *b)
+static int	color_er(char **rgb)
 {
-	char	**rgb;
-	int		i;
-
-	i = 0;
-	while (line[i] && line[i] != ' ')
-		i++;
-	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
-		i++;
-	rgb = ft_split(line + i, ',');
+	
 	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
 	{
 		if (rgb)
@@ -103,11 +96,28 @@ int	parse_color(char *line, int *r, int *g, int *b)
 		free_rgb(rgb);
 		return (0);
 	}
-	if (!is_valid_rgb_token(rgb[0]) || !is_valid_rgb_token(rgb[1]) || !is_valid_rgb_token(rgb[2]))
+	if (!is_valid_rgb_token(rgb[0]) || !is_valid_rgb_token(rgb[1])\
+		|| !is_valid_rgb_token(rgb[2]))
 	{
 		free_rgb(rgb);
 		return (0);
 	}
+	return 1;
+}
+
+int	parse_color(char *line, int *r, int *g, int *b)
+{
+	char	**rgb;
+	int		i;
+
+	i = 0;
+	while (line[i] && line[i] != ' ')
+		i++;
+	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+		i++;
+	rgb = ft_split(line + i, ',');
+	if (!color_er(rgb))
+		return 0;
 	*r = ft_atoi(rgb[0]);
 	*g = ft_atoi(rgb[1]);
 	*b = ft_atoi(rgb[2]);
