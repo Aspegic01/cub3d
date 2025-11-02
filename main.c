@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include "include/minilibx/include/MLX42/MLX42.h"
 
 static int	parse_map_file(char *map_file, t_map *map)
 {
@@ -86,29 +87,30 @@ t_map	*read_map(char *map_file)
 	return (map);
 }
 
-int main(int ac, char *av[])
+int	main(int ac, char *av[])
 {
-    t_game  game;
-    t_map   *map;
-    
-    if (ac != 2)
-        return (ft_putstr_fd("Error\nInvalid number of arguments\n", 2), 1);
-    if (strcmp(av[1] + ft_strlen(av[1]) - 4, ".cub") != 0)
-        return (ft_putstr_fd("Error\nInvalid file extension\n", 2), 1);
-    map = read_map(av[1]);
-    if (!map)
-        return (1);
-    game.map = map;
-    if (init_window(&game) == -1)
-    {
-        free_textures(map);
-        free_map_grid(map);
-        free(map);
-        return (1);
-    }
-    mlx_loop(game.mlx);
-    free_textures(map);
-    free_map_grid(map);
-    free(map);
-    return (0);
+	t_game	game;
+	t_map	*map;
+
+	if (ac != 2)
+		return (ft_putstr_fd("Error\nInvalid number of arguments\n", 2), 1);
+	if (strcmp(av[1] + ft_strlen(av[1]) - 4, ".cub") != 0)
+		return (ft_putstr_fd("Error\nInvalid file extension\n", 2), 1);
+	map = read_map(av[1]);
+	if (!map)
+		return (1);
+	game.map = map;
+	if (init_window(&game) == -1)
+	{
+		free_textures(map);
+		free_map_grid(map);
+		free(map);
+		return (1);
+	}
+	mlx_loop(game.mlx);
+	mlx_terminate(game.mlx);
+	free_textures(map);
+	free_map_grid(map);
+	free(map);
+	return (0);
 }

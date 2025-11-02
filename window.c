@@ -14,53 +14,37 @@
 
 int	close_window(t_game *game)
 {
-	if (game->map)
-	{
-		free_textures(game->map);
-		free_map_grid(game->map);
-		free(game->map);
-	}
-	if (game->win)
-		mlx_destroy_window(game->mlx, game->win);
+	// if (game->map)
+	// {
+	// 	free_textures(game->map);
+	// 	free_map_grid(game->map);
+	// 	free(game->map);
+	// }
 	if (game->mlx)
-	{
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
-	}
-	exit(0);
+		mlx_close_window(game->mlx);
 	return (0);
 }
 
-int	handle_keypress(int keycode, t_game *game)
+void	capture_keys(void *param)
 {
-	if (keycode == 65307)
+	t_game *game = param;
+	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
-	return (0);
 }
 
-void	render_frame(t_game *game)
+static void	start(void *param)
 {
-	mlx_clear_window(game->mlx, game->win);
-}
+	t_game *game = param;
 
-int	game_loop(t_game *game)
-{
-	render_frame(game);
-	return (0);
+	(void)game;
 }
 
 int	init_window(t_game *game)
 {
-	game->mlx = mlx_init();
+	game->mlx = mlx_init(1920, 1080, WIN_TITLE, false);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
-	
-	game->win = mlx_new_window(game->mlx, 1920, 1080, WIN_TITLE);
-	if (!game->win)
-		return (ft_putstr_fd("Error\nFailed to create window\n", 2), -1);
-	mlx_hook(game->win, 2, 1L<<0, handle_keypress, game);
-	mlx_hook(game->win, 17, 1L<<17, close_window, game);
-	mlx_loop_hook(game->mlx, game_loop, game);
-	
+	mlx_loop_hook(game->mlx, capture_keys, game);
+	mlx_loop_hook(game->mlx, start, game);
 	return (0);
 }

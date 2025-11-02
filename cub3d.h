@@ -21,7 +21,7 @@
 # include <stdbool.h>
 # include "./get_next_line/get_next_line.h"
 # include "./libft/libft.h"
-# include "./minilibx-linux/mlx.h"
+# include "./include/minilibx/include/MLX42/MLX42.h"
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 768
@@ -67,7 +67,7 @@ typedef struct s_map
 
 typedef struct s_game
 {
-    void    *mlx;
+    mlx_t *mlx;
     void    *win;
     void    *img;
     char    *addr;
