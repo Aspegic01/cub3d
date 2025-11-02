@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include "include/minilibx/include/MLX42/MLX42.h"
 
 static int	parse_map_file(char *map_file, t_map *map)
 {
@@ -87,6 +86,24 @@ t_map	*read_map(char *map_file)
 	return (map);
 }
 
+void map_print(t_map *map)
+{
+	size_t i;
+	size_t j;
+
+	i = 0;
+	printf("%d %d\n", map->width, map->height);
+	while (map->grid[i])
+	{
+		j = 0;
+		while (map->grid[i][j])
+			j++;
+		write(1, map->grid[i], j);
+		write(1, "\n", 1);
+		i++;
+	}
+}
+
 int	main(int ac, char *av[])
 {
 	t_game	game;
@@ -100,6 +117,7 @@ int	main(int ac, char *av[])
 	if (!map)
 		return (1);
 	game.map = map;
+	map_print(map);
 	if (init_window(&game) == -1)
 	{
 		free_textures(map);

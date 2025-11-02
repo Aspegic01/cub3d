@@ -12,7 +12,7 @@
 
 NAME = cub3d
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3
 SRCS = main.c \
        map_parsing.c \
        texture_loader.c \
@@ -20,7 +20,9 @@ SRCS = main.c \
        utils.c \
        window.c \
        ./get_next_line/get_next_line.c \
-       ./get_next_line/get_next_line_utils.c
+       ./get_next_line/get_next_line_utils.c \
+       ./vector/vec_init.c ./vector/vec_ops.c
+
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 MLX = ./include/minilibx/build/libmlx42.a

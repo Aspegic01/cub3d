@@ -27,6 +27,11 @@
 # define WIN_HEIGHT 768
 # define WIN_TITLE "Cub3D"
 
+typedef struct s_v2 {
+  int32_t x;
+  int32_t y;
+} t_v2;
+
 typedef struct s_player
 {
     double  x;
@@ -63,6 +68,8 @@ typedef struct s_map
     int         elements_count;
     t_textures  textures;
     t_colors    colors;
+    mlx_image_t *minimap;
+    int32_t cell_size;
 }               t_map;
 
 typedef struct s_game
@@ -115,6 +122,16 @@ void    free_player(void);
 
 // Map utility functions
 void    fix_zero_space_to_zero(t_map *map);
+
+// Vector functions
+t_v2    vec_new(int32_t x, int32_t y);
+t_v2    vec_zero(void);
+void    vec_print(char *label, t_v2 this);
+t_v2    vec_scale(t_v2 this, float factor);
+t_v2    vec_add(t_v2 this, t_v2 that);
+t_v2    vec_sub(t_v2 this, t_v2 that);
+t_v2    vec_div(t_v2 this, t_v2 that);
+t_v2    vec_mul(t_v2 this, t_v2 that);
 
 // Window and game functions
 int     init_window(t_game *game);
