@@ -23,9 +23,9 @@ SRCS = main.c \
        ./get_next_line/get_next_line_utils.c
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
-MLX_DIR = ./minilibx-linux
-MLX = $(MLX_DIR)/libmlx.a
-MLX_FLAGS = -lmlx -lXext -lX11 -lm
+MLX = ./include/minilibx/build/libmlx42.a
+# MLX_FLAGS = -lmlx -lXext -lX11 -lm
+MLX_FLAGS = -ldl -lglfw -pthread -lm
 
 OBJS = $(SRCS:.c=.o)
 
@@ -34,11 +34,8 @@ all: $(NAME)
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
-$(MLX):
-	make -C $(MLX_DIR)
-
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) -L$(MLX_DIR) $(MLX_FLAGS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(MLX) $(LIBFT) $(MLX_FLAGS)
 clean:
 	rm -f $(OBJS)
 	make clean -C $(LIBFT_DIR)
@@ -47,4 +44,4 @@ fclean: clean
 	make fclean -C $(LIBFT_DIR)
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: clean
