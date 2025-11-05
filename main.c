@@ -86,13 +86,12 @@ t_map	*read_map(char *map_file)
 	return (map);
 }
 
-void map_print(t_map *map)
+static void map_print(t_map *map)
 {
 	size_t i;
 	size_t j;
 
 	i = 0;
-	printf("%d %d\n", map->width, map->height);
 	while (map->grid[i])
 	{
 		j = 0;

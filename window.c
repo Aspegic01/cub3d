@@ -49,47 +49,45 @@ void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color)
 	int32_t	y0;
 	int32_t	x1;
 	int32_t	y1;
+	int32_t	px;
+	int32_t	py;
 
-	x0 = clamp_range(pos.x, 0, scene->minimap->width);
-	y0 = clamp_range(pos.y, 0, scene->minimap->height);
-	x1 = clamp_range(pos.x + scene->cell_size, 0, scene->minimap->width);
-	y1 = clamp_range(pos.y + scene->cell_size, 0, scene->minimap->height);
-	for (int32_t px = x0; px < x1; px++)
+	x0 = pos.x;
+	y0 = pos.y;
+	x1 = pos.x + scene->cell_size;
+	y1 = pos.y + scene->cell_size;
+	px = x0;
+	while (px < x1)
 	{
-		for (int32_t py = y0; py < y1; py++)
+		py = y0;
+		while (py < y1)
 		{
-			mlx_put_pixel(scene->minimap, px, py, color);
+			mlx_put_pixel(scene->img, px, py, color);
+			py++;
 		}
+		px++;
 	}
 }
 
 void	render_minimap(t_map *scene)
 {
 	t_v2	iter;
+	t_v2	pos;
 
-	// t_v2	pos;
-	// pos = vec_zero();
 	iter = vec_zero();
-	while (scene->grid[iter.x])
+	while (iter.y < scene->height)
 	{
-		iter.y = 0;
-		while (scene->grid[iter.y])
+		iter.x = 0;
+		while (iter.x <= scene->width)
 		{
-			// pos.x = iter.x * scene->cell_size;
-			// pos.y = iter.y * scene->cell_size;
-			if (scene->grid[iter.x][iter.y] == '0')
-			{
-				// render_map_cell(scene, iter, 0x333333);
-				// mlx_put_pixel(scene->minimap, iter.x, iter.y, 0x333333);
-			}
-			else
-			{
-				mlx_put_pixel(scene->minimap, iter.x, iter.y, 0xFFFFFFFF);
-				// render_map_cell(scene, iter, 0xFFFFFFFF);
-			}
-			iter.y++;
+			pos = vec_scale(iter, scene->cell_size);
+			if (scene->grid[iter.y][iter.x] == '0')
+				render_map_cell(scene, pos, 0xFFFFFFFF );
+			else 
+				render_map_cell(scene, pos, 0x333333);
+			iter.x++;
 		}
-		iter.x++;
+		iter.y++;
 	}
 }
 
@@ -104,24 +102,25 @@ static void	start(void *param)
 int	init_window(t_game *game)
 {
 	t_v2	msize;
-	t_v2	scene_size;
+	t_v2	grid_dimensions;
 	int32_t	instance_idx;
 
-	game->mlx = mlx_init(1920, 1080, WIN_TITLE, false);
+	game->mlx = mlx_init(16 * 100, 9 * 100, WIN_TITLE, false);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
-	game->map->cell_size = 1920 * 0.02;
-	scene_size = vec_new(game->map->width, game->map->height);
-	msize = vec_scale(scene_size, game->map->cell_size);
-	game->map->minimap = mlx_new_image(game->mlx, msize.x, msize.y);
-	if (!game->map->minimap)
+	grid_dimensions = vec_new(game->map->width, game->map->height);
+	game->map->cell_size = 1920 * 0.01;
+	msize = vec_scale(grid_dimensions, game->map->cell_size);
+	game->map->img = mlx_new_image(game->mlx, msize.x, msize.y);
+	if (!game->map->img)
 		return (ft_putstr_fd("Error\nFailed to initialize image\n", 2), -1);
-	instance_idx = mlx_image_to_window(game->mlx, game->map->minimap, 0, 0);
+	instance_idx = mlx_image_to_window(game->mlx, game->map->img, 0, 0);
 	if (instance_idx < 0)
 		return (ft_putstr_fd("Error\nFailed to put image\n", 2), -1);
+	vec_print("grid", grid_dimensions);
+	vec_print("map_size", msize);
 	printf("cell_size %d\n", game->map->cell_size);
-	vec_print("scene_size", scene_size);
-	vec_print("minimap_size", msize);
+	game->map->run = true;
 	mlx_loop_hook(game->mlx, capture_keys, game);
 	mlx_loop_hook(game->mlx, start, game);
 	return (0);

@@ -68,8 +68,9 @@ typedef struct s_map
     int         elements_count;
     t_textures  textures;
     t_colors    colors;
-    mlx_image_t *minimap;
+    mlx_image_t *img;
     int32_t cell_size;
+    bool run;
 }               t_map;
 
 typedef struct s_game
