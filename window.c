@@ -78,11 +78,12 @@ void	render_minimap(t_map *scene)
 	while (iter.y < scene->height)
 	{
 		iter.x = 0;
-		while (iter.x <= scene->width)
+		int line_len = ft_strlen(scene->grid[iter.y]);
+		while (iter.x < scene->width)
 		{
 			pos = vec_scale(iter, scene->cell_size);
-			if (scene->grid[iter.y][iter.x] == '0')
-				render_map_cell(scene, pos, 0xFFFFFFFF );
+			if (iter.x < line_len && scene->grid[iter.y][iter.x] == '0')
+				render_map_cell(scene, pos, 0xFFFFFFFF);
 			else 
 				render_map_cell(scene, pos, 0x333333);
 			iter.x++;
