@@ -25,25 +25,30 @@ SRCS = main.c \
 
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
-MLX = ./include/minilibx/build/libmlx42.a
-# MLX_FLAGS = -lmlx -lXext -lX11 -lm
-MLX_FLAGS = -ldl -lglfw -pthread -lm
+LIBMLX = ./include/minilibx
+LIBS = $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+HEADERS = -I ./include -I $(LIBMLX)/include
 
 OBJS = $(SRCS:.c=.o)
 
-all: $(NAME)
+all: libmlx $(NAME)
 
 $(LIBFT):
-	make -C $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(MLX) $(LIBFT) $(MLX_FLAGS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(LIBFT) $(HEADERS) -o $(NAME)
+
+libmlx:
+	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
+
 clean:
-	rm -f $(OBJS)
-	make clean -C $(LIBFT_DIR)
+	@rm -f $(OBJS)
+	@rm -rf $(LIBMLX)/build
+	@make clean -C $(LIBFT_DIR)
 fclean: clean
-	rm -f $(NAME)
-	make fclean -C $(LIBFT_DIR)
+	@rm -f $(NAME)
+	@make fclean -C $(LIBFT_DIR)
 re: fclean all
 
 .PHONY: clean
