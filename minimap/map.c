@@ -34,7 +34,9 @@ void	minimap_render(t_map *scene)
 			pos = vec_scale(iter, scene->cell_size);
 			if (iter.x < line_len && scene->grid[iter.y][iter.x] == '0')
 				render_map_cell(scene, pos, 0xFFFFFFFF);
-			else 
+			else if (iter.x < line_len && scene->grid[iter.y][iter.x] == 'W')
+				render_map_cell(scene, pos, 0x00000000);
+			else
 				render_map_cell(scene, pos, 0x333333);
 			iter.x++;
 		}
