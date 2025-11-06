@@ -21,25 +21,27 @@ SRCS = main.c \
        window.c \
        ./get_next_line/get_next_line.c \
        ./get_next_line/get_next_line_utils.c \
-       ./vector/vec_init.c ./vector/vec_ops.c
+       ./vector/vec_init.c ./vector/vec_ops.c \
+       ./minimap/map.c
 
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBMLX = ./include/minilibx
-LIBS = $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
+MLX = $(LIBMLX)/build/libmlx42.a
+LIBS = $(MLX) -ldl -lglfw -pthread -lm
 HEADERS = -I ./include -I $(LIBMLX)/include
 
 OBJS = $(SRCS:.c=.o)
 
-all: libmlx $(NAME)
+all: $(NAME)
 
 $(LIBFT):
 	@make -C $(LIBFT_DIR)
 
-$(NAME): $(LIBFT) $(OBJS)
+$(NAME): $(LIBFT) $(OBJS) $(MLX)
 	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(LIBFT) $(HEADERS) -o $(NAME)
 
-libmlx:
+$(MLX):
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
 run: all
