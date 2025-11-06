@@ -34,8 +34,8 @@ typedef struct s_v2 {
 
 typedef struct s_player
 {
-    double  x;
-    double  y;
+    int32_t x;
+    int32_t y;
     double  dir_x;
     double  dir_y;
     double  plane_x;
@@ -70,6 +70,9 @@ typedef struct s_map
     t_colors    colors;
     mlx_image_t *img;
     int32_t cell_size;
+    t_v2 position;
+    t_player player;
+    t_v2 player_position;
     bool run;
 }               t_map;
 
@@ -80,7 +83,6 @@ typedef struct s_game
     void    *img;
     char    *addr;
     int     bits_per_pixel;
-    int     line_length;
     int     endian;
     t_map   *map;
 }               t_game;

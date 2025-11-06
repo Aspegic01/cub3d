@@ -83,6 +83,7 @@ t_map	*read_map(char *map_file)
 		free_textures(map);
 		return (free(map), NULL);
 	}
+	map->player = player;
 	return (map);
 }
 
