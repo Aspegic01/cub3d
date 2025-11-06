@@ -124,6 +124,11 @@ void    free_player(void);
 // Map utility functions
 void    fix_zero_space_to_zero(t_map *map);
 
+// Mini map
+int minimap_setup(t_game *game);
+void	minimap_render(t_map *scene);
+
+
 // Vector functions
 t_v2    vec_new(int32_t x, int32_t y);
 t_v2    vec_zero(void);
