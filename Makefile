@@ -42,13 +42,18 @@ $(NAME): $(LIBFT) $(OBJS)
 libmlx:
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
+run: all
+	./$(NAME) ./map.cub
+
 clean:
 	@rm -f $(OBJS)
 	@rm -rf $(LIBMLX)/build
 	@make clean -C $(LIBFT_DIR)
+
 fclean: clean
 	@rm -f $(NAME)
 	@make fclean -C $(LIBFT_DIR)
+
 re: fclean all
 
-.PHONY: clean
+.PHONY: clean libmlx
