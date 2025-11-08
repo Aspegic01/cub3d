@@ -27,7 +27,8 @@ int32_t xmove_player(t_map *map, int32_t value) {
 	int32_t x_index = map->player_position.x / map->cell_size;
 	int32_t y_index = map->player_position.y / map->cell_size;
 	cell = map->grid[y_index];
-	if (value > 0 && x_index + value < map->width && cell[x_index + 1] == '0')
+	int len = ft_strlen(cell);
+	if (value > 0 && x_index + value < len && cell[x_index + 1] == '0')
 		return map->player_position.x + value;
 	if (value < 0 && x_index + value > 0 && cell[x_index - 1] == '0')
 		return map->player_position.x + value;
@@ -62,9 +63,9 @@ void	capture_keys(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
 		game->map->player_position.x = xmove_player(game->map, -1);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-		game->map->player_position.y += ymove_player(game->map, 1);
+		game->map->player_position.y += 1;//ymove_player(game->map, 1);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-		game->map->player_position.y = ymove_player(game->map, -1);
+		game->map->player_position.y -= 1;// ymove_player(game->map, -1);
 }
 
 static void	start(void *param)
