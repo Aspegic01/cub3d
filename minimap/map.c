@@ -1,21 +1,26 @@
 #include "../cub3d.h"
 
-static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color)
+static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color, bool border)
 {
 	t_v2 start;
 	t_v2 end;
 
 	start = vec_new(pos.x, pos.y);
 	end = vec_new(pos.x + scene->cell_size, pos.y + scene->cell_size);
-	while (start.x <= end.x)
+	while (start.y <= end.y)
 	{
-		start.y = pos.y;
-		while (start.y <= end.y)
+		start.x = pos.x;
+		while (start.x <= end.x)
 		{
-			mlx_put_pixel(scene->img, start.x, start.y, color);
-			start.y++;
+			if (border && (end.y - start.y == scene->cell_size || end.x - start.x == scene->cell_size)) {
+				mlx_put_pixel(scene->img, start.x, start.y, 0x000000FF);
+			}
+			else {
+				mlx_put_pixel(scene->img, start.x, start.y, color);
+			}
+			start.x++;
 		}
-		start.x++;
+		start.y++;
 	}
 }
 
@@ -33,15 +38,15 @@ void	minimap_render(t_map *scene)
 		{
 			pos = vec_scale(iter, scene->cell_size);
 			if (iter.x < line_len && scene->grid[iter.y][iter.x] == '0')
-				render_map_cell(scene, pos, 0xFFFFFFFF);
+				render_map_cell(scene, pos, 0xFFFFFFFF, true);
 			else
-				render_map_cell(scene, pos, 0x333333FF);
+				render_map_cell(scene, pos, 0x333333FF, true);
 			iter.x++;
 		}
 		iter.y++;
 	}
 
-	render_map_cell(scene, scene->player_position, 0x0000FFFF);
+	render_map_cell(scene, scene->player_position, 0x0000FFFF, false);
 }
 
 static void	map_print(t_map *map)
