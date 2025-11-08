@@ -1,6 +1,6 @@
 #include "../cub3d.h"
 
-static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color, bool border)
+static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color)
 {
 	t_v2 start;
 	t_v2 end;
@@ -12,12 +12,35 @@ static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color, bool border)
 		start.x = pos.x;
 		while (start.x <= end.x)
 		{
-			if (border && (end.y - start.y == scene->cell_size || end.x - start.x == scene->cell_size)) {
+			if (end.y - start.y == scene->cell_size || end.x - start.x == scene->cell_size)
+			{
 				mlx_put_pixel(scene->img, start.x, start.y, 0x000000FF);
 			}
 			else {
 				mlx_put_pixel(scene->img, start.x, start.y, color);
 			}
+			start.x++;
+		}
+		start.y++;
+	}
+}
+
+
+static void	render_player(t_map *scene, t_v2 pos, uint32_t color)
+{
+	t_v2 start;
+	t_v2 end;
+	int32_t	cell_size;
+
+	cell_size = scene->cell_size * 0.5;
+	start = vec_new(pos.x, pos.y);
+	end = vec_new(pos.x + cell_size, pos.y + cell_size);
+	while (start.y <= end.y)
+	{
+		start.x = pos.x;
+		while (start.x <= end.x)
+		{
+			mlx_put_pixel(scene->img, start.x, start.y, color);
 			start.x++;
 		}
 		start.y++;
@@ -38,15 +61,15 @@ void	minimap_render(t_map *scene)
 		{
 			pos = vec_scale(iter, scene->cell_size);
 			if (iter.x < line_len && scene->grid[iter.y][iter.x] == '0')
-				render_map_cell(scene, pos, 0xFFFFFFFF, true);
+				render_map_cell(scene, pos, 0xFFFFFFFF);
 			else
-				render_map_cell(scene, pos, 0x333333FF, true);
+				render_map_cell(scene, pos, 0x333333FF);
 			iter.x++;
 		}
 		iter.y++;
 	}
 
-	render_map_cell(scene, scene->player_position, 0x0000FFFF, false);
+	render_player(scene, scene->player_position, 0x0000FFFF);
 }
 
 static void	map_print(t_map *map)
