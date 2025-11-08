@@ -52,6 +52,22 @@ int32_t ymove_player(t_map *map, int32_t value) {
 	return (map->player_position.y);
 }
 
+int32_t clamp(int32_t boundary, int32_t position, int32_t step)
+{
+	int32_t new_pos = position + step;
+	if (step > 0)
+	{
+		if (new_pos >= boundary) return position;
+		return new_pos;
+	}
+	else
+	{
+		if (new_pos <= boundary) return position;
+		return new_pos;
+	}
+	return position;
+}
+
 void	capture_keys(void *param)
 {
 	t_game	*game;
@@ -60,13 +76,13 @@ void	capture_keys(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-		game->map->player_position.x = xmove_player(game->map, 1);
+		game->map->player_position.x = clamp(game->map->img->width - game->map->cell_size, game->map->player_position.x, 1);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-		game->map->player_position.x = xmove_player(game->map, -1);
+		game->map->player_position.x = clamp(0, game->map->player_position.x, -1);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-		game->map->player_position.y += 1;//ymove_player(game->map, 1);
+		game->map->player_position.y = clamp(game->map->img->height - game->map->cell_size, game->map->player_position.y, 1);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-		game->map->player_position.y -= 1;// ymove_player(game->map, -1);
+		game->map->player_position.y = clamp(0, game->map->player_position.y, -1);
 }
 
 static void	start(void *param)
