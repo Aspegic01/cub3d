@@ -80,7 +80,7 @@ typedef struct s_game
 {
     mlx_t *mlx;
     void    *win;
-    void    *img;
+    mlx_image_t *canvas;
     char    *addr;
     int     bits_per_pixel;
     int     endian;
@@ -130,6 +130,8 @@ void    fix_zero_space_to_zero(t_map *map);
 int minimap_setup(t_game *game);
 void	minimap_render(t_map *scene);
 
+// Engine
+void	render_game(t_game *game);
 
 // Vector functions
 t_v2    vec_new(int32_t x, int32_t y);

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include "include/minilibx/include/MLX42/MLX42.h"
 
 int	close_window(t_game *game)
 {
@@ -73,6 +74,7 @@ static void	start(void *param)
 	t_game	*game;
 
 	game = param;
+	render_game(game);
 	minimap_render(game->map);
 }
 
@@ -81,6 +83,11 @@ int	init_window(t_game *game)
 	game->mlx = mlx_init(16 * 100, 9 * 100, WIN_TITLE, false);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
+	game->canvas = mlx_new_image(game->mlx, game->mlx->width, game->mlx->height);
+	if (!game->mlx)
+		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
+	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
+		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
 	if (minimap_setup(game) != 0)
 		return (-1);
 	mlx_loop_hook(game->mlx, capture_keys, game);

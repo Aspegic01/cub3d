@@ -35,7 +35,7 @@ void	minimap_render(t_map *scene)
 			if (iter.x < line_len && scene->grid[iter.y][iter.x] == '0')
 				render_map_cell(scene, pos, 0xFFFFFFFF);
 			else
-				render_map_cell(scene, pos, 0x333333);
+				render_map_cell(scene, pos, 0x333333FF);
 			iter.x++;
 		}
 		iter.y++;
