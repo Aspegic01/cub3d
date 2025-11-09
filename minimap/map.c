@@ -70,6 +70,8 @@ void	minimap_render(t_map *scene)
 	}
 
 	render_player(scene, scene->player_position, 0x0000FFFF);
+	t_v2 direction = vec_new(scene->player_position.x + scene->cell_size, scene->player_position.y + scene->cell_size);
+	draw_line(scene->img, scene->player_position, direction, 0x0000FFFF);
 }
 
 static void	map_print(t_map *map)
