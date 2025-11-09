@@ -96,7 +96,7 @@ static void	start(void *param)
 
 int	init_window(t_game *game)
 {
-	game->mlx = mlx_init(16 * 100, 9 * 100, WIN_TITLE, false);
+	game->mlx = mlx_init(16 * 60, 9 * 60, WIN_TITLE, false);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
 	game->canvas = mlx_new_image(game->mlx, game->mlx->width, game->mlx->height);

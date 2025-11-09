@@ -7,10 +7,10 @@ static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color)
 
 	start = vec_new(pos.x, pos.y);
 	end = vec_new(pos.x + scene->cell_size, pos.y + scene->cell_size);
-	while (start.y <= end.y)
+	while (start.y < end.y)
 	{
 		start.x = pos.x;
-		while (start.x <= end.x)
+		while (start.x < end.x)
 		{
 			if (end.y - start.y == scene->cell_size || end.x - start.x == scene->cell_size)
 			{
@@ -96,6 +96,7 @@ int	minimap_setup(t_game *game)
 	t_v2	grid_dimensions;
 	int32_t	img_idx;
 
+	game->map->run = true;
 	canvas = vec_new(game->mlx->width, game->mlx->height);
 	game->map->cell_size = canvas.x * 0.01;
 	grid_dimensions = vec_new(game->map->width, game->map->height);
