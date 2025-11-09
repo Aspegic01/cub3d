@@ -20,20 +20,42 @@ int	close_window(t_game *game)
 	return (0);
 }
 
+int32_t clamp(int32_t boundary, int32_t position, int32_t step)
+{
+	int32_t new_pos = position + step;
+	printf("%d %d %d %d\n", boundary, position, step, new_pos);
+	if (step > 0)
+	{
+		if (new_pos >= boundary) return position;
+		return new_pos;
+	}
+	else
+	{
+		if (new_pos <= boundary) return position;
+		return new_pos;
+	}
+	return position;
+}
+
 int32_t xmove_player(t_map *map, int32_t value) {
 	char	*cell;
+	int32_t	y_index;
 
 	if (value == 0)
 		return (map->player_position.x);
-	int32_t x_index = map->player_position.x / map->cell_size;
-	int32_t y_index = map->player_position.y / map->cell_size;
+	y_index = map->player_position.y / map->cell_size;
 	cell = map->grid[y_index];
 	int len = ft_strlen(cell);
-	if (value > 0 && x_index + value < len && cell[x_index + 1] == '0')
-		return map->player_position.x + value;
-	if (value < 0 && x_index + value > 0 && cell[x_index - 1] == '0')
-		return map->player_position.x + value;
-	return (map->player_position.x);
+	if (value > 0)
+	{
+		int32_t pos = map->player_position.x + value;
+		int32_t x_index = pos / map->cell_size;
+		if (x_index + 1 > len)
+			return map->player_position.x;
+		if (cell[x_index + value] == '0')
+			return pos;
+	}
+	return map->player_position.x;
 }
 
 int32_t ymove_player(t_map *map, int32_t value) {
@@ -50,22 +72,6 @@ int32_t ymove_player(t_map *map, int32_t value) {
 	if (value < 0 && y_index - 1 > 0 && cell[y_index - 1] == '0')
 		return map->player_position.y + value;
 	return (map->player_position.y);
-}
-
-int32_t clamp(int32_t boundary, int32_t position, int32_t step)
-{
-	int32_t new_pos = position + step;
-	if (step > 0)
-	{
-		if (new_pos >= boundary) return position;
-		return new_pos;
-	}
-	else
-	{
-		if (new_pos <= boundary) return position;
-		return new_pos;
-	}
-	return position;
 }
 
 void	capture_keys(void *param)

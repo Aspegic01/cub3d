@@ -96,7 +96,6 @@ int	minimap_setup(t_game *game)
 	t_v2	grid_dimensions;
 	int32_t	img_idx;
 
-	game->map->run = true;
 	canvas = vec_new(game->mlx->width, game->mlx->height);
 	game->map->cell_size = canvas.x * 0.01;
 	grid_dimensions = vec_new(game->map->width, game->map->height);
