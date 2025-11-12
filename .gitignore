@@ -1,0 +1,7 @@
+# Object files
+*.o
+# Binary
+cub3d
+# lib archive
+*.a
+.vscode

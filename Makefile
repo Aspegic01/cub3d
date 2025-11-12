@@ -12,7 +12,7 @@
 
 NAME = cub3d
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g3
 SRCS = main.c \
        map_parsing.c \
        texture_loader.c \
@@ -20,31 +20,42 @@ SRCS = main.c \
        utils.c \
        window.c \
        ./get_next_line/get_next_line.c \
-       ./get_next_line/get_next_line_utils.c
+       ./get_next_line/get_next_line_utils.c \
+       ./vector/vec_init.c ./vector/vec_ops.c \
+       ./minimap/map.c ./engine/render.c ./engine/drawline.c
+
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
-MLX_DIR = ./minilibx-linux
-MLX = $(MLX_DIR)/libmlx.a
-MLX_FLAGS = -lmlx -lXext -lX11 -lm
+LIBMLX = ./include/minilibx
+MLX = $(LIBMLX)/build/libmlx42.a
+LIBS = $(MLX) -ldl -lglfw -pthread -lm
+HEADERS = -I ./include -I $(LIBMLX)/include
 
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
 $(LIBFT):
-	make -C $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR)
+
+$(NAME): $(LIBFT) $(OBJS) $(MLX)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBS) $(LIBFT) $(HEADERS) -o $(NAME)
 
 $(MLX):
-	make -C $(MLX_DIR)
+	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
 
-$(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) -L$(MLX_DIR) $(MLX_FLAGS)
+run: all
+	./$(NAME) ./map.cub
+
 clean:
-	rm -f $(OBJS)
-	make clean -C $(LIBFT_DIR)
+	@rm -f $(OBJS)
+	@rm -rf $(LIBMLX)/build
+	@make clean -C $(LIBFT_DIR)
+
 fclean: clean
-	rm -f $(NAME)
-	make fclean -C $(LIBFT_DIR)
+	@rm -f $(NAME)
+	@make fclean -C $(LIBFT_DIR)
+
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: clean libmlx

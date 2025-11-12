@@ -14,53 +14,103 @@
 
 int	close_window(t_game *game)
 {
-	if (game->map)
-	{
-		free_textures(game->map);
-		free_map_grid(game->map);
-		free(game->map);
-	}
-	if (game->win)
-		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
+		mlx_close_window(game->mlx);
+	return (0);
+}
+
+int32_t clamp(int32_t boundary, int32_t position, int32_t step)
+{
+	int32_t new_pos = position + step;
+	if (step > 0)
 	{
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
+		if (new_pos >= boundary) return position;
+		return new_pos;
 	}
-	exit(0);
-	return (0);
+	else
+	{
+		if (new_pos <= boundary) return position;
+		return new_pos;
+	}
+	return position;
 }
 
-int	handle_keypress(int keycode, t_game *game)
+int32_t xmove_player(t_map *map, int32_t value) {
+	char	*cell;
+	int32_t	y_index;
+
+	if (value == 0)
+		return (map->player_position.x);
+	y_index = map->player_position.y / map->cell_size;
+	cell = map->grid[y_index];
+	int len = ft_strlen(cell);
+	if (value > 0)
+	{
+		int32_t pos = map->player_position.x + value;
+		int32_t x_index = pos / map->cell_size;
+		if (x_index + 1 > len)
+			return map->player_position.x;
+		if (cell[x_index + value] == '0')
+			return pos;
+	}
+	return map->player_position.x;
+}
+
+int32_t ymove_player(t_map *map, int32_t value) {
+	char	*cell;
+
+	if (value == 0)
+		return (map->player_position.y);
+	int32_t x_index = map->player_position.x / map->cell_size;
+	int32_t y_index = map->player_position.y / map->cell_size;
+	vec_print("player_pos", vec_new(x_index, y_index));
+	cell = map->grid[x_index];
+	if (value > 0 && y_index + value < map->height && cell[y_index + 1] == '0')
+		return map->player_position.y + value;
+	if (value < 0 && y_index - 1 > 0 && cell[y_index - 1] == '0')
+		return map->player_position.y + value;
+	return (map->player_position.y);
+}
+
+void	capture_keys(void *param)
 {
-	if (keycode == 65307)
+	t_game	*game;
+
+	game = param;
+	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
-	return (0);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
+		game->map->player_position.x = clamp(game->map->img->width - game->map->cell_size, game->map->player_position.x, 1);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
+		game->map->player_position.x = clamp(0, game->map->player_position.x, -1);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
+		game->map->player_position.y = clamp(game->map->img->height - game->map->cell_size, game->map->player_position.y, 1);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
+		game->map->player_position.y = clamp(0, game->map->player_position.y, -1);
 }
 
-void	render_frame(t_game *game)
+static void	start(void *param)
 {
-	mlx_clear_window(game->mlx, game->win);
-}
+	t_game	*game;
 
-int	game_loop(t_game *game)
-{
-	render_frame(game);
-	return (0);
+	game = param;
+	render_game(game);
+	minimap_render(game->map);
 }
 
 int	init_window(t_game *game)
 {
-	game->mlx = mlx_init();
+	game->mlx = mlx_init(16 * 100, 9 * 100, WIN_TITLE, false);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
-	
-	game->win = mlx_new_window(game->mlx, 1200, 600, WIN_TITLE);
-	if (!game->win)
-		return (ft_putstr_fd("Error\nFailed to create window\n", 2), -1);
-	mlx_hook(game->win, 2, 1L<<0, handle_keypress, game);
-	mlx_hook(game->win, 17, 1L<<17, close_window, game);
-	mlx_loop_hook(game->mlx, game_loop, game);
-	
+	game->canvas = mlx_new_image(game->mlx, game->mlx->width, game->mlx->height);
+	if (!game->mlx)
+		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
+	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
+		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
+	if (minimap_setup(game) != 0)
+		return (-1);
+	mlx_loop_hook(game->mlx, capture_keys, game);
+	mlx_loop_hook(game->mlx, start, game);
 	return (0);
 }
