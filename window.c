@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include "include/minilibx/include/MLX42/MLX42.h"
 
 int	close_window(t_game *game)
 {

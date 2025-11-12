@@ -3,85 +3,93 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrirh <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/10 22:12:58 by mlabrirh          #+#    #+#             */
-/*   Updated: 2024/11/15 17:54:29 by mlabrirh         ###   ########.fr       */
+/*   Created: 2024/10/25 11:11:10 by mgamraou          #+#    #+#             */
+/*   Updated: 2025/10/23 20:37:21 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static	int	count_words(const char *str, char c)
+static size_t	splitcount(char const *s, char c)
 {
 	int	i;
 	int	count;
 
-	count = 0;
+	if (!s)
+		return (0);
 	i = 0;
-	if (str[i] != c && str[i] != '\0' )
-	{
+	count = 0;
+	if (s[0] != c && s[0] != '\0')
 		count++;
-	}
-	while (str[i])
+	while (s[i])
 	{
-		if (str[i - 1] == c && str[i] != c)
-		{
+		if (s[i - 1] == c && s[i] != c)
 			count++;
-		}
 		i++;
 	}
 	return (count);
 }
 
-static int	extract_next_word(char **s, char *c, char ***result, int *j)
+static void	needfree(char **strs, int i)
+{
+	int	j;
+
+	j = 0;
+	while (j <= i)
+	{
+		free(strs[j]);
+		j++;
+	}
+	free(strs);
+}
+
+static int	countlen(const char *s, char c)
 {
 	int	len;
 
-	while (**s == *c)
-		(*s)++;
-	if (**s != '\0')
-	{
-		len = 0;
-		while ((*s)[len] && (*s)[len] != *c)
-			len++;
-		(*result)[*j] = ft_substr(*s, 0, len);
-		if (!(*result)[*j])
-			return (0);
-		(*j)++;
-		*s += len;
-	}
-	return (1);
+	if (!ft_strchr(s, c))
+		len = ft_strlen(s);
+	else
+		len = ft_strchr(s, c) - s;
+	return (len);
 }
 
-static void	free_split(char **result, int j)
+static int	checkdel(const char **s, char c)
 {
-	while (j > 0)
-		free(result[--j]);
-	free(result);
+	while (**s == c && *s)
+		(*s)++;
+	if (**s == '\0')
+		return (0);
+	return (1);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	int		words;
-	char	**result;
-	int		j;
+	int		i;
+	int		slen;
+	char	**strs;
 
 	if (!s)
 		return (NULL);
-	words = count_words(s, c);
-	result = (char **)malloc(sizeof(char *) * (words + 1));
-	if (!result)
+	i = 0;
+	strs = (char **)malloc(sizeof(char *) * (splitcount(s, c) + 1));
+	if (!strs)
 		return (NULL);
-	j = 0;
 	while (*s)
 	{
-		if (!extract_next_word((char **)&s, &c, &result, &j))
+		if (checkdel(&s, c) == 0)
+			break ;
+		slen = countlen(s, c);
+		strs[i++] = ft_substr(s, 0, slen);
+		if (!strs[i - 1])
 		{
-			free_split(result, j);
+			needfree(strs, i);
 			return (NULL);
 		}
+		s += slen;
 	}
-	result[j] = NULL;
-	return (result);
+	strs[i] = NULL;
+	return (strs);
 }

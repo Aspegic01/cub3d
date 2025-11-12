@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrirh <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/27 10:20:42 by mlabrirh          #+#    #+#             */
-/*   Updated: 2024/11/29 11:23:56 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/25 11:40:02 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*get_next_line(int fd);
+void	gnl_free_buffer(void);
 
 #endif
