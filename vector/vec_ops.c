@@ -31,6 +31,8 @@ t_v2	vec_div(t_v2 this, t_v2 that)
 {
 	t_v2	v;
 
+	if (that.x == 0 || that.y == 0)
+		return (vec_zero());
 	v.x = this.x / that.x;
 	v.y = this.y / that.y;
 	return (v);

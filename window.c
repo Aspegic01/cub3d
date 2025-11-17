@@ -38,37 +38,47 @@ int32_t clamp(int32_t boundary, int32_t position, int32_t step)
 int32_t xmove_player(t_map *map, int32_t value) {
 	char	*cell;
 	int32_t	y_index;
+	int32_t	pos;
+	int32_t	x_index;
+	int		len;
 
 	if (value == 0)
 		return (map->player_position.x);
 	y_index = map->player_position.y / map->cell_size;
+	if (y_index < 0 || y_index >= map->height)
+		return (map->player_position.x);
 	cell = map->grid[y_index];
-	int len = ft_strlen(cell);
-	if (value > 0)
-	{
-		int32_t pos = map->player_position.x + value;
-		int32_t x_index = pos / map->cell_size;
-		if (x_index + 1 > len)
-			return map->player_position.x;
-		if (cell[x_index + value] == '0')
-			return pos;
-	}
-	return map->player_position.x;
+	len = ft_strlen(cell);
+	pos = map->player_position.x + value;
+	x_index = pos / map->cell_size;
+	if (x_index < 0 || x_index >= len)
+		return (map->player_position.x);
+	if (cell[x_index] == '0')
+		return (pos);
+	return (map->player_position.x);
 }
 
 int32_t ymove_player(t_map *map, int32_t value) {
 	char	*cell;
+	int32_t	x_index;
+	int32_t	y_index;
+	int32_t	new_y_index;
+	int		len;
 
 	if (value == 0)
 		return (map->player_position.y);
-	int32_t x_index = map->player_position.x / map->cell_size;
-	int32_t y_index = map->player_position.y / map->cell_size;
+	x_index = map->player_position.x / map->cell_size;
+	y_index = map->player_position.y / map->cell_size;
+	new_y_index = (map->player_position.y + value) / map->cell_size;
 	vec_print("player_pos", vec_new(x_index, y_index));
-	cell = map->grid[x_index];
-	if (value > 0 && y_index + value < map->height && cell[y_index + 1] == '0')
-		return map->player_position.y + value;
-	if (value < 0 && y_index - 1 > 0 && cell[y_index - 1] == '0')
-		return map->player_position.y + value;
+	if (new_y_index < 0 || new_y_index >= map->height)
+		return (map->player_position.y);
+	cell = map->grid[new_y_index];
+	len = ft_strlen(cell);
+	if (x_index < 0 || x_index >= len)
+		return (map->player_position.y);
+	if (cell[x_index] == '0')
+		return (map->player_position.y + value);
 	return (map->player_position.y);
 }
 
@@ -104,12 +114,21 @@ int	init_window(t_game *game)
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
 	game->canvas = mlx_new_image(game->mlx, game->mlx->width, game->mlx->height);
-	if (!game->mlx)
+	if (!game->canvas)
+	{
+		mlx_terminate(game->mlx);
 		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
+	}
 	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
+	{
+		mlx_terminate(game->mlx);
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
+	}
 	if (minimap_setup(game) != 0)
+	{
+		mlx_terminate(game->mlx);
 		return (-1);
+	}
 	mlx_loop_hook(game->mlx, capture_keys, game);
 	mlx_loop_hook(game->mlx, start, game);
 	return (0);

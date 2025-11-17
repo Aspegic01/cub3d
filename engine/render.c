@@ -19,7 +19,7 @@ void	render_game(t_game *game)
 		x = 0;
 		while (x < game->canvas->width)
 		{
-			color = get_rgba(colors.ceiling_r, colors.ceiling_g, colors.floor_b, 255);
+			color = get_rgba(colors.ceiling_r, colors.ceiling_g, colors.ceiling_b, 255);
 			mlx_put_pixel(game->canvas, x, y, color);
 			x++;
 		}

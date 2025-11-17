@@ -5,3 +5,5 @@ cub3d
 # lib archive
 *.a
 .vscode
+# Build directory
+include/minilibx/build/

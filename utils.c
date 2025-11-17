@@ -34,7 +34,7 @@ int store_map_line(char *line, t_map *map, int line_index)
 	int i;
 
 	len = ft_strlen(line);
-	if (line[len - 1] == '\n')
+	if (len > 0 && line[len - 1] == '\n')
 		len--;
 	map->grid[line_index] = malloc(sizeof(char) * (len + 1));
 	if (!map->grid[line_index])
@@ -187,6 +187,7 @@ int load_map_data(char *map_file, t_map *map)
 				{
 					free(line);
 					close(fd);
+					gnl_free_buffer();
 					return (0);
 				}
 				map_line_index++;
@@ -197,6 +198,7 @@ int load_map_data(char *map_file, t_map *map)
 		line = get_next_line(fd);
 	}
 	close(fd);
+	gnl_free_buffer();
 	return (1);
 }
 
@@ -207,10 +209,21 @@ static int is_walkable_char(char c)
 
 static int is_space_adjacent_to_walkable(t_map *map, int i, int j)
 {
-	if (i > 0 && is_walkable_char(map->grid[i - 1][j]))
-		return (1);
-	if (i < map->height - 1 && is_walkable_char(map->grid[i + 1][j]))
-		return (1);
+	int	len_up;
+	int	len_down;
+
+	if (i > 0)
+	{
+		len_up = ft_strlen(map->grid[i - 1]);
+		if (j < len_up && is_walkable_char(map->grid[i - 1][j]))
+			return (1);
+	}
+	if (i < map->height - 1)
+	{
+		len_down = ft_strlen(map->grid[i + 1]);
+		if (j < len_down && is_walkable_char(map->grid[i + 1][j]))
+			return (1);
+	}
 	if (j > 0 && is_walkable_char(map->grid[i][j - 1]))
 		return (1);
 	if (map->grid[i][j + 1] && is_walkable_char(map->grid[i][j + 1]))

@@ -23,14 +23,16 @@ void	draw_line(mlx_image_t *grid, t_v2 v1, t_v2 v2, uint32_t color)
 	steps = maxabs_int32(delta.x, delta.y);
 	if (steps == 0)
 	{
-		mlx_put_pixel(grid, v1.x, v1.y, color);
+		if (v1.x >= 0 && v1.x < (int32_t)grid->width && v1.y >= 0 && v1.y < (int32_t)grid->height)
+			mlx_put_pixel(grid, v1.x, v1.y, color);
 		return ;
 	}
 	incr = vec_new(delta.x / steps, delta.y / steps);
 	i = 0;
 	while (i <= steps)
 	{
-		mlx_put_pixel(grid, v1.x, v1.y, color);
+		if (v1.x >= 0 && v1.x < (int32_t)grid->width && v1.y >= 0 && v1.y < (int32_t)grid->height)
+			mlx_put_pixel(grid, v1.x, v1.y, color);
 		v1.x += incr.x;
 		v1.y += incr.y;
 		i++;

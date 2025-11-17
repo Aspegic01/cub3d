@@ -26,6 +26,8 @@
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 768
 # define WIN_TITLE "Cub3D"
+# define MAX_MAP_WIDTH 1000
+# define MAX_MAP_HEIGHT 1000
 
 typedef struct s_v2 {
   int32_t x;
@@ -110,6 +112,7 @@ int     check_map_surrounded_by_walls(t_map *map);
 char    *extract_path(char *line);
 int     parse_color(char *line, int *r, int *g, int *b);
 int     load_texture(char *line, t_map *map);
+int     check_duplicate_element(char *line, t_map *map);
 
 // Player initialization functions
 void    set_player_direction(t_player *player, char direction);
