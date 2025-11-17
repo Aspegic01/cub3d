@@ -34,7 +34,7 @@ int store_map_line(char *line, t_map *map, int line_index)
 	int i;
 
 	len = ft_strlen(line);
-	if (line[len - 1] == '\n')
+	if (len > 0 && line[len - 1] == '\n')
 		len--;
 	map->grid[line_index] = malloc(sizeof(char) * (len + 1));
 	if (!map->grid[line_index])

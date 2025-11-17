@@ -26,6 +26,8 @@
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 768
 # define WIN_TITLE "Cub3D"
+# define MAX_MAP_WIDTH 1000
+# define MAX_MAP_HEIGHT 1000
 
 typedef struct s_v2 {
   int32_t x;

@@ -105,6 +105,13 @@ int	process_line(char *line, t_map *map, int fd)
 			close(fd);
 			return (ft_putstr_fd("Error\nInvalid character in map\n", 2), -1);
 		}
+		if (map->height >= MAX_MAP_HEIGHT)
+		{
+			free_textures(map);
+			free(map);
+			close(fd);
+			return (ft_putstr_fd("Error\nMap height exceeds maximum\n", 2), -1);
+		}
 		map->height++;
 	}
 	return (0);
@@ -146,6 +153,12 @@ int	validate_final_map(t_map *map)
 		free_textures(map);
 		free(map);
 		return (ft_putstr_fd("Error\nNo map found\n", 2), -1);
+	}
+	if (map->height > MAX_MAP_HEIGHT || map->width > MAX_MAP_WIDTH)
+	{
+		free_textures(map);
+		free(map);
+		return (ft_putstr_fd("Error\nMap dimensions too large\n", 2), -1);
 	}
 	if (!validate_texture_files(map))
 	{

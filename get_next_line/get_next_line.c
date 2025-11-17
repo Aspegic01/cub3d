@@ -41,7 +41,7 @@ char	*read_from_fd(int fd, char **buffer)
 		new_buffer = ft_strjoin(*buffer, temp);
 		free(*buffer);
 		if (!new_buffer)
-			return (free(*buffer), free(temp), NULL);
+			return (free(temp), NULL);
 		*buffer = new_buffer;
 	}
 	free(temp);
