@@ -31,6 +31,8 @@ char	*extract_path(char *line)
 	while (line[end] && line[end] != '\n' && line[end] != ' ' && line[end] != '\t')
 		end++;
 	len = end - start;
+	if (len == 0)
+		return (NULL);
 	path = malloc(sizeof(char) * (len + 1));
 	if (!path)
 		return (NULL);
@@ -129,18 +131,79 @@ int	parse_color(char *line, int *r, int *g, int *b)
 
 int	load_texture(char *line, t_map *map)
 {
+	char	*path;
+
 	if (ft_strncmp(line, "NO ", 3) == 0)
-		map->textures.north = extract_path(line);
+	{
+		if (map->textures.north)
+			return (0);
+		path = extract_path(line);
+		if (!path)
+			return (0);
+		map->textures.north = path;
+	}
 	else if (ft_strncmp(line, "SO ", 3) == 0)
-		map->textures.south = extract_path(line);
+	{
+		if (map->textures.south)
+			return (0);
+		path = extract_path(line);
+		if (!path)
+			return (0);
+		map->textures.south = path;
+	}
 	else if (ft_strncmp(line, "WE ", 3) == 0)
-		map->textures.west = extract_path(line);
+	{
+		if (map->textures.west)
+			return (0);
+		path = extract_path(line);
+		if (!path)
+			return (0);
+		map->textures.west = path;
+	}
 	else if (ft_strncmp(line, "EA ", 3) == 0)
-		map->textures.east = extract_path(line);
+	{
+		if (map->textures.east)
+			return (0);
+		path = extract_path(line);
+		if (!path)
+			return (0);
+		map->textures.east = path;
+	}
 	else if (ft_strncmp(line, "F ", 2) == 0)
+	{
+		if (map->colors.floor_r != -1)
+			return (0);
 		return (parse_color(line, &map->colors.floor_r, &map->colors.floor_g, &map->colors.floor_b));
+	}
 	else if (ft_strncmp(line, "C ", 2) == 0)
+	{
+		if (map->colors.ceiling_r != -1)
+			return (0);
 		return (parse_color(line, &map->colors.ceiling_r, &map->colors.ceiling_g, &map->colors.ceiling_b));
+	}
+	return (1);
+}
+
+int	validate_texture_files(t_map *map)
+{
+	int	fd;
+
+	fd = open(map->textures.north, O_RDONLY);
+	if (fd < 0)
+		return (ft_putstr_fd("Error\nNorth texture file not found or unreadable\n", 2), 0);
+	close(fd);
+	fd = open(map->textures.south, O_RDONLY);
+	if (fd < 0)
+		return (ft_putstr_fd("Error\nSouth texture file not found or unreadable\n", 2), 0);
+	close(fd);
+	fd = open(map->textures.west, O_RDONLY);
+	if (fd < 0)
+		return (ft_putstr_fd("Error\nWest texture file not found or unreadable\n", 2), 0);
+	close(fd);
+	fd = open(map->textures.east, O_RDONLY);
+	if (fd < 0)
+		return (ft_putstr_fd("Error\nEast texture file not found or unreadable\n", 2), 0);
+	close(fd);
 	return (1);
 }
 

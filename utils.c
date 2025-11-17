@@ -187,6 +187,7 @@ int load_map_data(char *map_file, t_map *map)
 				{
 					free(line);
 					close(fd);
+					gnl_free_buffer();
 					return (0);
 				}
 				map_line_index++;
@@ -197,6 +198,7 @@ int load_map_data(char *map_file, t_map *map)
 		line = get_next_line(fd);
 	}
 	close(fd);
+	gnl_free_buffer();
 	return (1);
 }
 

@@ -23,7 +23,7 @@ static int	parse_map_file(char *map_file, t_map *map)
 		return (ft_putstr_fd("Error\nCannot open file\n", 2), -1);
 	line = get_next_line(fd);
 	if (!line)
-		return (close(fd), ft_putstr_fd("Error\nEmpty file\n", 2), -1);
+		return (close(fd), gnl_free_buffer(), ft_putstr_fd("Error\nEmpty file\n", 2), -1);
 	while (line)
 	{
 		result = process_line(line, map, fd);
@@ -37,7 +37,7 @@ static int	parse_map_file(char *map_file, t_map *map)
 		free(line);
 		line = get_next_line(fd);
 	}
-	return (close(fd), 0);
+	return (close(fd), gnl_free_buffer(), 0);
 }
 
 static int	setup_map_grid(char *map_file, t_map *map)
@@ -76,6 +76,11 @@ t_map	*read_map(char *map_file)
 	result = validate_final_map(map);
 	if (result == -1)
 		return (NULL);
+	if (!validate_texture_files(map))
+	{
+		free_textures(map);
+		return (free(map), NULL);
+	}
 	if (setup_map_grid(map_file, map) == -1)
 	{
 		free_map_grid(map);
@@ -99,7 +104,7 @@ int	main(int ac, char *av[])
 
 	if (ac != 2)
 		return (ft_putstr_fd("Error\nInvalid number of arguments\n", 2), 1);
-	if (strcmp(av[1] + ft_strlen(av[1]) - 4, ".cub") != 0)
+	if (ft_strlen(av[1]) < 5 || strcmp(av[1] + ft_strlen(av[1]) - 4, ".cub") != 0)
 		return (ft_putstr_fd("Error\nInvalid file extension\n", 2), 1);
 	map = read_map(av[1]);
 	if (!map)

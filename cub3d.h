@@ -110,6 +110,7 @@ int     check_map_surrounded_by_walls(t_map *map);
 char    *extract_path(char *line);
 int     parse_color(char *line, int *r, int *g, int *b);
 int     load_texture(char *line, t_map *map);
+int     validate_texture_files(t_map *map);
 
 // Player initialization functions
 void    set_player_direction(t_player *player, char direction);
