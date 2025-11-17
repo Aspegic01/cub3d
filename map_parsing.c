@@ -117,6 +117,11 @@ int	validate_final_map(t_map *map)
 		free(map);
 		return (ft_putstr_fd("Error\nNo map found\n", 2), -1);
 	}
-	
+	if (map->height < 3)
+	{
+		free_textures(map);
+		free(map);
+		return (ft_putstr_fd("Error\nMap too small (minimum 3 rows)\n", 2), -1);
+	}
 	return (0);
 }

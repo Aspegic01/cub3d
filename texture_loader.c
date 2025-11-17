@@ -184,10 +184,32 @@ int	load_texture(char *line, t_map *map)
 	return (1);
 }
 
+static int	check_texture_extension(char *path)
+{
+	int	len;
+
+	len = ft_strlen(path);
+	if (len < 5)
+		return (0);
+	if (ft_strncmp(path + len - 4, ".xpm", 4) == 0)
+		return (1);
+	if (len >= 5 && ft_strncmp(path + len - 4, ".png", 4) == 0)
+		return (1);
+	return (0);
+}
+
 int	validate_texture_files(t_map *map)
 {
 	int	fd;
 
+	if (!check_texture_extension(map->textures.north))
+		return (ft_putstr_fd("Error\nNorth texture must be .xpm or .png\n", 2), 0);
+	if (!check_texture_extension(map->textures.south))
+		return (ft_putstr_fd("Error\nSouth texture must be .xpm or .png\n", 2), 0);
+	if (!check_texture_extension(map->textures.west))
+		return (ft_putstr_fd("Error\nWest texture must be .xpm or .png\n", 2), 0);
+	if (!check_texture_extension(map->textures.east))
+		return (ft_putstr_fd("Error\nEast texture must be .xpm or .png\n", 2), 0);
 	fd = open(map->textures.north, O_RDONLY);
 	if (fd < 0)
 		return (ft_putstr_fd("Error\nNorth texture file not found or unreadable\n", 2), 0);

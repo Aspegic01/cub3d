@@ -50,6 +50,11 @@ static int	setup_map_grid(char *map_file, t_map *map)
 		return (ft_putstr_fd("Error\nFailed to load map data\n", 2), -1);
 	}
 	fix_zero_space_to_zero(map);
+	if (map->width < 3)
+	{
+		free_map_grid(map);
+		return (ft_putstr_fd("Error\nMap too small (minimum 3 columns)\n", 2), -1);
+	}
 	return (0);
 }
 
