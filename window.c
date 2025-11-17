@@ -80,13 +80,40 @@ void	capture_keys(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-		game->map->player_position.x = clamp(game->map->img->width - game->map->cell_size, game->map->player_position.x, 1);
+	{
+		int32_t player_size = game->map->cell_size * 0.5;
+		int32_t x = (game->map->player_position.x + player_size + 1) / game->map->cell_size;
+		int32_t y = (game->map->player_position.y + player_size) / game->map->cell_size;
+		if (game->map->grid[y][x] == '0') {
+			game->map->player_position.x += 1;
+		}
+	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-		game->map->player_position.x = clamp(0, game->map->player_position.x, -1);
+	{
+		int32_t x = (game->map->player_position.x - 1) / game->map->cell_size;
+		int32_t y = (game->map->player_position.y) / game->map->cell_size;
+		printf("%d %d\n", x, y);
+		if (game->map->grid[y][x] == '0') {
+			game->map->player_position.x -= 1;
+		}
+	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-		game->map->player_position.y = clamp(game->map->img->height - game->map->cell_size, game->map->player_position.y, 1);
+	{
+		int32_t player_size = game->map->cell_size * 0.5;
+		int32_t x = (game->map->player_position.x + player_size) / game->map->cell_size;
+		int32_t y = (game->map->player_position.y + player_size + 1) / game->map->cell_size;
+		if (game->map->grid[y][x] == '0') {
+			game->map->player_position.y += 1;
+		}
+	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-		game->map->player_position.y = clamp(0, game->map->player_position.y, -1);
+	{
+		int32_t x = game->map->player_position.x / game->map->cell_size;
+		int32_t y = (game->map->player_position.y - 1) / game->map->cell_size;
+		if (game->map->grid[y][x] == '0') {
+			game->map->player_position.y -= 1;
+		}
+	}
 }
 
 static void	start(void *param)
