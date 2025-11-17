@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 09:58:35 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/25 11:40:02 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/11/07 09:46:30 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,34 +88,34 @@ t_map	*read_map(char *map_file)
 		free_textures(map);
 		return (free(map), NULL);
 	}
-	map->player = player;
 	return (map);
 }
 
-int	main(int ac, char *av[])
+int main(int ac, char *av[])
 {
-	t_game	game;
-	t_map	*map;
-
-	if (ac != 2)
-		return (ft_putstr_fd("Error\nInvalid number of arguments\n", 2), 1);
-	if (ft_strlen(av[1]) < 4 || strcmp(av[1] + ft_strlen(av[1]) - 4, ".cub") != 0)
-		return (ft_putstr_fd("Error\nInvalid file extension\n", 2), 1);
-	map = read_map(av[1]);
-	if (!map)
-		return (1);
-	game.map = map;
-	if (init_window(&game) == -1)
-	{
-		free_textures(map);
-		free_map_grid(map);
-		free(map);
-		return (1);
-	}
-	mlx_loop(game.mlx);
-	mlx_terminate(game.mlx);
-	free_textures(map);
-	free_map_grid(map);
-	free(map);
-	return (0);
+    t_game  game;
+    t_map   *map;
+    
+    if (ac != 2)
+        return (ft_putstr_fd("Error\nInvalid number of arguments\n", 2), 1);
+    if (strcmp(av[1] + ft_strlen(av[1]) - 4, ".cub") != 0)
+        return (ft_putstr_fd("Error\nInvalid file extension\n", 2), 1);
+    map = read_map(av[1]);
+    if (!map)
+        return (1);
+    game.map = map;
+	/* Debug: print loaded map to stdout */
+	print_map(map);
+    if (init_window(&game) == -1)
+    {
+        free_textures(map);
+        free_map_grid(map);
+        free(map);
+        return (1);
+    }
+    mlx_loop(game.mlx);
+    free_textures(map);
+    free_map_grid(map);
+    free(map);
+    return (0);
 }

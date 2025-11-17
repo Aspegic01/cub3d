@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 10:00:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/11/07 09:46:30 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,16 @@
 # include <stdbool.h>
 # include "./get_next_line/get_next_line.h"
 # include "./libft/libft.h"
-# include "./include/minilibx/include/MLX42/MLX42.h"
+# include "./minilibx-linux/mlx.h"
 
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 768
 # define WIN_TITLE "Cub3D"
-# define MAX_MAP_WIDTH 1000
-# define MAX_MAP_HEIGHT 1000
-
-typedef struct s_v2 {
-  int32_t x;
-  int32_t y;
-} t_v2;
 
 typedef struct s_player
 {
-    int32_t x;
-    int32_t y;
+    double  x;
+    double  y;
     double  dir_x;
     double  dir_y;
     double  plane_x;
@@ -70,21 +63,16 @@ typedef struct s_map
     int         elements_count;
     t_textures  textures;
     t_colors    colors;
-    mlx_image_t *img;
-    int32_t cell_size;
-    t_v2 position;
-    t_player player;
-    t_v2 player_position;
-    bool run;
 }               t_map;
 
 typedef struct s_game
 {
-    mlx_t *mlx;
+    void    *mlx;
     void    *win;
-    mlx_image_t *canvas;
+    void    *img;
     char    *addr;
     int     bits_per_pixel;
+    int     line_length;
     int     endian;
     t_map   *map;
 }               t_game;
@@ -112,7 +100,6 @@ int     check_map_surrounded_by_walls(t_map *map);
 char    *extract_path(char *line);
 int     parse_color(char *line, int *r, int *g, int *b);
 int     load_texture(char *line, t_map *map);
-int     check_duplicate_element(char *line, t_map *map);
 
 // Player initialization functions
 void    set_player_direction(t_player *player, char direction);
@@ -128,24 +115,7 @@ void    free_player(void);
 
 // Map utility functions
 void    fix_zero_space_to_zero(t_map *map);
-
-// Mini map
-int minimap_setup(t_game *game);
-void	minimap_render(t_map *scene);
-
-// Engine
-void	render_game(t_game *game);
-void	draw_line(mlx_image_t *grid, t_v2 v1, t_v2 v2, uint32_t color);
-
-// Vector functions
-t_v2    vec_new(int32_t x, int32_t y);
-t_v2    vec_zero(void);
-void    vec_print(char *label, t_v2 this);
-t_v2    vec_scale(t_v2 this, float factor);
-t_v2    vec_add(t_v2 this, t_v2 that);
-t_v2    vec_sub(t_v2 this, t_v2 that);
-t_v2    vec_div(t_v2 this, t_v2 that);
-t_v2    vec_mul(t_v2 this, t_v2 that);
+void    print_map(t_map *map);
 
 // Window and game functions
 int     init_window(t_game *game);

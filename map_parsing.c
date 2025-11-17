@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:05:06 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,19 +66,18 @@ int	validate_map_line(char *line)
 
 int	process_line(char *line, t_map *map, int fd)
 {
+	int	i;
+
+	i = 0;
+	while (line[i] == ' ' || line[i] == '\t')
+		i++;
+	printf("%d\n", i);
 	if (ft_strncmp(line, "\n", ft_strlen(line)) == 0)
 		return (0);
 	if (map->elements_count < 6)
 	{
 		if (is_valid_element(line))
 		{
-			if (!check_duplicate_element(line, map))
-			{
-				free_textures(map);
-				free(map);
-				close(fd);
-				return (ft_putstr_fd("Error\nDuplicate element definition\n", 2), -1);
-			}
 			if (!load_texture(line, map))
 			{
 				free_textures(map);
@@ -105,39 +104,9 @@ int	process_line(char *line, t_map *map, int fd)
 			close(fd);
 			return (ft_putstr_fd("Error\nInvalid character in map\n", 2), -1);
 		}
-		if (map->height >= MAX_MAP_HEIGHT)
-		{
-			free_textures(map);
-			free(map);
-			close(fd);
-			return (ft_putstr_fd("Error\nMap height exceeds maximum\n", 2), -1);
-		}
 		map->height++;
 	}
 	return (0);
-}
-
-static int	validate_texture_files(t_map *map)
-{
-	int	fd;
-
-	fd = open(map->textures.north, O_RDONLY);
-	if (fd < 0)
-		return (ft_putstr_fd("Error\nNorth texture file not accessible\n", 2), 0);
-	close(fd);
-	fd = open(map->textures.south, O_RDONLY);
-	if (fd < 0)
-		return (ft_putstr_fd("Error\nSouth texture file not accessible\n", 2), 0);
-	close(fd);
-	fd = open(map->textures.west, O_RDONLY);
-	if (fd < 0)
-		return (ft_putstr_fd("Error\nWest texture file not accessible\n", 2), 0);
-	close(fd);
-	fd = open(map->textures.east, O_RDONLY);
-	if (fd < 0)
-		return (ft_putstr_fd("Error\nEast texture file not accessible\n", 2), 0);
-	close(fd);
-	return (1);
 }
 
 int	validate_final_map(t_map *map)
@@ -154,17 +123,31 @@ int	validate_final_map(t_map *map)
 		free(map);
 		return (ft_putstr_fd("Error\nNo map found\n", 2), -1);
 	}
-	if (map->height > MAX_MAP_HEIGHT || map->width > MAX_MAP_WIDTH)
-	{
-		free_textures(map);
-		free(map);
-		return (ft_putstr_fd("Error\nMap dimensions too large\n", 2), -1);
-	}
-	if (!validate_texture_files(map))
-	{
-		free_textures(map);
-		free(map);
-		return (-1);
-	}
+	
 	return (0);
+}
+
+void	print_map(t_map *map)
+{
+	int i;
+
+	if (!map)
+	{
+		ft_putstr_fd("(null map)\n", 1);
+		return;
+	}
+	if (!map->grid)
+	{
+		ft_putstr_fd("(empty grid)\n", 1);
+		return;
+	}
+	i = 0;
+	while (i < map->height && map->grid[i])
+	{
+		ft_putstr_fd(map->grid[i], 1);
+		/* ensure newline at end of row for readability */
+		if (map->grid[i][ft_strlen(map->grid[i]) - 1] != '\n')
+			ft_putstr_fd("\n", 1);
+		i++;
+	}
 }

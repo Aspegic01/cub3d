@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/08/28 13:57:43 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/11/07 09:34:20 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ int	find_player_position(t_map *map, t_player *player)
 				map->grid[i][j] == 'E' || map->grid[i][j] == 'W')
 			{
 				direction = map->grid[i][j];
-				player->x = j;
-				player->y = i;
+				player->x = j + 0.5;
+				player->y = i + 0.5;
 				map->grid[i][j] = '0';
 				set_player_direction(player, direction);
 				player_count++;
@@ -84,10 +84,10 @@ int	init_player(t_map *map, t_player *player)
 		return (ft_putstr_fd("Error\nNo player starting position found\n", 2), -1);
 	if (player_count > 1)
 		return (ft_putstr_fd("Error\nMultiple player positions found\n", 2), -1);
-	// printf("Player initialized successfully!\n");
-	// printf("Position: (%.1f, %.1f)\n", player->x, player->y);
-	// printf("Direction: (%.2f, %.2f)\n", player->dir_x, player->dir_y);
-	// printf("Camera plane: (%.2f, %.2f)\n", player->plane_x, player->plane_y);
+	printf("Player initialized successfully!\n");
+	printf("Position: (%.1f, %.1f)\n", player->x, player->y);
+	printf("Direction: (%.2f, %.2f)\n", player->dir_x, player->dir_y);
+	printf("Camera plane: (%.2f, %.2f)\n", player->plane_x, player->plane_y);
 	
 	return (0);
 }
