@@ -72,6 +72,13 @@ int	process_line(char *line, t_map *map, int fd)
 	{
 		if (is_valid_element(line))
 		{
+			if (!check_duplicate_element(line, map))
+			{
+				free_textures(map);
+				free(map);
+				close(fd);
+				return (ft_putstr_fd("Error\nDuplicate element definition\n", 2), -1);
+			}
 			if (!load_texture(line, map))
 			{
 				free_textures(map);
@@ -103,6 +110,29 @@ int	process_line(char *line, t_map *map, int fd)
 	return (0);
 }
 
+static int	validate_texture_files(t_map *map)
+{
+	int	fd;
+
+	fd = open(map->textures.north, O_RDONLY);
+	if (fd < 0)
+		return (ft_putstr_fd("Error\nNorth texture file not accessible\n", 2), 0);
+	close(fd);
+	fd = open(map->textures.south, O_RDONLY);
+	if (fd < 0)
+		return (ft_putstr_fd("Error\nSouth texture file not accessible\n", 2), 0);
+	close(fd);
+	fd = open(map->textures.west, O_RDONLY);
+	if (fd < 0)
+		return (ft_putstr_fd("Error\nWest texture file not accessible\n", 2), 0);
+	close(fd);
+	fd = open(map->textures.east, O_RDONLY);
+	if (fd < 0)
+		return (ft_putstr_fd("Error\nEast texture file not accessible\n", 2), 0);
+	close(fd);
+	return (1);
+}
+
 int	validate_final_map(t_map *map)
 {
 	if (map->elements_count != 6)
@@ -117,6 +147,11 @@ int	validate_final_map(t_map *map)
 		free(map);
 		return (ft_putstr_fd("Error\nNo map found\n", 2), -1);
 	}
-	
+	if (!validate_texture_files(map))
+	{
+		free_textures(map);
+		free(map);
+		return (-1);
+	}
 	return (0);
 }

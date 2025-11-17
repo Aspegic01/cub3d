@@ -127,16 +127,55 @@ int	parse_color(char *line, int *r, int *g, int *b)
 	return (1);
 }
 
+int	check_duplicate_element(char *line, t_map *map)
+{
+	if (ft_strncmp(line, "NO ", 3) == 0 && map->textures.north)
+		return (0);
+	if (ft_strncmp(line, "SO ", 3) == 0 && map->textures.south)
+		return (0);
+	if (ft_strncmp(line, "WE ", 3) == 0 && map->textures.west)
+		return (0);
+	if (ft_strncmp(line, "EA ", 3) == 0 && map->textures.east)
+		return (0);
+	if (ft_strncmp(line, "F ", 2) == 0 && map->colors.floor_r != -1)
+		return (0);
+	if (ft_strncmp(line, "C ", 2) == 0 && map->colors.ceiling_r != -1)
+		return (0);
+	return (1);
+}
+
 int	load_texture(char *line, t_map *map)
 {
+	char	*path;
+
 	if (ft_strncmp(line, "NO ", 3) == 0)
-		map->textures.north = extract_path(line);
+	{
+		path = extract_path(line);
+		if (!path)
+			return (0);
+		map->textures.north = path;
+	}
 	else if (ft_strncmp(line, "SO ", 3) == 0)
-		map->textures.south = extract_path(line);
+	{
+		path = extract_path(line);
+		if (!path)
+			return (0);
+		map->textures.south = path;
+	}
 	else if (ft_strncmp(line, "WE ", 3) == 0)
-		map->textures.west = extract_path(line);
+	{
+		path = extract_path(line);
+		if (!path)
+			return (0);
+		map->textures.west = path;
+	}
 	else if (ft_strncmp(line, "EA ", 3) == 0)
-		map->textures.east = extract_path(line);
+	{
+		path = extract_path(line);
+		if (!path)
+			return (0);
+		map->textures.east = path;
+	}
 	else if (ft_strncmp(line, "F ", 2) == 0)
 		return (parse_color(line, &map->colors.floor_r, &map->colors.floor_g, &map->colors.floor_b));
 	else if (ft_strncmp(line, "C ", 2) == 0)
