@@ -114,12 +114,21 @@ int	init_window(t_game *game)
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
 	game->canvas = mlx_new_image(game->mlx, game->mlx->width, game->mlx->height);
-	if (!game->mlx)
+	if (!game->canvas)
+	{
+		mlx_terminate(game->mlx);
 		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
+	}
 	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
+	{
+		mlx_terminate(game->mlx);
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
+	}
 	if (minimap_setup(game) != 0)
+	{
+		mlx_terminate(game->mlx);
 		return (-1);
+	}
 	mlx_loop_hook(game->mlx, capture_keys, game);
 	mlx_loop_hook(game->mlx, start, game);
 	return (0);

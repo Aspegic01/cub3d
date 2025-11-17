@@ -7,17 +7,20 @@ static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color)
 
 	start = vec_new(pos.x, pos.y);
 	end = vec_new(pos.x + scene->cell_size, pos.y + scene->cell_size);
-	while (start.y < end.y)
+	while (start.y < end.y && start.y < (int32_t)scene->img->height)
 	{
 		start.x = pos.x;
-		while (start.x < end.x)
+		while (start.x < end.x && start.x < (int32_t)scene->img->width)
 		{
-			if (end.y - start.y == scene->cell_size || end.x - start.x == scene->cell_size)
+			if (start.x >= 0 && start.y >= 0)
 			{
-				mlx_put_pixel(scene->img, start.x, start.y, 0x000000FF);
-			}
-			else {
-				mlx_put_pixel(scene->img, start.x, start.y, color);
+				if (end.y - start.y == scene->cell_size || end.x - start.x == scene->cell_size)
+				{
+					mlx_put_pixel(scene->img, start.x, start.y, 0x000000FF);
+				}
+				else {
+					mlx_put_pixel(scene->img, start.x, start.y, color);
+				}
 			}
 			start.x++;
 		}
@@ -35,12 +38,13 @@ static void	render_player(t_map *scene, t_v2 pos, uint32_t color)
 	cell_size = scene->cell_size * 0.5;
 	start = vec_new(pos.x, pos.y);
 	end = vec_new(pos.x + cell_size, pos.y + cell_size);
-	while (start.y <= end.y)
+	while (start.y <= end.y && start.y < (int32_t)scene->img->height)
 	{
 		start.x = pos.x;
-		while (start.x <= end.x)
+		while (start.x <= end.x && start.x < (int32_t)scene->img->width)
 		{
-			mlx_put_pixel(scene->img, start.x, start.y, color);
+			if (start.x >= 0 && start.y >= 0)
+				mlx_put_pixel(scene->img, start.x, start.y, color);
 			start.x++;
 		}
 		start.y++;

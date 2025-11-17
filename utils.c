@@ -209,10 +209,21 @@ static int is_walkable_char(char c)
 
 static int is_space_adjacent_to_walkable(t_map *map, int i, int j)
 {
-	if (i > 0 && is_walkable_char(map->grid[i - 1][j]))
-		return (1);
-	if (i < map->height - 1 && is_walkable_char(map->grid[i + 1][j]))
-		return (1);
+	int	len_up;
+	int	len_down;
+
+	if (i > 0)
+	{
+		len_up = ft_strlen(map->grid[i - 1]);
+		if (j < len_up && is_walkable_char(map->grid[i - 1][j]))
+			return (1);
+	}
+	if (i < map->height - 1)
+	{
+		len_down = ft_strlen(map->grid[i + 1]);
+		if (j < len_down && is_walkable_char(map->grid[i + 1][j]))
+			return (1);
+	}
 	if (j > 0 && is_walkable_char(map->grid[i][j - 1]))
 		return (1);
 	if (map->grid[i][j + 1] && is_walkable_char(map->grid[i][j + 1]))
