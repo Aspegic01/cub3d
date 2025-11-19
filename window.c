@@ -81,36 +81,41 @@ void	capture_keys(void *param)
 		close_window(game);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
 	{
-		int32_t player_size = game->map->cell_size * 0.5;
-		int32_t x = (game->map->player_position.x + player_size + 1) / game->map->cell_size;
-		int32_t y = (game->map->player_position.y + player_size) / game->map->cell_size;
-		if (game->map->grid[y][x] == '0') {
+		int32_t box = game->map->cell_size * 0.5;
+		int32_t x = (game->map->player_position.x + box + 1) / game->map->cell_size;
+		int32_t y1 = (game->map->player_position.y) / game->map->cell_size;
+		int32_t y2 = (game->map->player_position.y + box) / game->map->cell_size;
+		if (game->map->grid[y1][x] == '0' && game->map->grid[y2][x] == '0') {
 			game->map->player_position.x += 1;
 		}
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
 	{
+		int32_t box = game->map->cell_size * 0.5;
 		int32_t x = (game->map->player_position.x - 1) / game->map->cell_size;
-		int32_t y = (game->map->player_position.y) / game->map->cell_size;
-		printf("%d %d\n", x, y);
-		if (game->map->grid[y][x] == '0') {
+		int32_t y1 = game->map->player_position.y / game->map->cell_size;
+		int32_t y2 = (game->map->player_position.y + box) / game->map->cell_size;
+		if (game->map->grid[y1][x] == '0' && game->map->grid[y2][x] == '0') {
 			game->map->player_position.x -= 1;
 		}
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
 	{
-		int32_t player_size = game->map->cell_size * 0.5;
-		int32_t x = (game->map->player_position.x + player_size) / game->map->cell_size;
-		int32_t y = (game->map->player_position.y + player_size + 1) / game->map->cell_size;
-		if (game->map->grid[y][x] == '0') {
+		int32_t box = game->map->cell_size * 0.5;
+		int32_t x1 = game->map->player_position.x / game->map->cell_size;
+		int32_t x2 = (game->map->player_position.x + box) / game->map->cell_size;
+		int32_t y = (game->map->player_position.y + box + 1) / game->map->cell_size;
+		if (game->map->grid[y][x1] == '0' &&  game->map->grid[y][x2] == '0') {
 			game->map->player_position.y += 1;
 		}
 	}
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
 	{
-		int32_t x = game->map->player_position.x / game->map->cell_size;
+		int32_t box = game->map->cell_size * 0.5;
+		int32_t x1  = game->map->player_position.x / game->map->cell_size;
+		int32_t x2 = (game->map->player_position.x + box) / game->map->cell_size;
 		int32_t y = (game->map->player_position.y - 1) / game->map->cell_size;
-		if (game->map->grid[y][x] == '0') {
+		if (game->map->grid[y][x1] == '0' && game->map->grid[y][x2] == '0') {
 			game->map->player_position.y -= 1;
 		}
 	}
