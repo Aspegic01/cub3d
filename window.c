@@ -19,46 +19,41 @@ int	close_window(t_game *game)
 	return (0);
 }
 
-int32_t xmove_player(t_map *map, int32_t value)
+static void	move_player_in_dir(t_map *map, double move_x, double move_y)
 {
-	int32_t box = map->cell_size * 0.5;
-	int32_t y1 = map->player_position.y / map->cell_size;
-	int32_t y2 = (map->player_position.y + box) / map->cell_size;
+	int32_t	box;
+	int32_t	new_x;
+	int32_t	new_y;
+	int32_t	grid_x1, grid_x2, grid_y1, grid_y2;
+	double	move_speed;
 
-	if (value > 0)
+	move_speed = 2.0; 
+	box = map->cell_size * 0.5;
+	
+	new_x = map->player_position.x + (int32_t)(move_x * move_speed);
+	new_y = map->player_position.y + (int32_t)(move_y * move_speed);
+	
+	grid_x1 = new_x / map->cell_size;
+	grid_x2 = (new_x + box) / map->cell_size;
+	grid_y1 = new_y / map->cell_size;
+	grid_y2 = (new_y + box) / map->cell_size;
+	
+	if (grid_y1 >= 0 && grid_y2 < map->height && 
+	    grid_x1 >= 0 && grid_x2 < map->width)
 	{
-		int32_t x = (map->player_position.x + box + value) / map->cell_size;
-		if (map->grid[y1][x] == '0' && map->grid[y2][x] == '0')
-			map->player_position.x += value;
-	} else
-	{
-		int32_t x = (map->player_position.x + value) / map->cell_size;
-		if (map->grid[y1][x] == '0' && map->grid[y2][x] == '0')
-			map->player_position.x += value;
-	}
-	return map->player_position.x;
-}
-
-int32_t ymove_player(t_map *map, int32_t value)
-{
-	int32_t box = map->cell_size * 0.5;
-	int32_t x1 = map->player_position.x / map->cell_size;
-	int32_t x2 = (map->player_position.x + box) / map->cell_size;
-
-	if (value > 0)
-	{
-		int32_t y = (map->player_position.y + box + value) / map->cell_size;
-		if (map->grid[y][x1] == '0' &&  map->grid[y][x2] == '0')
-			map->player_position.y += value;
-	}
-	else
-	{
-		int32_t y = (map->player_position.y + value) / map->cell_size;
-		if (map->grid[y][x1] == '0' && map->grid[y][x2] == '0') {
-			map->player_position.y += value;
+		int line_len1 = ft_strlen(map->grid[grid_y1]);
+		int line_len2 = ft_strlen(map->grid[grid_y2]);
+		
+		if (grid_x1 < line_len1 && grid_x2 < line_len2 &&
+		    map->grid[grid_y1][grid_x1] == '0' && 
+		    map->grid[grid_y1][grid_x2] == '0' &&
+		    map->grid[grid_y2][grid_x1] == '0' && 
+		    map->grid[grid_y2][grid_x2] == '0')
+		{
+			map->player_position.x = new_x;
+			map->player_position.y = new_y;
 		}
 	}
-	return map->player_position.y;
 }
 
 static void	rotate_player(t_map *map, double angle)
@@ -87,14 +82,14 @@ void	capture_keys(void *param)
 	rot_speed = 0.05;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-		game->map->player_position.x = xmove_player(game->map, 1);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-		game->map->player_position.x = xmove_player(game->map, -1);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-		game->map->player_position.y = ymove_player(game->map, 1);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-		game->map->player_position.y = ymove_player(game->map, -1);
+		move_player_in_dir(game->map, game->map->player.dir_x, game->map->player.dir_y);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
+		move_player_in_dir(game->map, -game->map->player.dir_x, -game->map->player.dir_y);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
+		move_player_in_dir(game->map, -game->map->player.plane_x, -game->map->player.plane_y);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
+		move_player_in_dir(game->map, game->map->player.plane_x, game->map->player.plane_y);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
 		rotate_player(game->map, -rot_speed);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
