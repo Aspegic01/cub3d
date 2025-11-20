@@ -25,6 +25,17 @@ static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color, bool walkabl
 	}
 }
 
+static void drawDirLine(t_map *scene, t_v2 p_pos) {
+	int32_t	cell;
+	t_v2	direction;
+	t_v2	center;
+
+	cell = scene->cell_size;
+	center = vec_new(p_pos.x + (cell * 0.25), p_pos.y + (cell * 0.25));
+	direction = vec_new(scene->player.dir_x * cell, scene->player.dir_y * cell);
+	draw_line(scene->img, center, vec_add(center, direction),0x0000FFFF);
+}
+
 static void	render_player(t_map *scene, t_v2 pos, uint32_t color)
 {
 	t_v2 start;
@@ -44,6 +55,8 @@ static void	render_player(t_map *scene, t_v2 pos, uint32_t color)
 		}
 		start.y++;
 	}
+
+	drawDirLine(scene, pos);
 }
 
 void	minimap_render(t_map *scene)
@@ -69,8 +82,6 @@ void	minimap_render(t_map *scene)
 	}
 
 	render_player(scene, scene->player_position, 0x0000FFFF);
-	t_v2 direction = vec_new(scene->player_position.x + scene->cell_size, scene->player_position.y + scene->cell_size);
-	draw_line(scene->img, scene->player_position, direction, 0x0000FFFF);
 }
 
 static void	map_print(t_map *map)
