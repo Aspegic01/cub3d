@@ -33,7 +33,7 @@ static void drawDirLine(t_map *scene, t_v2 p_pos) {
 	cell = scene->cell_size;
 	center = vec_new(p_pos.x + (cell * 0.25), p_pos.y + (cell * 0.25));
 	direction = vec_new(scene->player.dir_x * cell, scene->player.dir_y * cell);
-	draw_line(scene->img, center, vec_add(center, direction),0x0000FFFF);
+	draw_line(scene->img, center, vec_add(center, direction), 0x0000FFFF);
 }
 
 static void	render_player(t_map *scene, t_v2 pos, uint32_t color)
@@ -63,7 +63,7 @@ void	minimap_render(t_map *scene)
 {
 	t_v2	iter;
 	t_v2	pos;
-
+	
 	iter = vec_zero();
 	while (iter.y < scene->height)
 	{
