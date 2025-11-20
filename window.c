@@ -61,11 +61,30 @@ int32_t ymove_player(t_map *map, int32_t value)
 	return map->player_position.y;
 }
 
+static void	rotate_player(t_map *map, double angle)
+{
+	double	old_dir_x;
+	double	old_plane_x;
+	double	cos_a;
+	double	sin_a;
+
+	old_dir_x = map->player.dir_x;
+	old_plane_x = map->player.plane_x;
+	cos_a = cos(angle);
+	sin_a = sin(angle);
+	map->player.dir_x = old_dir_x * cos_a - map->player.dir_y * sin_a;
+	map->player.dir_y = old_dir_x * sin_a + map->player.dir_y * cos_a;
+	map->player.plane_x = old_plane_x * cos_a - map->player.plane_y * sin_a;
+	map->player.plane_y = old_plane_x * sin_a + map->player.plane_y * cos_a;
+}
+
 void	capture_keys(void *param)
 {
 	t_game	*game;
+	double	rot_speed;
 
 	game = param;
+	rot_speed = 0.05;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
@@ -76,6 +95,10 @@ void	capture_keys(void *param)
 		game->map->player_position.y = ymove_player(game->map, 1);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
 		game->map->player_position.y = ymove_player(game->map, -1);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
+		rotate_player(game->map, -rot_speed);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+		rotate_player(game->map, rot_speed);
 }
 
 static void	start(void *param)
