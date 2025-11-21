@@ -25,38 +25,46 @@ static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color, bool walkabl
 	}
 }
 
-static void drawDirLine(t_map *scene, t_v2 p_pos) {
+static void drawDirLine(t_map *scene, double p_pos_x, double p_pos_y) {
 	int32_t	cell;
-	t_v2	direction;
-	t_v2	center;
+	double	directionx;
+	double	directiony;
+	double	centerx;
+	double	centery;
 
 	cell = scene->cell_size;
-	center = vec_new(p_pos.x + (cell * 0.25), p_pos.y + (cell * 0.25));
-	direction = vec_new(scene->player.dir_x * cell, scene->player.dir_y * cell);
-	draw_line(scene->img, center, vec_add(center, direction), 0x0000FFFF);
+	centerx = p_pos_x + (cell * 0.25);
+	centery = p_pos_y + (cell * 0.25);
+	directionx = scene->player.dir_x * cell;
+	directiony = scene->player.dir_y * cell;
+	draw_line(scene->img, centerx, centery, centerx + directionx, centery + directiony, 0x0000FFFF);
 }
 
-static void	render_player(t_map *scene, t_v2 pos, uint32_t color)
+static void	render_player(t_map *scene, double pos_x, double pos_y, uint32_t color)
 {
-	t_v2 start;
-	t_v2 end;
+	double startx;
+	double starty;
+	double endx;
+	double endy;
 	int32_t	cell_size;
 
 	cell_size = scene->cell_size * 0.5;
-	start = vec_new(pos.x, pos.y);
-	end = vec_new(pos.x + cell_size, pos.y + cell_size);
-	while (start.y <= end.y)
+	startx = pos_x;
+	starty = pos_y;
+	endx = pos_x + cell_size;
+	endy = pos_y + cell_size;
+	while (starty <= endy)
 	{
-		start.x = pos.x;
-		while (start.x <= end.x)
+		startx = pos_x;
+		while (startx <= endx)
 		{
-			mlx_put_pixel(scene->img, start.x, start.y, color);
-			start.x++;
+			mlx_put_pixel(scene->img, startx, starty, color);
+			startx++;
 		}
-		start.y++;
+		starty++;
 	}
 
-	drawDirLine(scene, pos);
+	drawDirLine(scene, pos_x, pos_y);
 }
 
 void	minimap_render(t_map *scene)
@@ -81,7 +89,7 @@ void	minimap_render(t_map *scene)
 		iter.y++;
 	}
 
-	render_player(scene, scene->player_position, 0x0000FFFF);
+	render_player(scene, scene->player.x, scene->player.y, 0x0000FFFF);
 }
 
 static void	map_print(t_map *map)
@@ -109,14 +117,16 @@ int	minimap_setup(t_game *game)
 	int32_t	img_idx;
 
 	canvas = vec_new(game->mlx->width, game->mlx->height);
-	game->map->cell_size = canvas.x * 0.01;
+	game->map->cell_size = canvas.x * 0.02;
 	grid_dimensions = vec_new(game->map->width, game->map->height);
 	map_size = vec_scale(grid_dimensions, game->map->cell_size);
 	game->map->img = mlx_new_image(game->mlx, map_size.x, map_size.y);
 	if (!game->map->img)
 		return (ft_putstr_fd("Error\nFailed to initialize image\n", 2), -1);
 	game->map->position = vec_scale(canvas, 0.01);
-	game->map->player_position = vec_scale(vec_new(game->map->player.x, game->map->player.y), game->map->cell_size);
+	// game->map->player_position = vec_scale(vec_new(game->map->player.x, game->map->player.y), game->map->cell_size);
+	game->map->player.x = game->map->player.x * game->map->cell_size;
+	game->map->player.y = game->map->player.y * game->map->cell_size;
 	img_idx = mlx_image_to_window(game->mlx, game->map->img, game->map->position.x, game->map->position.y);
 	if (img_idx < 0)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);

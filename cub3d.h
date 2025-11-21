@@ -34,8 +34,8 @@ typedef struct s_v2 {
 
 typedef struct s_player
 {
-    int32_t x;
-    int32_t y;
+    double x;
+    double y;
     double  dir_x;
     double  dir_y;
     double  plane_x;
@@ -132,7 +132,7 @@ void	minimap_render(t_map *scene);
 
 // Engine
 void	render_game(t_game *game);
-void	draw_line(mlx_image_t *grid, t_v2 v1, t_v2 v2, uint32_t color);
+void	draw_line(mlx_image_t *grid, double v1_x, double v1_y, double v2_x, double v2_y, uint32_t color);
 
 // Vector functions
 t_v2    vec_new(int32_t x, int32_t y);

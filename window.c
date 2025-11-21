@@ -22,16 +22,16 @@ int	close_window(t_game *game)
 static void	move_player_in_dir(t_map *map, double move_x, double move_y)
 {
 	int32_t	box;
-	int32_t	new_x;
-	int32_t	new_y;
+	double	new_x;
+	double	new_y;
 	int32_t	grid_x1, grid_x2, grid_y1, grid_y2;
 	double	move_speed;
 
 	move_speed = 2.0; 
 	box = map->cell_size * 0.5;
 	
-	new_x = map->player_position.x + (int32_t)(move_x * move_speed);
-	new_y = map->player_position.y + (int32_t)(move_y * move_speed);
+	new_x = map->player.x + (move_x * move_speed);
+	new_y = map->player.y + (move_y * move_speed);
 	
 	grid_x1 = new_x / map->cell_size;
 	grid_x2 = (new_x + box) / map->cell_size;
@@ -50,8 +50,8 @@ static void	move_player_in_dir(t_map *map, double move_x, double move_y)
 		    map->grid[grid_y2][grid_x1] == '0' && 
 		    map->grid[grid_y2][grid_x2] == '0')
 		{
-			map->player_position.x = new_x;
-			map->player_position.y = new_y;
+			map->player.x = new_x;
+			map->player.y = new_y;
 		}
 	}
 }

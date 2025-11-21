@@ -1,6 +1,6 @@
 #include "../cub3d.h"
 
-void	draw_line(mlx_image_t *grid, t_v2 v1, t_v2 v2, uint32_t color)
+void	draw_line(mlx_image_t *grid, double v1_x, double v1_y, double v2_x, double v2_y, uint32_t color)
 {
 	double	delta_x;
 	double	delta_y;
@@ -11,18 +11,18 @@ void	draw_line(mlx_image_t *grid, t_v2 v1, t_v2 v2, uint32_t color)
 	double	y;
 	int32_t	i;
 
-	delta_x = (double)(v2.x - v1.x);
-	delta_y = (double)(v2.y - v1.y);
+	delta_x = (double)(v2_x - v1_x);
+	delta_y = (double)(v2_y - v1_y);
 	steps = fmax(fabs(delta_x), fabs(delta_y));
 	if (steps == 0)
 	{
-		mlx_put_pixel(grid, v1.x, v1.y, color);
+		mlx_put_pixel(grid, v1_x, v1_y, color);
 		return ;
 	}
 	incr_x = delta_x / steps;
 	incr_y = delta_y / steps;
-	x = (double)v1.x;
-	y = (double)v1.y;
+	x = v1_x;
+	y = v1_y;
 	i = 0;
 	while (i <= (int32_t)steps)
 	{
