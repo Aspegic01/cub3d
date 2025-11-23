@@ -21,30 +21,23 @@ int	close_window(t_game *game)
 
 static void	move_player_in_dir(t_map *map, t_v2f dir)
 {
-	t_v2f	new;
-	int32_t	x1, x2, y1, y2;
-	float_t	move_speed;
+	t_v2f	pos;
+	t_v2i	l;
+	t_v2i	r;
 
-	move_speed = 0.5;
-	new = vecf_add(map->player.position, vecf_scale(dir, move_speed));
-	x1 = new.x / map->cell_size;
-	x2 = (new.x + map->player_size) / map->cell_size;
-	y1 = new.y / map->cell_size;
-	y2 = (new.y + map->player_size) / map->cell_size;
-	
-	if (y1 >= 0 && y2 < map->height && x1 >= 0 && x2 < map->width)
-	{
-		int line1 = ft_strlen(map->grid[y1]);
-		if (x1 >= line1)
-			return ;
-		int line2 = ft_strlen(map->grid[y2]);
-		if (x2 >= line2)
-			return ;
-		if (map->grid[y1][x1] == '0' && map->grid[y1][x2] == '0' && map->grid[y2][x1] == '0' && map->grid[y2][x2] == '0')
-		{
-			map->player.position = new;
-		}
-	}
+	pos = vecf_add(map->player.position, vecf_scale(dir, 0.5));
+	l = veci_new(pos.x / map->cell_size, pos.y / map->cell_size);
+	r = veci_new((pos.x + map->player_size) / map->cell_size, (pos.y
+				+ map->player_size) / map->cell_size);
+	if (!(l.y >= 0 && r.y < map->height && l.x >= 0 && r.x < map->width))
+		return ;
+	if (l.x >= (int32_t)ft_strlen(map->grid[l.y]))
+		return ;
+	if (r.x >= (int32_t)ft_strlen(map->grid[r.y]))
+		return ;
+	if (map->grid[l.y][l.x] == '0' && map->grid[l.y][r.x] == '0'
+		&& map->grid[r.y][l.x] == '0' && map->grid[r.y][r.x] == '0')
+		map->player.position = pos;
 }
 
 static void	rotate_player(t_map *map, double angle)
@@ -73,7 +66,7 @@ void	capture_keys(void *param)
 	rot_speed = 0.05;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
-	if (mlx_is_key_down(game->mlx, MLX_KEY_W))	
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
 		move_player_in_dir(game->map, game->map->player.dir);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
 		move_player_in_dir(game->map, vecf_scale(game->map->player.dir, -1));
@@ -101,7 +94,8 @@ int	init_window(t_game *game)
 	game->mlx = mlx_init(16 * 100, 9 * 100, WIN_TITLE, false);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
-	game->canvas = mlx_new_image(game->mlx, game->mlx->width, game->mlx->height);
+	game->canvas = mlx_new_image(game->mlx, game->mlx->width,
+			game->mlx->height);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
 	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
