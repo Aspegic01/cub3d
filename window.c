@@ -19,51 +19,11 @@ int	close_window(t_game *game)
 	return (0);
 }
 
-static void	move_player_in_dir(t_map *map, t_v2f dir)
-{
-	t_v2f	pos;
-	t_v2i	l;
-	t_v2i	r;
-
-	pos = vecf_add(map->player.position, vecf_scale(dir, 0.5));
-	l = veci_new(pos.x / map->cell_size, pos.y / map->cell_size);
-	r = veci_new((pos.x + map->player_size) / map->cell_size, (pos.y
-				+ map->player_size) / map->cell_size);
-	if (!(l.y >= 0 && r.y < map->height && l.x >= 0 && r.x < map->width))
-		return ;
-	if (l.x >= (int32_t)ft_strlen(map->grid[l.y]))
-		return ;
-	if (r.x >= (int32_t)ft_strlen(map->grid[r.y]))
-		return ;
-	if (map->grid[l.y][l.x] == '0' && map->grid[l.y][r.x] == '0'
-		&& map->grid[r.y][l.x] == '0' && map->grid[r.y][r.x] == '0')
-		map->player.position = pos;
-}
-
-static void	rotate_player(t_map *map, double angle)
-{
-	float_t	cos_a;
-	float_t	sin_a;
-	t_v2f	new_dir;
-	t_v2f	new_plane;
-
-	cos_a = cosf(angle);
-	sin_a = sinf(angle);
-	new_dir.x = map->player.dir.x * cos_a - map->player.dir.y * sin_a;
-	new_dir.y = map->player.dir.x * sin_a + map->player.dir.y * cos_a;
-	new_plane.x = map->player.plane.x * cos_a - map->player.plane.y * sin_a;
-	new_plane.y = map->player.plane.x * sin_a + map->player.plane.y * cos_a;
-	map->player.dir = new_dir;
-	map->player.plane = new_plane;
-}
-
 void	capture_keys(void *param)
 {
 	t_game	*game;
-	double	rot_speed;
 
 	game = param;
-	rot_speed = 0.05;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
@@ -75,9 +35,9 @@ void	capture_keys(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
 		move_player_in_dir(game->map, game->map->player.plane);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		rotate_player(game->map, -rot_speed);
+		rotate_player(game->map, -ROT_SPEED);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-		rotate_player(game->map, rot_speed);
+		rotate_player(game->map, ROT_SPEED);
 }
 
 static void	start(void *param)
@@ -86,12 +46,11 @@ static void	start(void *param)
 
 	game = param;
 	render_game(game);
-	minimap_render(game->map);
 }
 
 int	init_window(t_game *game)
 {
-	game->mlx = mlx_init(16 * 100, 9 * 100, WIN_TITLE, false);
+	game->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE, false);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
 	game->canvas = mlx_new_image(game->mlx, game->mlx->width,

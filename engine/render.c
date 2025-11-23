@@ -54,4 +54,5 @@ void	render_game(t_game *game)
 {
 	render_ceiling(game);
 	render_floor(game);
+	minimap_render(game->map);
 }

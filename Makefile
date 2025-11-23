@@ -18,7 +18,7 @@ SRCS = main.c \
        texture_loader.c \
        player_init.c \
        utils.c \
-       window.c \
+       window.c movement.c \
        ./get_next_line/get_next_line.c \
        ./get_next_line/get_next_line_utils.c \
        ./vector/vecf_init.c ./vector/vecf_ops.c ./vector/veci_init.c ./vector/veci_ops.c \

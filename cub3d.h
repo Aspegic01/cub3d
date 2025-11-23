@@ -23,9 +23,15 @@
 # include "./libft/libft.h"
 # include "./include/minilibx/include/MLX42/MLX42.h"
 
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_WIDTH 16 * 100
+# define WIN_HEIGHT 9 * 100
+# define CELL_SIZE WIN_WIDTH * 0.01
+# define PLAYER_SIZE CELL_SIZE / 2
+# define PLAYER_HALF PLAYER_SIZE / 2
 # define WIN_TITLE "Cub3D"
+# define FOV_ANGLE 60.0 * (M_PI / 180.0)
+# define ROT_SPEED 2.0 * (M_PI / 180.0)
+# define MOVE_SPEED 0.5
 
 typedef struct s_v2f {
   float_t x;
@@ -71,10 +77,7 @@ typedef struct s_map
     t_textures  textures;
     t_colors    colors;
     mlx_image_t *img;
-    int32_t cell_size;
     t_v2i position;
-    int32_t player_size;
-    int32_t player_center;
     t_player player;
     bool run;
 }               t_map;
@@ -159,6 +162,8 @@ int     close_window(t_game *game);
 int     handle_keypress(int keycode, t_game *game);
 void    render_frame(t_game *game);
 int     game_loop(t_game *game);
+void	move_player_in_dir(t_map *map, t_v2f dir);
+void	rotate_player(t_map *map, float_t angle);
 
 
 
