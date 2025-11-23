@@ -21,7 +21,7 @@ SRCS = main.c \
        window.c \
        ./get_next_line/get_next_line.c \
        ./get_next_line/get_next_line_utils.c \
-       ./vector/vec_init.c ./vector/vec_ops.c \
+       ./vector/vecf_init.c ./vector/vecf_ops.c ./vector/veci_init.c ./vector/veci_ops.c \
        ./minimap/map.c ./engine/render.c ./engine/drawline.c
 
 LIBFT_DIR = ./libft

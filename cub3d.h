@@ -27,19 +27,21 @@
 # define WIN_HEIGHT 768
 # define WIN_TITLE "Cub3D"
 
-typedef struct s_v2 {
+typedef struct s_v2f {
+  float_t x;
+  float_t y;
+} t_v2f;
+
+typedef struct s_v2i {
   int32_t x;
   int32_t y;
-} t_v2;
+} t_v2i;
 
 typedef struct s_player
 {
-    double x;
-    double y;
-    double  dir_x;
-    double  dir_y;
-    double  plane_x;
-    double  plane_y;
+    t_v2f position;
+    t_v2f dir;
+    t_v2f plane;
 }               t_player;
 
 typedef struct s_textures
@@ -70,20 +72,17 @@ typedef struct s_map
     t_colors    colors;
     mlx_image_t *img;
     int32_t cell_size;
-    t_v2 position;
+    t_v2i position;
+    int32_t player_size;
+    int32_t player_center;
     t_player player;
-    t_v2 player_position;
     bool run;
 }               t_map;
 
 typedef struct s_game
 {
     mlx_t *mlx;
-    void    *win;
     mlx_image_t *canvas;
-    char    *addr;
-    int     bits_per_pixel;
-    int     endian;
     t_map   *map;
 }               t_game;
 
@@ -132,17 +131,27 @@ void	minimap_render(t_map *scene);
 
 // Engine
 void	render_game(t_game *game);
-void	draw_line(mlx_image_t *grid, double v1_x, double v1_y, double v2_x, double v2_y, uint32_t color);
+void	draw_line(mlx_image_t *grid, t_v2f start, t_v2f end, uint32_t color);
 
 // Vector functions
-t_v2    vec_new(int32_t x, int32_t y);
-t_v2    vec_zero(void);
-void    vec_print(char *label, t_v2 this);
-t_v2    vec_scale(t_v2 this, float factor);
-t_v2    vec_add(t_v2 this, t_v2 that);
-t_v2    vec_sub(t_v2 this, t_v2 that);
-t_v2    vec_div(t_v2 this, t_v2 that);
-t_v2    vec_mul(t_v2 this, t_v2 that);
+t_v2i    veci_new(int32_t x, int32_t y);
+t_v2i    veci_zero(void);
+void    veci_print(char *label, t_v2i vec);
+t_v2i    veci_scale(t_v2i vec, float_t factor);
+t_v2i    veci_add(t_v2i vec, t_v2i that);
+t_v2i    veci_sub(t_v2i vec, t_v2i that);
+t_v2i    veci_div(t_v2i vec, t_v2i that);
+t_v2i    veci_mul(t_v2i vec, t_v2i that);
+
+t_v2f    vecf_new(float_t x, float_t y);
+t_v2f    vecf_zero(void);
+void    vecf_print(char *label, t_v2f vec);
+t_v2f    vecf_scale(t_v2f vec, float_t factor);
+t_v2f    vecf_scale(t_v2f vec, float_t factor);
+t_v2f    vecf_add(t_v2f vec, t_v2f that);
+t_v2f    vecf_sub(t_v2f vec, t_v2f that);
+t_v2f    vecf_div(t_v2f vec, t_v2f that);
+t_v2f    vecf_mul(t_v2f vec, t_v2f that);
 
 // Window and game functions
 int     init_window(t_game *game);

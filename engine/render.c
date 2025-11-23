@@ -25,17 +25,4 @@ void	render_game(t_game *game)
 		}
 		y++;
 	}
-
-	t_v2 pos = vec_new(game->canvas->width / 2 - game->map->cell_size, game->canvas->height - game->map->cell_size);
-	y = 0;
-	while (y < (uint32_t)game->map->cell_size)
-	{
-		x = 0;
-		while (x < (uint32_t)game->map->cell_size)
-		{
-			mlx_put_pixel(game->canvas, x + pos.x, y + pos.y, 0x0000FFFF);
-			x++;
-		}
-		y++;
-	}
 }

@@ -1,95 +1,79 @@
 #include "../cub3d.h"
 
-static void	render_map_cell(t_map *scene, t_v2 pos, uint32_t color, bool walkable)
+static void	render_map_cell(t_map *scene, t_v2i pos, uint32_t color, bool walkable)
 {
-	t_v2 start;
-	t_v2 end;
+	t_v2i start;
+	t_v2i end;
 
-	start = vec_new(pos.x, pos.y);
-	end = vec_new(pos.x + scene->cell_size, pos.y + scene->cell_size);
+	start = veci_new(pos.x, pos.y);
+	end = veci_new(pos.x + scene->cell_size, pos.y + scene->cell_size);
 	while (start.y < end.y)
 	{
 		start.x = pos.x;
 		while (start.x < end.x)
 		{
 			if (walkable && (end.y - start.y == scene->cell_size || end.x - start.x == scene->cell_size))
-			{
 				mlx_put_pixel(scene->img, start.x, start.y, 0x000000FF);
-			}
-			else {
+			else
 				mlx_put_pixel(scene->img, start.x, start.y, color);
-			}
 			start.x++;
 		}
 		start.y++;
 	}
 }
 
-static void drawDirLine(t_map *scene, double p_pos_x, double p_pos_y) {
-	int32_t	cell;
-	double	directionx;
-	double	directiony;
-	double	centerx;
-	double	centery;
+static void drawDirLine(t_map *scene, t_v2f pos, uint32_t color) {
+	t_v2f direction;
+	t_v2f center;
 
-	cell = scene->cell_size;
-	centerx = p_pos_x + (cell * 0.25);
-	centery = p_pos_y + (cell * 0.25);
-	directionx = scene->player.dir_x * cell;
-	directiony = scene->player.dir_y * cell;
-	draw_line(scene->img, centerx, centery, centerx + directionx, centery + directiony, 0x0000FFFF);
+	center = vecf_new(pos.x + scene->player_center, pos.y + scene->player_center);
+	direction = vecf_scale(scene->player.dir, scene->cell_size);
+	draw_line(scene->img, center, vecf_add(center, direction), color);
 }
 
-static void	render_player(t_map *scene, double pos_x, double pos_y, uint32_t color)
+static void	render_player(t_map *scene, t_v2f pos, uint32_t color)
 {
-	double startx;
-	double starty;
-	double endx;
-	double endy;
-	int32_t	cell_size;
+	t_v2i start;
+	t_v2i end;
 
-	cell_size = scene->cell_size * 0.5;
-	startx = pos_x;
-	starty = pos_y;
-	endx = pos_x + cell_size;
-	endy = pos_y + cell_size;
-	while (starty <= endy)
+	start = veci_new(pos.x, pos.y);
+	end = veci_new(pos.x + scene->player_size, pos.y + scene->player_size);
+	while (start.y <= end.y)
 	{
-		startx = pos_x;
-		while (startx <= endx)
+		start.x = (int32_t)pos.x;
+		while (start.x <= end.x)
 		{
-			mlx_put_pixel(scene->img, startx, starty, color);
-			startx++;
+			mlx_put_pixel(scene->img, start.x, start.y, color);
+			start.x++;
 		}
-		starty++;
+		start.y++;
 	}
 
-	drawDirLine(scene, pos_x, pos_y);
+	drawDirLine(scene, pos, color);
 }
 
 void	minimap_render(t_map *scene)
 {
-	t_v2	iter;
-	t_v2	pos;
+	t_v2i pos;
+	int line_len;
 	
-	iter = vec_zero();
-	while (iter.y < scene->height)
+	pos = veci_zero();
+	while (pos.y < scene->height)
 	{
-		iter.x = 0;
-		int line_len = ft_strlen(scene->grid[iter.y]);
-		while (iter.x < scene->width)
+		pos.x = 0;
+		line_len = ft_strlen(scene->grid[pos.y]);
+		while (pos.x < scene->width)
 		{
-			pos = vec_scale(iter, scene->cell_size);
-			if (iter.x < line_len && scene->grid[iter.y][iter.x] == '0')
-				render_map_cell(scene, pos, 0xFFFFFFFF, true);
+			if (pos.x < line_len && scene->grid[pos.y][pos.x] == '0')
+				render_map_cell(scene, veci_scale(pos, scene->cell_size), 0xFFFFFFFF, true);
 			else
-				render_map_cell(scene, pos, 0x333333FF, false);
-			iter.x++;
+				render_map_cell(scene, veci_scale(pos, scene->cell_size), 0x333333FF, false);
+			pos.x++;
 		}
-		iter.y++;
+		pos.y++;
 	}
 
-	render_player(scene, scene->player.x, scene->player.y, 0x0000FFFF);
+	render_player(scene, scene->player.position, 0x0000FFFF);
 }
 
 static void	map_print(t_map *map)
@@ -111,31 +95,32 @@ static void	map_print(t_map *map)
 
 int	minimap_setup(t_game *game)
 {
-	t_v2	canvas;
-	t_v2	map_size;
-	t_v2	grid_dimensions;
+	t_v2i	canvas;
+	t_v2i	map_size;
+	t_v2i	grid_dimensions;
 	int32_t	img_idx;
 
-	canvas = vec_new(game->mlx->width, game->mlx->height);
-	game->map->cell_size = canvas.x * 0.02;
-	grid_dimensions = vec_new(game->map->width, game->map->height);
-	map_size = vec_scale(grid_dimensions, game->map->cell_size);
+	canvas = veci_new(game->mlx->width, game->mlx->height);
+	game->map->cell_size = canvas.x * 0.01;
+	game->map->player_size = game->map->cell_size * 0.5;
+	grid_dimensions = veci_new(game->map->width, game->map->height);
+	map_size = veci_scale(grid_dimensions, game->map->cell_size);
 	game->map->img = mlx_new_image(game->mlx, map_size.x, map_size.y);
 	if (!game->map->img)
 		return (ft_putstr_fd("Error\nFailed to initialize image\n", 2), -1);
-	game->map->position = vec_scale(canvas, 0.01);
-	// game->map->player_position = vec_scale(vec_new(game->map->player.x, game->map->player.y), game->map->cell_size);
-	game->map->player.x = game->map->player.x * game->map->cell_size;
-	game->map->player.y = game->map->player.y * game->map->cell_size;
+	game->map->position = veci_scale(canvas, 0.01);
+	game->map->player_size = game->map->cell_size * 0.5;
+	game->map->player_center = game->map->player_size / 2;
+	game->map->player.position = vecf_scale(game->map->player.position, game->map->cell_size);
 	img_idx = mlx_image_to_window(game->mlx, game->map->img, game->map->position.x, game->map->position.y);
 	if (img_idx < 0)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
 	map_print(game->map);
-	vec_print("canvas", canvas);
-	vec_print("grid", grid_dimensions);
-	vec_print("map_size", map_size);
-	vec_print("map_position", game->map->position);
-	vec_print("player", game->map->player_position);
-	printf("cell_size{%d}\n", game->map->cell_size);
+	veci_print("canvas", canvas);
+	veci_print("grid", grid_dimensions);
+	veci_print("map_size", map_size);
+	veci_print("map_position", game->map->position);
+	veci_print("cell_size", veci_new(game->map->cell_size, game->map->cell_size));
+	vecf_print("player", game->map->player.position);
 	return (0);
 }
