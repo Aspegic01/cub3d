@@ -19,9 +19,18 @@ bool	at_wall(t_map *scene, t_v2f pos)
 	map_pos = veci_new(pos.x / CELL_SIZE, pos.y / CELL_SIZE);
 	if (map_pos.x >= (int32_t)ft_strlen(scene->grid[map_pos.y]))
 		return (true);
-	if (scene->grid[map_pos.y][map_pos.x] == '1' )
+	if (scene->grid[map_pos.y][map_pos.x] == '1')
 		return (true);
 	return (scene->grid[map_pos.y][map_pos.x] == '\0');
+}
+
+static bool	can_walk(t_map *map, int32_t x, int32_t y)
+{
+	if (y < 0 || y >= map->height || x < 0 || x >= map->width)
+		return (false);
+	if (x >= (int32_t)ft_strlen(map->grid[y]))
+		return (false);
+	return (map->grid[y][x] == '0');
 }
 
 void	move_player_in_dir(t_map *map, t_v2f dir)
@@ -29,19 +38,24 @@ void	move_player_in_dir(t_map *map, t_v2f dir)
 	t_v2f	pos;
 	t_v2i	l;
 	t_v2i	r;
+	bool	can_move_x;
+	bool	can_move_y;
 
 	pos = vecf_add(map->player.position, vecf_scale(dir, MOVE_SPEED));
 	l = veci_new(pos.x / CELL_SIZE, pos.y / CELL_SIZE);
 	r = veci_new((pos.x + PLAYER_SIZE) / CELL_SIZE, (pos.y + PLAYER_SIZE)
 			/ CELL_SIZE);
-	if (!(l.y >= 0 && r.y < map->height && l.x >= 0 && r.x < map->width))
-		return ;
-	if (l.x >= (int32_t)ft_strlen(map->grid[l.y]))
-		return ;
-	if (r.x >= (int32_t)ft_strlen(map->grid[r.y]))
-		return ;
-	if (map->grid[l.y][l.x] == '0' && map->grid[l.y][r.x] == '0'
-		&& map->grid[r.y][l.x] == '0' && map->grid[r.y][r.x] == '0')
+	can_move_x = true;
+	can_move_y = true;
+	if (dir.x > 0)
+		can_move_x = can_walk(map, r.x, l.y) && can_walk(map, r.x, r.y);
+	else if (dir.x < 0)
+		can_move_x = can_walk(map, l.x, l.y) && can_walk(map, l.x, r.y);
+	if (dir.y > 0)
+		can_move_y = can_walk(map, l.x, r.y) && can_walk(map, r.x, r.y);
+	else if (dir.y < 0)
+		can_move_y = can_walk(map, l.x, l.y) && can_walk(map, r.x, l.y);
+	if (can_move_x && can_move_y)
 		map->player.position = pos;
 }
 
