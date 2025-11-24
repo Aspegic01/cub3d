@@ -45,7 +45,10 @@ static void	start(void *param)
 	t_game	*game;
 
 	game = param;
+	if (!game->map->run)
+		return;
 	render_game(game);
+	game->map->run = false;
 }
 
 int	init_window(t_game *game)
@@ -59,6 +62,7 @@ int	init_window(t_game *game)
 		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
 	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
+	game->map->run = true;
 	if (minimap_setup(game) != 0)
 		return (-1);
 	mlx_loop_hook(game->mlx, capture_keys, game);

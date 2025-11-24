@@ -56,11 +56,15 @@ void	move_player_in_dir(t_map *map, t_v2f dir)
 	else if (dir.y < 0)
 		can_move_y = can_walk(map, l.x, l.y) && can_walk(map, r.x, l.y);
 	if (can_move_x && can_move_y)
+	{
 		map->player.position = pos;
+		map->run = true;
+	}
 }
 
 void	rotate_player(t_map *map, float_t angle)
 {
 	map->player.dir = vecf_rot(map->player.dir, angle);
 	map->player.plane = vecf_rot(map->player.plane, angle);
+	map->run = true;
 }
