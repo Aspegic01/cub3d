@@ -12,6 +12,18 @@
 
 #include "cub3d.h"
 
+bool	at_wall(t_map *scene, t_v2f pos)
+{
+	t_v2i	map_pos;
+
+	map_pos = veci_new(pos.x / CELL_SIZE, pos.y / CELL_SIZE);
+	if (map_pos.x >= (int32_t)ft_strlen(scene->grid[map_pos.y]))
+		return (true);
+	if (scene->grid[map_pos.y][map_pos.x] == '1' )
+		return (true);
+	return (scene->grid[map_pos.y][map_pos.x] == '\0');
+}
+
 void	move_player_in_dir(t_map *map, t_v2f dir)
 {
 	t_v2f	pos;
