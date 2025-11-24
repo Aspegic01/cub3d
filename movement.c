@@ -35,17 +35,6 @@ void	move_player_in_dir(t_map *map, t_v2f dir)
 
 void	rotate_player(t_map *map, float_t angle)
 {
-	float_t	cos_a;
-	float_t	sin_a;
-	t_v2f	new_dir;
-	t_v2f	new_plane;
-
-	cos_a = cosf(angle);
-	sin_a = sinf(angle);
-	new_dir.x = map->player.dir.x * cos_a - map->player.dir.y * sin_a;
-	new_dir.y = map->player.dir.x * sin_a + map->player.dir.y * cos_a;
-	new_plane.x = map->player.plane.x * cos_a - map->player.plane.y * sin_a;
-	new_plane.y = map->player.plane.x * sin_a + map->player.plane.y * cos_a;
-	map->player.dir = new_dir;
-	map->player.plane = new_plane;
+	map->player.dir = vecf_rot(map->player.dir, angle);
+	map->player.plane = vecf_rot(map->player.plane, angle);
 }

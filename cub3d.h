@@ -145,6 +145,7 @@ t_v2i    veci_add(t_v2i vec, t_v2i that);
 t_v2i    veci_sub(t_v2i vec, t_v2i that);
 t_v2i    veci_div(t_v2i vec, t_v2i that);
 t_v2i    veci_mul(t_v2i vec, t_v2i that);
+t_v2f	vecf_rot(t_v2f vec, float_t angle);
 
 t_v2f    vecf_new(float_t x, float_t y);
 t_v2f    vecf_zero(void);

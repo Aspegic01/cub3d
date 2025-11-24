@@ -25,13 +25,17 @@ static void	render_map_cell(t_map *scene, t_v2i pos, uint32_t color,
 	}
 }
 
+static t_v2f	get_player_center(t_player *p)
+{
+	return (vecf_new(p->position.x + PLAYER_HALF, p->position.y + PLAYER_HALF));
+}
+
 static void	draw_dirline(t_map *scene, uint32_t color)
 {
 	t_v2f	direction;
 	t_v2f	center;
 
-	center = vecf_new(scene->player.position.x + PLAYER_HALF,
-			scene->player.position.y + PLAYER_HALF);
+	center = get_player_center(&scene->player);
 	direction = vecf_scale(scene->player.dir, CELL_SIZE);
 	draw_line(scene->img, center, vecf_add(center, direction), color);
 }
@@ -39,24 +43,23 @@ static void	draw_dirline(t_map *scene, uint32_t color)
 void	draw_fov(t_map *scene, uint32_t color)
 {
 	int32_t	ray_count;
-	// float_t	rotation_angle;
-	// float_t	ray_angle;
+	float_t	rotation_angle;
+	float_t	ray_angle;
 	t_v2f	ray_dir;
+	t_v2f	center;
 	int32_t	i;
 
-	ray_count = scene->width / 4;
-	// rotation_angle = scene->player.dir.x * ROT_SPEED;
-	// ray_angle = rotation_angle - (FOV_ANGLE / 2);
+	rotation_angle = scene->player.dir.x * ROT_SPEED;
+	ray_angle = rotation_angle - (FOV_ANGLE / 2);
+	center = get_player_center(&scene->player);
+	ray_count = scene->width / 2;
 	i = 0;
-
-	t_v2f center = vecf_new(scene->player.position.x + PLAYER_HALF,
-			scene->player.position.y + PLAYER_HALF);
 	while (i < ray_count)
 	{
-		// ray_dir = vecf_new(center.x + cosf(ray_angle) * 30, center.y + sinf(ray_angle) * 30);
-		ray_dir = vecf_scale(scene->player.dir, CELL_SIZE);
+		ray_dir = vecf_scale(scene->player.dir, CELL_SIZE * 2);
+		ray_dir = vecf_rot(ray_dir, ray_angle);
 		draw_line(scene->img, center, vecf_add(center, ray_dir), color);
-		// ray_angle += FOV_ANGLE / ray_count;
+		ray_angle += FOV_ANGLE / ray_count;
 		i++;
 	}
 }
@@ -78,7 +81,7 @@ static void	render_player(t_map *scene, uint32_t color)
 		}
 		start.y++;
 	}
-	draw_fov(scene, color);
+	draw_fov(scene, 0xFF00FFFF);
 	draw_dirline(scene, color);
 }
 
