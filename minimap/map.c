@@ -43,15 +43,13 @@ static void	draw_dirline(t_map *scene, uint32_t color)
 void	draw_fov(t_map *scene, uint32_t color)
 {
 	int32_t	ray_count;
-	float_t	rotation_angle;
 	float_t	ray_angle;
 	t_v2f	ray_dir;
 	t_v2f	center;
 	int32_t	i;
 
-	rotation_angle = scene->player.dir.x * ROT_SPEED;
-	ray_angle = rotation_angle - (FOV_ANGLE / 2);
 	center = get_player_center(&scene->player);
+	ray_angle = -(FOV_ANGLE / 2);
 	ray_count = scene->width / 2;
 	i = 0;
 	while (i < ray_count)
