@@ -26,15 +26,15 @@ void	vecf_print(char *label, t_v2f this)
 		printf("v{x = %f, y = %f}\n", this.x, this.y);
 }
 
-t_v2f	vecf_rot(t_v2f this, float_t angle)
+t_v2f	vecf_rot(t_v2f that, float_t angle)
 {
 	float_t	cos_a;
 	float_t	sin_a;
-	t_v2f	v;
+	t_v2f	this;
 
 	cos_a = cosf(angle);
 	sin_a = sinf(angle);
-	v.x = this.x * cos_a - this.y * sin_a;
-	v.y = this.x * sin_a + this.y * cos_a;
-	return (v);
+	this.x = that.x * cos_a - that.y * sin_a;
+	this.y = that.x * sin_a + that.y * cos_a;
+	return (this);
 }
