@@ -1,8 +1,7 @@
 #include "../cub3d.h"
 #include <stdint.h>
 
-static void	render_map_cell(t_map *scene, t_v2i pos, uint32_t color,
-		bool walkable)
+static void	render_cell(t_map *scene, t_v2i pos, uint32_t color, bool walkable)
 {
 	t_v2i	start;
 	t_v2i	end;
@@ -96,10 +95,10 @@ void	minimap_render(t_map *scene)
 		while (pos.x < scene->width)
 		{
 			if (pos.x < line_len && scene->grid[pos.y][pos.x] == '0')
-				render_map_cell(scene, veci_scale(pos, CELL_SIZE), 0xFFFFFFFF,
+				render_cell(scene, veci_scale(pos, CELL_SIZE), 0xFFFFFFFF,
 					true);
 			else
-				render_map_cell(scene, veci_scale(pos, CELL_SIZE), 0x333333FF,
+				render_cell(scene, veci_scale(pos, CELL_SIZE), 0x333333FF,
 					false);
 			pos.x++;
 		}
