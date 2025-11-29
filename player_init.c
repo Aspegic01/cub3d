@@ -54,7 +54,7 @@ int	find_player_position(t_map *map, t_player *player)
 				map->grid[i][j] == 'E' || map->grid[i][j] == 'W')
 			{
 				direction = map->grid[i][j];
-				player->position = vecf_new(j, i);
+				player->position = vecf_scale(vecf_new(j, i), CELL_SIZE);
 				map->grid[i][j] = '0';
 				set_player_direction(player, direction);
 				player_count++;

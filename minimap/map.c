@@ -132,8 +132,6 @@ int	minimap_setup(t_game *game)
 	if (!game->map->img)
 		return (ft_putstr_fd("Error\nFailed to initialize image\n", 2), -1);
 	game->map->position = veci_new(WIN_WIDTH * 0.01, WIN_HEIGHT * 0.01);
-	game->map->player.position = vecf_scale(game->map->player.position,
-			CELL_SIZE);
 	img_idx = mlx_image_to_window(game->mlx, game->map->img,
 			game->map->position.x, game->map->position.y);
 	if (img_idx < 0)
