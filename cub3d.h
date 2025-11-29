@@ -31,7 +31,7 @@
 # define WIN_TITLE "Cub3D"
 # define FOV_ANGLE 60.0 * (M_PI / 180.0)
 # define ROT_SPEED 2.0 * (M_PI / 180.0)
-# define MOVE_SPEED 0.1
+# define MOVE_SPEED 0.3
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
 
