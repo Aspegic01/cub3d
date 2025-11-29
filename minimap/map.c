@@ -1,7 +1,6 @@
 #include "../cub3d.h"
-#include <stdint.h>
 
-static void	render_cell(t_map *scene, t_v2i pos, uint32_t color, bool walkable)
+static void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
 {
 	t_v2i	start;
 	t_v2i	end;
@@ -13,9 +12,8 @@ static void	render_cell(t_map *scene, t_v2i pos, uint32_t color, bool walkable)
 		start.x = pos.x;
 		while (start.x < end.x)
 		{
-			if (walkable && (end.y - start.y == CELL_SIZE || end.x
-					- start.x == CELL_SIZE))
-				mlx_put_pixel(scene->img, start.x, start.y, 0x000000FF);
+			if (end.y - start.y == CELL_SIZE || end.x - start.x == CELL_SIZE)
+				mlx_put_pixel(scene->img, start.x, start.y, color << 1);
 			else
 				mlx_put_pixel(scene->img, start.x, start.y, color);
 			start.x++;
@@ -95,11 +93,9 @@ void	minimap_render(t_map *scene)
 		while (pos.x < scene->width)
 		{
 			if (pos.x < line_len && scene->grid[pos.y][pos.x] == '0')
-				render_cell(scene, veci_scale(pos, CELL_SIZE), 0xFFFFFFFF,
-					true);
+				render_cell(scene, veci_scale(pos, CELL_SIZE), MAPFG);
 			else
-				render_cell(scene, veci_scale(pos, CELL_SIZE), 0x333333FF,
-					false);
+				render_cell(scene, veci_scale(pos, CELL_SIZE), MAPBG);
 			pos.x++;
 		}
 		pos.y++;

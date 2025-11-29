@@ -58,7 +58,7 @@ int	init_window(t_game *game)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
 	game->canvas = mlx_new_image(game->mlx, game->mlx->width,
 			game->mlx->height);
-	if (!game->mlx)
+	if (!game->canvas)
 		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
 	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);

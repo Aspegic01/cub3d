@@ -23,15 +23,17 @@
 # include "./libft/libft.h"
 # include "./include/minilibx/include/MLX42/MLX42.h"
 
-# define WIN_WIDTH 16 * 60
-# define WIN_HEIGHT 9 * 60
-# define CELL_SIZE (uint32_t)(WIN_WIDTH * 0.008)
+# define WIN_WIDTH 16 * 80
+# define WIN_HEIGHT 9 * 80
+# define CELL_SIZE (uint32_t)(WIN_WIDTH * 0.01)
 # define PLAYER_SIZE (uint32_t)(CELL_SIZE / 2)
 # define PLAYER_HALF (uint32_t)(PLAYER_SIZE / 2)
 # define WIN_TITLE "Cub3D"
 # define FOV_ANGLE 60.0 * (M_PI / 180.0)
 # define ROT_SPEED 2.0 * (M_PI / 180.0)
 # define MOVE_SPEED 0.1
+# define MAPFG 0xFFFFFFFF
+# define MAPBG 0x333333FF
 
 typedef struct s_v2f {
   float_t x;
