@@ -28,7 +28,7 @@ LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 LIBMLX = ./include/minilibx
 MLX = $(LIBMLX)/build/libmlx42.a
-LIBS = $(MLX) -ldl -lglfw -pthread -lm
+LIBS = $(MLX) -ldl -lglfw -lm
 HEADERS = -I ./include -I $(LIBMLX)/include
 
 OBJS = $(SRCS:.c=.o)
@@ -49,12 +49,12 @@ run: all
 
 clean:
 	@rm -f $(OBJS)
-	@rm -rf $(LIBMLX)/build
-	@make clean -C $(LIBFT_DIR)
+	# @rm -rf $(LIBMLX)/build
+	# @make clean -C $(LIBFT_DIR)
 
 fclean: clean
 	@rm -f $(NAME)
-	@make fclean -C $(LIBFT_DIR)
+	# @make fclean -C $(LIBFT_DIR)
 
 re: fclean all
 

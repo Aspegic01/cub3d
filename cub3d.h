@@ -29,9 +29,8 @@
 # define PLAYER_SIZE (uint32_t)(CELL_SIZE / 2)
 # define PLAYER_HALF (uint32_t)(PLAYER_SIZE / 2)
 # define WIN_TITLE "Cub3D"
-# define FOV_ANGLE 60.0 * (M_PI / 180.0)
-# define ROT_SPEED 2.0 * (M_PI / 180.0)
-# define MOVE_SPEED 0.3
+# define ROT_SPEED 3.0
+# define MOVE_SPEED 5.0
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
 
@@ -81,7 +80,6 @@ typedef struct s_map
     mlx_image_t *img;
     t_v2i position;
     t_player player;
-    bool run;
 }               t_map;
 
 typedef struct s_game
@@ -132,7 +130,7 @@ void    fix_zero_space_to_zero(t_map *map);
 
 // Mini map
 int minimap_setup(t_game *game);
-void	minimap_render(t_map *scene);
+void	minimap_render(t_game *game);
 
 // Engine
 void	render_game(t_game *game);
@@ -141,6 +139,7 @@ void	draw_line(mlx_image_t *grid, t_v2f start, t_v2f end, uint32_t color);
 // Vector functions
 t_v2i    veci_new(int32_t x, int32_t y);
 t_v2i    veci_zero(void);
+t_v2i    veci_from(t_v2i that);
 void    veci_print(char *label, t_v2i vec);
 t_v2i    veci_scale(t_v2i vec, float_t factor);
 t_v2i    veci_add(t_v2i vec, t_v2i that);
@@ -151,6 +150,7 @@ t_v2f	vecf_rot(t_v2f vec, float_t angle);
 
 t_v2f    vecf_new(float_t x, float_t y);
 t_v2f    vecf_zero(void);
+t_v2f    vecf_from(t_v2f that);
 void    vecf_print(char *label, t_v2f vec);
 t_v2f    vecf_scale(t_v2f vec, float_t factor);
 t_v2f    vecf_scale(t_v2f vec, float_t factor);
@@ -165,8 +165,8 @@ int     close_window(t_game *game);
 int     handle_keypress(int keycode, t_game *game);
 void    render_frame(t_game *game);
 int     game_loop(t_game *game);
-void	move_player_in_dir(t_map *map, t_v2f dir);
-void	rotate_player(t_map *map, float_t angle);
+void	move_player_in_dir(t_game *game, t_v2f dir);
+void	rotate_player(t_game *game, float_t rot_speed);
 
 
 

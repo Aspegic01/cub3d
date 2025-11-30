@@ -9,6 +9,16 @@ t_v2f	vecf_new(float_t x, float_t y)
 	return (this);
 }
 
+t_v2f    vecf_from(t_v2f that)
+{
+	t_v2f	this;
+
+	this.x = that.x;
+	this.y = that.y;
+	return (this);
+}
+
+
 t_v2f	vecf_zero(void)
 {
 	t_v2f	this;

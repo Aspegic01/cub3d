@@ -12,6 +12,13 @@
 
 #include "cub3d.h"
 
+
+	/*
+	 dir x negative we looking left;
+	 dir x positive we looking right;
+	 dir y posivite we looking down
+	 dir y negative we looking up
+	 * */
 void	set_player_direction(t_player *player, char direction)
 {
 	if (direction == 'N')

@@ -27,17 +27,17 @@ void	capture_keys(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
-		move_player_in_dir(game->map, game->map->player.dir);
+		move_player_in_dir(game, game->map->player.dir);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
-		move_player_in_dir(game->map, vecf_scale(game->map->player.dir, -1));
+		move_player_in_dir(game, vecf_scale(game->map->player.dir, -1));
 	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
-		move_player_in_dir(game->map, vecf_scale(game->map->player.plane, -1));
+		move_player_in_dir(game, vecf_scale(game->map->player.plane, -1));
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
-		move_player_in_dir(game->map, game->map->player.plane);
+		move_player_in_dir(game, game->map->player.plane);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		rotate_player(game->map, -ROT_SPEED);
+		rotate_player(game, -ROT_SPEED * game->mlx->delta_time);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-		rotate_player(game->map, ROT_SPEED);
+		rotate_player(game, ROT_SPEED * game->mlx->delta_time);
 }
 
 static void	start(void *param)
@@ -45,10 +45,7 @@ static void	start(void *param)
 	t_game	*game;
 
 	game = param;
-	if (!game->map->run)
-		return;
 	render_game(game);
-	game->map->run = false;
 }
 
 int	init_window(t_game *game)
@@ -62,7 +59,6 @@ int	init_window(t_game *game)
 		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
 	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
-	game->map->run = true;
 	if (minimap_setup(game) != 0)
 		return (-1);
 	mlx_loop_hook(game->mlx, capture_keys, game);

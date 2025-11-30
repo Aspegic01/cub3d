@@ -9,6 +9,15 @@ t_v2i	veci_new(int32_t x, int32_t y)
 	return (this);
 }
 
+t_v2i    veci_from(t_v2i that)
+{
+	t_v2i	this;
+
+	this.x = that.x;
+	this.y = that.y;
+	return (this);
+}
+
 t_v2i	veci_zero(void)
 {
 	t_v2i	this;
