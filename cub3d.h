@@ -30,7 +30,7 @@
 # define PLAYER_HALF (uint32_t)(PLAYER_SIZE / 2)
 # define WIN_TITLE "Cub3D"
 # define ROT_SPEED 3.0
-# define MOVE_SPEED 0.05
+# define MOVE_SPEED 0.04
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
 
