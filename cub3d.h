@@ -26,11 +26,11 @@
 # define WIN_WIDTH 16 * 80
 # define WIN_HEIGHT 9 * 80
 # define CELL_SIZE (uint32_t)(WIN_WIDTH * 0.01)
-# define PLAYER_SIZE (uint32_t)(CELL_SIZE / 2)
+# define PLAYER_SIZE (uint32_t)(CELL_SIZE / 4)
 # define PLAYER_HALF (uint32_t)(PLAYER_SIZE / 2)
 # define WIN_TITLE "Cub3D"
 # define ROT_SPEED 3.0
-# define MOVE_SPEED 0.04
+# define MOVE_SPEED 0.025
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
 
