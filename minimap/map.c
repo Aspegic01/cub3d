@@ -37,91 +37,6 @@ static void	draw_dirline(t_map *scene, uint32_t color)
 	draw_line(scene->img, center, vecf_add(center, direction), color);
 }
 
-// void	draw_fov(t_map *scene, t_player *player, uint32_t color)
-// {
-// 	// int32_t	ray_count;
-// 	float_t	ray_angle;
-// 	float_t	camerax;
-// 	uint32_t	i;
-// 	t_v2f	wall_hit;
-// 	t_v2f	h_hit;
-// 	t_v2f	first_inter;
-// 	t_v2f	next_h_hit;
-// 	t_v2f	move_step;
-// 	t_v2f	ray_dir;
-// 	bool	found_horizontal_wall;
-//
-// 	// t_v2f	center;
-// 	wall_hit = vecf_zero();
-// 	// center = get_player_center(&scene->player);
-// 	// ray_angle = -(FOV_ANGLE / 2);
-// 	// ray_count = scene->width / 2;
-// 	// bool is_facing_down = ray_angle > 0 && ray_angle < M_PI;
-// 	// bool is_facing_up = !is_facing_down;
-// 	// bool is_facing_right = ray_angle < 0.5 * M_PI || ray_angle > 1.5 * M_PI;
-// 	// bool is_facing_left = !is_facing_right;
-// 	i = 0;
-//
-// 	// ray_dir = vecf_scale(scene->player.dir, CELL_SIZE * 2);
-// 	// ray_dir = vecf_rot(scene->player.dir, ray_angle);
-// 	// draw_line(scene->img, center, vecf_add(center, ray_dir), color);
-// 	while (i < scene->img->width)
-// 	{
-// 		wall_hit = vecf_zero();
-// 		found_horizontal_wall = false;
-// 		h_hit = vecf_zero();
-// 		camerax = 2.0 * (i / (float_t)scene->img->width) - 1.0;
-// 		ray_dir = vecf_add(player->dir, vecf_scale(player->plane, camerax));
-// 		ray_angle = atan2f(ray_dir.y, ray_dir.x);
-// 		bool is_facing_down = ray_angle > 0 && ray_angle < M_PI;
-// 		// bool is_facing_right = ray_angle < 0.5 * M_PI || ray_angle > 1.5 * M_PI;
-// 		first_inter = vecf_zero();
-// 		if (!is_facing_down)
-// 			first_inter.y = floorf(player->position.y / CELL_SIZE) * CELL_SIZE
-// 				- 1;
-// 		if (is_facing_down)
-// 			first_inter.y = floorf(player->position.y / CELL_SIZE) * CELL_SIZE
-// 				+ CELL_SIZE;
-// 		first_inter.x = player->position.x + (first_inter.y
-// 				- player->position.y) / tanf(ray_angle);
-// 		next_h_hit = vecf_from(first_inter);
-// 		move_step = vecf_zero();
-// 		if (player->looking_up)
-// 			move_step.y = (int32_t)CELL_SIZE * -1;
-// 		else
-// 			move_step.y = (int32_t)CELL_SIZE;
-// 		move_step.x = move_step.y / tanf(ray_angle);
-// 		// move_step.x = ceilf(move_step.x);
-// 		// NOTE: may need to check for the map offset
-// 		while (next_h_hit.x <= scene->img->width && next_h_hit.x >= 0
-// 			&& next_h_hit.y <= scene->img->height && next_h_hit.y >= 0)
-// 		{
-// 			if (at_wall(scene, next_h_hit.x, next_h_hit.y))
-// 			{
-// 				found_horizontal_wall = true;
-// 				h_hit.x = next_h_hit.x;
-// 				h_hit.y = next_h_hit.y;
-// 				break ;
-// 			}
-// 			else
-// 			{
-// 				next_h_hit = vecf_add(next_h_hit, move_step);
-// 			}
-// 		}
-//
-// 		wall_hit.x = h_hit.x;
-// 		wall_hit.y = h_hit.y;
-// 		(void)found_horizontal_wall;
-// 		draw_line(scene->img, player->position, wall_hit, color);
-//
-// 		// ray_dir = vecf_scale(scene->player.dir, CELL_SIZE * 2);
-// 		// ray_dir = vecf_rot(ray_dir, ray_angle);
-// 		// draw_line(scene->img, center, vecf_add(center, ray_dir), color);
-// 		ray_angle += FOV_ANGLE / scene->img->width;
-// 		i++;
-// 	}
-// }
-
 bool	at_wall(t_map *map, float_t offsetx, float_t offsety)
 {
 	int32_t	x;
@@ -182,12 +97,11 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 			if (at_wall(scene, map.x, map.y))
 				hit = 1;
 		}
+		
 		if (side == 0)
-			// perp_wall_dist = (side_dist.x - delta_dist.x);
-			perp_wall_dist = (map.x - player->position.x / CELL_SIZE + (1.0 - step.x) / 2) / ray_dir.x;
+			perp_wall_dist = (side_dist.x - delta_dist.x);
 		else
-			// perp_wall_dist = (side_dist.y - delta_dist.y);
-			perp_wall_dist = (map.y - player->position.y / CELL_SIZE + (1.0 - step.y) / 2) / ray_dir.y;
+			perp_wall_dist = (side_dist.y - delta_dist.y);
 		int32_t line_height = (int32_t)game->canvas->height / perp_wall_dist;
 		int32_t draw_start = -line_height / 2 + game->canvas->height / 2;
 		if (draw_start < 0)
