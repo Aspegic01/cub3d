@@ -24,7 +24,10 @@ static void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
 
 static t_v2f	get_player_center(t_player *p)
 {
-	return (vecf_new(p->position.x + PLAYER_HALF, p->position.y + PLAYER_HALF));
+	t_v2f that = vecf_scale(vecf_new(p->position.x, p->position.y), CELL_SIZE);
+	that.x += PLAYER_HALF;
+	that.y += PLAYER_HALF;
+	return (that);
 }
 
 static void	draw_dirline(t_map *scene, uint32_t color)
@@ -60,27 +63,36 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 		float_t perp_wall_dist;
 		uint32_t hit = 0;
 		uint32_t side = 0;
-		t_v2f map = vecf_new(player->position.x / CELL_SIZE, player->position.y / CELL_SIZE);
+		t_v2f map = vecf_new(player->position.x, player->position.y);
 		t_v2i step = veci_zero();
 		t_v2f ray_dir = vecf_add(player->dir, vecf_scale(player->plane, camerax));
 		t_v2f side_dist = vecf_zero();
-		t_v2f delta_dist = vecf_new(fabsf(1 / ray_dir.x), fabsf(1 / ray_dir.y));
+		t_v2f delta_dist = vecf_zero();
+
+		if (ray_dir.x == 0.0)
+			step.x = 1e30;
+		else
+			step.x = fabs(1 / ray_dir.x);
+		if (ray_dir.y == 0)
+			step.y = 1e30;
+		else
+			step.y = fabs(1 / ray_dir.y);
 
 		if (ray_dir.x < 0)
 		{
 			step.x = -1;
-			side_dist.x = (player->position.x - map.x * CELL_SIZE) * delta_dist.x / CELL_SIZE;
+			side_dist.x = (player->position.x - map.x) * delta_dist.x;
 		} else {
 			step.x = 1;
-			side_dist.x = ((map.x + 1.0) * CELL_SIZE - player->position.x) * delta_dist.x / CELL_SIZE;
+			side_dist.x = ((map.x + 1.0) - player->position.x) * delta_dist.x;
 		}
 		if (ray_dir.y < 0)
 		{
 			step.y = -1;
-			side_dist.y = (player->position.y - map.y * CELL_SIZE) * delta_dist.y / CELL_SIZE;
+			side_dist.y = (player->position.y - map.y) * delta_dist.y;
 		} else {
 			step.y = 1;
-			side_dist.y = ((map.y + 1.0) * CELL_SIZE - player->position.y) * delta_dist.y / CELL_SIZE;
+			side_dist.y = ((map.y + 1.0) - player->position.y) * delta_dist.y;
 		}
 		while (hit == 0)
 		{
@@ -102,33 +114,35 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 			perp_wall_dist = (side_dist.x - delta_dist.x);
 		else
 			perp_wall_dist = (side_dist.y - delta_dist.y);
-		int32_t line_height = (int32_t)game->canvas->height / perp_wall_dist;
-		int32_t draw_start = -line_height / 2 + game->canvas->height / 2;
-		if (draw_start < 0)
-			draw_start = 0;
-		int32_t draw_end = line_height / 2 + game->canvas->height / 2;
-		if (draw_end >= (int32_t)game->canvas->height)
-			draw_end = game->canvas->height - 1;
-		int32_t y = draw_start;
-		while (y < draw_end)
-		{
-			mlx_put_pixel(game->canvas, x, y, color);
-			y++;
-		}
+		draw_line(game->map->img, player->position, vecf_new(map.x, map.y), color);
+		(void)perp_wall_dist;
+		// int32_t line_height = (int32_t)game->canvas->height / perp_wall_dist;
+		// int32_t draw_start = -line_height / 2 + game->canvas->height / 2;
+		// if (draw_start < 0)
+		// 	draw_start = 0;
+		// int32_t draw_end = line_height / 2 + game->canvas->height / 2;
+		// if (draw_end >= (int32_t)game->canvas->height)
+		// 	draw_end = game->canvas->height - 1;
+		// int32_t y = draw_start;
+		// while (y < draw_end)
+		// {
+		// 	mlx_put_pixel(game->canvas, x, y, color);
+		// 	y++;
+		// }
 		x++;
 	}
 }
 
 static void	render_player(t_game *game, t_map *scene, uint32_t color)
 {
-	t_v2i	start;
-	t_v2i	end;
+	t_v2f	start;
+	t_v2f	end;
 
-	start = veci_new(scene->player.position.x, scene->player.position.y);
-	end = veci_new(start.x + PLAYER_SIZE, start.y + PLAYER_SIZE);
+	start = vecf_scale(vecf_new(scene->player.position.x, scene->player.position.y), CELL_SIZE);
+	end = vecf_new(start.x + PLAYER_SIZE, start.y + PLAYER_SIZE);
 	while (start.y <= end.y)
 	{
-		start.x = (int32_t)scene->player.position.x;
+		start.x = scene->player.position.x * CELL_SIZE;
 		while (start.x <= end.x)
 		{
 			mlx_put_pixel(scene->img, start.x, start.y, color);
