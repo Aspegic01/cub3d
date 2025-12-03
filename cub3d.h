@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 10:00:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/11/07 09:46:30 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,20 +21,34 @@
 # include <stdbool.h>
 # include "./get_next_line/get_next_line.h"
 # include "./libft/libft.h"
-# include "./minilibx-linux/mlx.h"
+# include "./include/minilibx/include/MLX42/MLX42.h"
 
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 768
+# define WIN_WIDTH 16 * 80
+# define WIN_HEIGHT 9 * 80
+# define CELL_SIZE (uint32_t)(WIN_WIDTH * 0.01)
+# define PLAYER_SIZE (uint32_t)(CELL_SIZE / 2)
+# define PLAYER_HALF (uint32_t)(PLAYER_SIZE / 2)
 # define WIN_TITLE "Cub3D"
+# define ROT_SPEED 3.0
+# define MOVE_SPEED 0.04
+# define MAPFG 0xFFFFFFFF
+# define MAPBG 0x333333FF
+
+typedef struct s_v2f {
+  float_t x;
+  float_t y;
+} t_v2f;
+
+typedef struct s_v2i {
+  int32_t x;
+  int32_t y;
+} t_v2i;
 
 typedef struct s_player
 {
-    double  x;
-    double  y;
-    double  dir_x;
-    double  dir_y;
-    double  plane_x;
-    double  plane_y;
+    t_v2f position;
+    t_v2f dir;
+    t_v2f plane;
 }               t_player;
 
 typedef struct s_textures
@@ -63,17 +77,15 @@ typedef struct s_map
     int         elements_count;
     t_textures  textures;
     t_colors    colors;
+    mlx_image_t *img;
+    t_v2i position;
+    t_player player;
 }               t_map;
 
 typedef struct s_game
 {
-    void    *mlx;
-    void    *win;
-    void    *img;
-    char    *addr;
-    int     bits_per_pixel;
-    int     line_length;
-    int     endian;
+    mlx_t *mlx;
+    mlx_image_t *canvas;
     t_map   *map;
 }               t_game;
 
@@ -115,7 +127,37 @@ void    free_player(void);
 
 // Map utility functions
 void    fix_zero_space_to_zero(t_map *map);
-void    print_map(t_map *map);
+
+// Mini map
+int minimap_setup(t_game *game);
+void	minimap_render(t_game *game);
+
+// Engine
+void	render_game(t_game *game);
+void	draw_line(mlx_image_t *grid, t_v2f start, t_v2f end, uint32_t color);
+
+// Vector functions
+t_v2i    veci_new(int32_t x, int32_t y);
+t_v2i    veci_zero(void);
+t_v2i    veci_from(t_v2i that);
+void    veci_print(char *label, t_v2i vec);
+t_v2i    veci_scale(t_v2i vec, float_t factor);
+t_v2i    veci_add(t_v2i vec, t_v2i that);
+t_v2i    veci_sub(t_v2i vec, t_v2i that);
+t_v2i    veci_div(t_v2i vec, t_v2i that);
+t_v2i    veci_mul(t_v2i vec, t_v2i that);
+t_v2f	vecf_rot(t_v2f vec, float_t angle);
+
+t_v2f    vecf_new(float_t x, float_t y);
+t_v2f    vecf_zero(void);
+t_v2f    vecf_from(t_v2f that);
+void    vecf_print(char *label, t_v2f vec);
+t_v2f    vecf_scale(t_v2f vec, float_t factor);
+t_v2f    vecf_scale(t_v2f vec, float_t factor);
+t_v2f    vecf_add(t_v2f vec, t_v2f that);
+t_v2f    vecf_sub(t_v2f vec, t_v2f that);
+t_v2f    vecf_div(t_v2f vec, t_v2f that);
+t_v2f    vecf_mul(t_v2f vec, t_v2f that);
 
 // Window and game functions
 int     init_window(t_game *game);
@@ -123,6 +165,8 @@ int     close_window(t_game *game);
 int     handle_keypress(int keycode, t_game *game);
 void    render_frame(t_game *game);
 int     game_loop(t_game *game);
+void	move_player_in_dir(t_game *game, t_v2f dir);
+void	rotate_player(t_game *game, float_t rot_speed);
 
 
 

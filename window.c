@@ -14,53 +14,54 @@
 
 int	close_window(t_game *game)
 {
-	if (game->map)
-	{
-		free_textures(game->map);
-		free_map_grid(game->map);
-		free(game->map);
-	}
-	if (game->win)
-		mlx_destroy_window(game->mlx, game->win);
 	if (game->mlx)
-	{
-		mlx_destroy_display(game->mlx);
-		free(game->mlx);
-	}
-	exit(0);
+		mlx_close_window(game->mlx);
 	return (0);
 }
 
-int	handle_keypress(int keycode, t_game *game)
+void	capture_keys(void *param)
 {
-	if (keycode == 65307)
+	t_game	*game;
+
+	game = param;
+	if (mlx_is_key_down(game->mlx, MLX_KEY_ESCAPE))
 		close_window(game);
-	return (0);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_W))
+		move_player_in_dir(game, game->map->player.dir);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_S))
+		move_player_in_dir(game, vecf_scale(game->map->player.dir, -1));
+	if (mlx_is_key_down(game->mlx, MLX_KEY_A))
+		move_player_in_dir(game, vecf_scale(game->map->player.plane, -1));
+	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
+		move_player_in_dir(game, game->map->player.plane);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
+		rotate_player(game, -ROT_SPEED * game->mlx->delta_time);
+	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
+		rotate_player(game, ROT_SPEED * game->mlx->delta_time);
 }
 
-void	render_frame(t_game *game)
+static void	start(void *param)
 {
-	mlx_clear_window(game->mlx, game->win);
-}
+	t_game	*game;
 
-int	game_loop(t_game *game)
-{
-	render_frame(game);
-	return (0);
+	game = param;
+	render_game(game);
 }
 
 int	init_window(t_game *game)
 {
-	game->mlx = mlx_init();
+	game->mlx = mlx_init(WIN_WIDTH, WIN_HEIGHT, WIN_TITLE, false);
 	if (!game->mlx)
 		return (ft_putstr_fd("Error\nFailed to initialize MLX\n", 2), -1);
-	
-	game->win = mlx_new_window(game->mlx, 1200, 600, WIN_TITLE);
-	if (!game->win)
-		return (ft_putstr_fd("Error\nFailed to create window\n", 2), -1);
-	mlx_hook(game->win, 2, 1L<<0, handle_keypress, game);
-	mlx_hook(game->win, 17, 1L<<17, close_window, game);
-	mlx_loop_hook(game->mlx, game_loop, game);
-	
+	game->canvas = mlx_new_image(game->mlx, game->mlx->width,
+			game->mlx->height);
+	if (!game->canvas)
+		return (ft_putstr_fd("Error\nFailed to init image\n", 2), -1);
+	if (mlx_image_to_window(game->mlx, game->canvas, 0, 0) < 0)
+		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
+	if (minimap_setup(game) != 0)
+		return (-1);
+	mlx_loop_hook(game->mlx, capture_keys, game);
+	mlx_loop_hook(game->mlx, start, game);
 	return (0);
 }
