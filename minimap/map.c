@@ -1,4 +1,5 @@
 #include "../cub3d.h"
+#include <stdint.h>
 
 static void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
 {
