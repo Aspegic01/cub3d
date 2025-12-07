@@ -154,4 +154,12 @@ void	free_textures(t_map *map)
 		free(map->textures.west);
 	if (map->textures.east)
 		free(map->textures.east);
+	if (map->tex_north)
+		mlx_delete_texture(map->tex_north);
+	if (map->tex_south)
+		mlx_delete_texture(map->tex_south);
+	if (map->tex_west)
+		mlx_delete_texture(map->tex_west);
+	if (map->tex_east)
+		mlx_delete_texture(map->tex_east);
 }

@@ -75,6 +75,10 @@ typedef struct s_map
     int         width;
     int         height;
     int         elements_count;
+    mlx_texture_t *tex_north;
+    mlx_texture_t *tex_south;
+    mlx_texture_t *tex_west;
+    mlx_texture_t *tex_east;
     t_textures  textures;
     t_colors    colors;
     mlx_image_t *img;
