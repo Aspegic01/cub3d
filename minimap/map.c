@@ -1,5 +1,4 @@
 #include "../cub3d.h"
-#include <stdint.h>
 
 static void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
 {
@@ -49,7 +48,7 @@ static void	draw_dirline(t_map *scene, uint32_t color)
 	{
 		exit(1);
 	}
-	
+
 
 }
 
@@ -88,17 +87,17 @@ static uint32_t	darken_color(uint32_t color)
 
 void load_map_textures(t_map *map)
 {
-    map->tex_north = mlx_load_png(map->textures.north);
-    map->tex_south = mlx_load_png(map->textures.south);
-    map->tex_west  = mlx_load_png(map->textures.west);
-    map->tex_east  = mlx_load_png(map->textures.east);
+	map->tex_north = mlx_load_png(map->textures.north);
+	map->tex_south = mlx_load_png(map->textures.south);
+	map->tex_west  = mlx_load_png(map->textures.west);
+	map->tex_east  = mlx_load_png(map->textures.east);
 
-    if (!map->tex_north || !map->tex_south ||
-        !map->tex_west || !map->tex_east)
-    {
-        ft_putstr_fd("Texture load error\n", 2);
-        exit(1);
-    }
+	if (!map->tex_north || !map->tex_south ||
+		!map->tex_west || !map->tex_east)
+	{
+		ft_putstr_fd("Texture load error\n", 2);
+		exit(1);
+	}
 }
 
 void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
@@ -158,7 +157,7 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 			if (at_wall(scene, map.x, map.y))
 				hit = 1;
 		}
-		
+
 		// t_v2f end = vecf_add(player->position, vecf_scale(ray_dir, distance));
 		// draw_line(game->map->img, vecf_scale(player->position, CELL_SIZE), vecf_scale(end, CELL_SIZE), color);
 		int32_t line_height;
@@ -208,7 +207,7 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 			float wallX;
 			if (side == 0)
 				wallX = hit_pos.y;
-			 else
+			else
 				wallX = hit_pos.x;
 			wallX -= floor(wallX);
 			int texX = (int)(wallX * (float)tex->width);
@@ -237,7 +236,7 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 			}
 		}
 		else
-		{
+	{
 			int wall_color = color;
 			if (side == 1)
 				wall_color = 0x0000ff00;
@@ -322,7 +321,7 @@ int	minimap_setup(t_game *game)
 		return (ft_putstr_fd("Error\nFailed to initialize image\n", 2), -1);
 	game->map->position = veci_new(WIN_WIDTH * 0.01, WIN_HEIGHT * 0.01);
 	img_idx = mlx_image_to_window(game->mlx, game->map->img,
-			game->map->position.x, game->map->position.y);
+			       game->map->position.x, game->map->position.y);
 	if (img_idx < 0)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
 	map_print(game->map);
