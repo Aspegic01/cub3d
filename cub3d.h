@@ -83,6 +83,7 @@ typedef struct s_map
     t_colors    colors;
     mlx_image_t *img;
     t_v2i position;
+    t_v2i size;
     t_player player;
 }               t_map;
 
@@ -144,6 +145,7 @@ void	draw_line(mlx_image_t *grid, t_v2f start, t_v2f end, uint32_t color);
 t_v2i    veci_new(int32_t x, int32_t y);
 t_v2i    veci_zero(void);
 t_v2i    veci_from(t_v2i that);
+t_v2i    veci_fromf(t_v2f that);
 void    veci_print(char *label, t_v2i vec);
 t_v2i    veci_scale(t_v2i vec, float_t factor);
 t_v2i    veci_add(t_v2i vec, t_v2i that);

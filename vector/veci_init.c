@@ -18,6 +18,15 @@ t_v2i    veci_from(t_v2i that)
 	return (this);
 }
 
+t_v2i    veci_fromf(t_v2f that)
+{
+	t_v2i	this;
+
+	this.x = that.x;
+	this.y = that.y;
+	return (this);
+}
+
 t_v2i	veci_zero(void)
 {
 	t_v2i	this;

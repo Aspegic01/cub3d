@@ -18,7 +18,6 @@ t_v2f    vecf_from(t_v2f that)
 	return (this);
 }
 
-
 t_v2f	vecf_zero(void)
 {
 	t_v2f	this;
