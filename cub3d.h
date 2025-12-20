@@ -26,6 +26,8 @@
 # define WIN_WIDTH 16 * 80
 # define WIN_HEIGHT 9 * 80
 # define CELL_SIZE (uint32_t)(WIN_WIDTH * 0.01)
+# define CELL_COUNT 10
+# define CELL_COUNT_HALF (uint32_t)(CELL_COUNT / 2)
 # define PLAYER_SIZE (uint32_t)(CELL_SIZE / 4)
 # define PLAYER_HALF (uint32_t)(PLAYER_SIZE / 2)
 # define WIN_TITLE "Cub3D"
@@ -140,6 +142,7 @@ void	minimap_render(t_game *game);
 // Engine
 void	render_game(t_game *game);
 void	draw_line(mlx_image_t *grid, t_v2f start, t_v2f end, uint32_t color);
+void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color);
 
 // Vector functions
 t_v2i    veci_new(int32_t x, int32_t y);
