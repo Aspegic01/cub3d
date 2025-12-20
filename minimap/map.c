@@ -7,10 +7,10 @@ void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
 
 	start = veci_new(pos.x, pos.y);
 	end = veci_new(pos.x + CELL_SIZE, pos.y + CELL_SIZE);
-	while (start.y < end.y)
+	while (start.y < end.y && end.y < scene->size.y)
 	{
 		start.x = pos.x;
-		while (start.x < end.x)
+		while (start.x < end.x && end.x < scene->size.x)
 		{
 			if (end.y - start.y == CELL_SIZE || end.x - start.x == CELL_SIZE)
 				mlx_put_pixel(scene->img, start.x, start.y, color << 1);
@@ -20,24 +20,6 @@ void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
 		}
 		start.y++;
 	}
-}
-
-t_v2f	get_player_center(t_player *p)
-{
-	t_v2f that = vecf_scale(vecf_new(p->position.x, p->position.y), CELL_SIZE);
-	that.x += PLAYER_HALF;
-	that.y += PLAYER_HALF;
-	return (that);
-}
-
-void	draw_dirline(t_map *scene, uint32_t color)
-{
-	t_v2f	direction;
-	t_v2f	center;
-
-	center = get_player_center(&scene->player);
-	direction = vecf_scale(scene->player.dir, CELL_SIZE);
-	draw_line(scene->img, center, vecf_add(center, direction), color);
 }
 
 bool	at_wall(t_map *map, float_t offsetx, float_t offsety)
@@ -235,49 +217,52 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 	}
 }
 
-void	render_player(t_game *game, t_map *scene, uint32_t color)
+t_v2f	get_player_center(t_player *p)
 {
-	(void)color;
-	// t_v2f	start;
-	// t_v2f	end;
-	//
-	// start = vecf_scale(vecf_new(scene->player.position.x, scene->player.position.y), CELL_SIZE);
-	// end = vecf_new(start.x + PLAYER_SIZE, start.y + PLAYER_SIZE);
-	// while (start.y <= end.y)
-	// {
-	// 	start.x = scene->player.position.x * CELL_SIZE;
-	// 	while (start.x <= end.x)
-	// 	{
-	// 		mlx_put_pixel(scene->img, start.x, start.y, color);
-	// 		start.x++;
-	// 	}
-	// 	start.y++;
-	// }
-	draw_fov(game, scene, &scene->player, 0xff00ffff);
-	// draw_dirline(scene, color);
+	t_v2f that = vecf_scale(vecf_new(p->position.x, p->position.y), CELL_SIZE);
+	that.x += PLAYER_HALF;
+	that.y += PLAYER_HALF;
+	return (that);
 }
 
-void	minimap_render2(t_game *game)
+void	draw_dirline(t_map *scene, t_v2f player_pos, uint32_t color)
 {
-	// t_v2i	pos;
-	// int		line_len;
-	//
-	// pos = veci_zero();
-	// while (pos.y < game->map->height)
-	// {
-	// 	pos.x = 0;
-	// 	line_len = ft_strlen(game->map->grid[pos.y]);
-	// 	while (pos.x < game->map->width)
-	// 	{
-	// 		if (pos.x < line_len && game->map->grid[pos.y][pos.x] == '0')
-	// 			render_cell(game->map, veci_scale(pos, CELL_SIZE), MAPFG);
-	// 		else
-	// 			render_cell(game->map, veci_scale(pos, CELL_SIZE), MAPBG);
-	// 		pos.x++;
-	// 	}
-	// 	pos.y++;
-	// }
-	render_player(game, game->map, 0x0000FFFF);
+	t_v2f	direction;
+	player_pos.x += PLAYER_HALF;
+	player_pos.y += PLAYER_HALF;
+
+	direction = vecf_scale(scene->player.dir, (float_t)CELL_SIZE / 1.5);
+	draw_line(scene->img, player_pos, vecf_add(player_pos, direction), color);
+}
+
+void	render_player(t_map *scene, uint32_t color)
+{
+	t_v2f	player_pos;
+	t_v2i	start;
+	t_v2i	end;
+	t_v2i	render;
+
+	start = veci_new(scene->player.position.x - 5, scene->player.position.y - 5);
+	if (start.x < 0)
+		start.x = 0;
+	if (start.y < 0)
+		start.y = 0;
+	player_pos.x = (scene->player.position.x - start.x) * CELL_SIZE;
+	player_pos.y = (scene->player.position.y - start.y) * CELL_SIZE;
+	end.y = 0;
+	while (end.y < (int32_t)PLAYER_SIZE)
+	{
+		end.x = 0;
+		while (end.x < (int32_t)PLAYER_SIZE)
+		{
+			render = veci_new(player_pos.x + end.x, player_pos.y + end.y);
+			if (render.x >= 0 && render.x < scene->size.x && render.y >= 0 && render.y < scene->size.y)
+				mlx_put_pixel(scene->img, render.x, render.y, color);
+			end.x++;
+		}
+		end.y++;
+	}
+	draw_dirline(scene, player_pos, color);
 }
 
 void	minimap_render(t_game *game)
@@ -286,39 +271,39 @@ void	minimap_render(t_game *game)
 	int		line_len;
 
 	draw_fov(game, game->map, &game->map->player, 0xff00ffff);
-	int max_cells = 4;
-	veci_print("map_size", game->map->size);
+	t_v2i render = veci_zero();
 	start_pos = veci_fromf(game->map->player.position);
-	veci_print("map_size", veci_new(game->map->width, game->map->height));
-	veci_print("player_pos", start_pos);
-	int x1 = start_pos.x - max_cells;
-	int x2 = start_pos.x + max_cells;
-	int y1 = start_pos.y - max_cells;
-	int y2 = start_pos.y + max_cells;
+	int x1 = start_pos.x - 5;
+	int x2 = start_pos.x + 5;
+	int y1 = start_pos.y - 5;
+	int y2 = start_pos.y + 5;
 	if (x1 < 0)
 		x1 = 0;
+	int initialX1 = x1;
 	if (x2 > game->map->width)
 		x2 = game->map->width;
 	if (y1 < 0)
 		y1 = 0;
 	if (y2 > game->map->height)
 		y2 = game->map->height;
-	printf("%d %d\n", x1, x2);
-	printf("%d %d\n", y1, y2);
-	while (y1 < y2)
+	while (y1 <= y2 && y1 < game->map->height)
 	{
+		x1 = initialX1;
+		render.x = 0;
 		line_len = ft_strlen(game->map->grid[y1]);
-		while (x1 < x2)
+		while (x1 <= x2)
 		{
 			if (x1 < line_len && game->map->grid[y1][x1] == '0')
-				render_cell(game->map, veci_new(x1 * CELL_SIZE, y1 * CELL_SIZE), MAPFG);
+				render_cell(game->map, veci_new(render.x * CELL_SIZE, render.y * CELL_SIZE), MAPFG);
 			else
-				render_cell(game->map, veci_new(x1 * CELL_SIZE, y1 * CELL_SIZE), MAPBG);
+				render_cell(game->map, veci_new(render.x * CELL_SIZE, render.y * CELL_SIZE), MAPBG);
 			x1++;
+			render.x++;
 		}
 		y1++;
+		render.y++;
 	}
-	// render_player(game, game->map, 0x0000FFFF);
+	render_player(game->map, 0x0000FFFF);
 }
 
 static void	map_print(t_map *map)
@@ -344,7 +329,7 @@ int	minimap_setup(t_game *game)
 	int32_t	img_idx;
 
 	grid_dimensions = veci_new(game->map->width, game->map->height);
-	game->map->size = veci_new(CELL_SIZE * 8, CELL_SIZE * 8);
+	game->map->size = veci_new(CELL_SIZE * 10, CELL_SIZE * 10);
 	game->map->img = mlx_new_image(game->mlx, game->map->size.x, game->map->size.y);
 	if (!game->map->img)
 		return (ft_putstr_fd("Error\nFailed to initialize image\n", 2), -1);
