@@ -6,37 +6,12 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/29 09:32:27 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/12/24 21:17:31 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include "libft/libft.h"
-
-char	*extract_path(char *line)
-{
-	int		start;
-	int		end;
-	int		len;
-	char	*path;
-
-	start = 0;
-	while (line[start] && (line[start] == ' ' || line[start] == '\t'))
-		start++;
-	while (line[start] && line[start] != ' ' && line[start] != '\t')
-		start++;
-	while (line[start] && (line[start] == ' ' || line[start] == '\t'))
-		start++;
-	end = start;
-	while (line[end] && line[end] != '\n' && line[end] != ' ' && line[end] != '\t')
-		end++;
-	len = end - start;
-	path = malloc(sizeof(char) * (len + 1));
-	if (!path)
-		return (NULL);
-	ft_strlcpy(path, line + start, len + 1);
-	return (path);
-}
 
 // bool ft_isnum(char *rgb)
 // {
@@ -84,7 +59,6 @@ static int	is_valid_rgb_token(char *s)
 
 static int	color_er(char **rgb)
 {
-	
 	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2])
 	{
 		if (rgb)
@@ -96,13 +70,13 @@ static int	color_er(char **rgb)
 		free_rgb(rgb);
 		return (0);
 	}
-	if (!is_valid_rgb_token(rgb[0]) || !is_valid_rgb_token(rgb[1])\
+	if (!is_valid_rgb_token(rgb[0]) || !is_valid_rgb_token(rgb[1])
 		|| !is_valid_rgb_token(rgb[2]))
 	{
 		free_rgb(rgb);
 		return (0);
 	}
-	return 1;
+	return (1);
 }
 
 int	parse_color(char *line, int *r, int *g, int *b)
@@ -117,7 +91,7 @@ int	parse_color(char *line, int *r, int *g, int *b)
 		i++;
 	rgb = ft_split(line + i, ',');
 	if (!color_er(rgb))
-		return 0;
+		return (0);
 	*r = ft_atoi(rgb[0]);
 	*g = ft_atoi(rgb[1]);
 	*b = ft_atoi(rgb[2]);
@@ -138,28 +112,10 @@ int	load_texture(char *line, t_map *map)
 	else if (ft_strncmp(line, "EA ", 3) == 0)
 		map->textures.east = extract_path(line);
 	else if (ft_strncmp(line, "F ", 2) == 0)
-		return (parse_color(line, &map->colors.floor_r, &map->colors.floor_g, &map->colors.floor_b));
+		return (parse_color(line, &map->colors.floor_r,
+				&map->colors.floor_g, &map->colors.floor_b));
 	else if (ft_strncmp(line, "C ", 2) == 0)
-		return (parse_color(line, &map->colors.ceiling_r, &map->colors.ceiling_g, &map->colors.ceiling_b));
+		return (parse_color(line, &map->colors.ceiling_r,
+				&map->colors.ceiling_g, &map->colors.ceiling_b));
 	return (1);
-}
-
-void	free_textures(t_map *map)
-{
-	if (map->textures.north)
-		free(map->textures.north);
-	if (map->textures.south)
-		free(map->textures.south);
-	if (map->textures.west)
-		free(map->textures.west);
-	if (map->textures.east)
-		free(map->textures.east);
-	if (map->tex_north)
-		mlx_delete_texture(map->tex_north);
-	if (map->tex_south)
-		mlx_delete_texture(map->tex_south);
-	if (map->tex_west)
-		mlx_delete_texture(map->tex_west);
-	if (map->tex_east)
-		mlx_delete_texture(map->tex_east);
 }

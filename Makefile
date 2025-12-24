@@ -6,7 +6,7 @@
 #    By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/08/27 10:15:47 by mlabrirh          #+#    #+#              #
-#    Updated: 2025/10/10 10:17:36 by mlabrirh         ###   ########.fr        #
+#    Updated: 2025/12/24 21:06:22 by mlabrirh         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRCS = main.c \
        ./get_next_line/get_next_line.c \
        ./get_next_line/get_next_line_utils.c \
        ./vector/vecf_init.c ./vector/vecf_ops.c ./vector/veci_init.c ./vector/veci_ops.c \
-       ./minimap/map.c ./engine/render.c ./engine/drawline.c
+       ./minimap/map.c ./engine/render.c ./engine/drawline.c map_parsing_utils.c texture_utils.c utils_c.c utils_s.c
 
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
