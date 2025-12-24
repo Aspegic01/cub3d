@@ -39,18 +39,6 @@ static void	draw_dirline(t_map *scene, uint32_t color)
 	center = get_player_center(&scene->player);
 	direction = vecf_scale(scene->player.dir, CELL_SIZE);
 	draw_line(scene->img, center, vecf_add(center, direction), color);
-
-	scene->tex_north = mlx_load_png(scene->textures.north);
-	scene->tex_south = mlx_load_png(scene->textures.south);
-	scene->tex_west  = mlx_load_png(scene->textures.west);
-	scene->tex_east  = mlx_load_png(scene->textures.east);
-	if (!scene->tex_north || !scene->tex_south ||
-		!scene->tex_west || !scene->tex_east)
-	{
-		exit(1);
-	}
-	
-
 }
 
 bool	at_wall(t_map *map, float_t offsetx, float_t offsety)
@@ -103,6 +91,8 @@ void load_map_textures(t_map *map)
 
 void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 {
+	(void)color;
+	load_map_textures(scene);
 	uint32_t x = 0;
 	while (x < game->canvas->width)
 	{
@@ -161,11 +151,7 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 		
 		// t_v2f end = vecf_add(player->position, vecf_scale(ray_dir, distance));
 		// draw_line(game->map->img, vecf_scale(player->position, CELL_SIZE), vecf_scale(end, CELL_SIZE), color);
-		int32_t line_height;
-		if (distance == 0)
-			line_height = (int32_t)game->canvas->height / 1;
-		else
-			line_height = (int32_t)game->canvas->height / distance;
+		int32_t line_height = (int32_t)game->canvas->height / distance;
 		int32_t draw_start = -line_height / 2 + game->canvas->height / 2;
 		if (draw_start < 0)
 			draw_start = 0;
@@ -187,6 +173,7 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 		// 	exit(1);
 		// }
 
+		// if side = 0 u hit wall from x else u hit from y
 		if (side == 0)
 		{
 			if (step.x < 0)
@@ -201,49 +188,49 @@ void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color)
 			else
 				tex = scene->tex_south;
 		}
-		if (tex)
+		if (tex) // If a wall texture is selected for this column
 		{
 			/* compute exact hit position on the wall */
-			t_v2f hit_pos = vecf_add(player->position, vecf_scale(ray_dir, distance));
-			float wallX;
-			if (side == 0)
-				wallX = hit_pos.y;
-			 else
-				wallX = hit_pos.x;
-			wallX -= floor(wallX);
-			int texX = (int)(wallX * (float)tex->width);
-			if (texX < 0)
+			t_v2f hit_pos = vecf_add(player->position, vecf_scale(ray_dir, distance)); // World-space point where the ray hits the wall
+			float wallX; // Fractional offset along the wall face (0..1)
+			if (side == 0) // If we stepped in X (hit a vertical wall)
+				wallX = hit_pos.y; // Use Y coordinate to measure along the wall
+			else // Otherwise we stepped in Y (hit a horizontal wall)
+				wallX = hit_pos.x; // Use X coordinate to measure along the wall
+			wallX -= (int)wallX; // Keep only the fractional part to get texture offset
+			int texX = (int)(wallX * (float)tex->width); // Map fractional offset to texture column
+			if (texX < 0) // Clamp left
 				texX = 0;
-			if (texX >= (int)tex->width)
+			if (texX >= (int)tex->width) // Clamp right
 				texX = tex->width - 1;
 
-			float texStep = (float)tex->height / (float)line_height;
-			float texPos = (draw_start - (float)game->canvas->height / 2 + (float)line_height / 2) * texStep;
-			while (y < draw_end)
+			float texStep = (float)tex->height / (float)line_height; // Texture Y increment per screen pixel
+			float texPos = (draw_start - (float)game->canvas->height / 2 + (float)line_height / 2) * texStep; // Starting texture Y at first drawn pixel
+			while (y < draw_end) // Draw the vertical textured wall slice
 			{
-				int texY = (int)texPos;
-				if (texY < 0)
+				int texY = (int)texPos; // Current texture row to sample
+				if (texY < 0) // Clamp top
 					texY = 0;
-				if (texY >= (int)tex->height)
+				if (texY >= (int)tex->height) // Clamp bottom
 					texY = tex->height - 1;
-				int idx = (texY * tex->width + texX) * tex->bytes_per_pixel;
-				uint8_t *p = &tex->pixels[idx];
-				uint32_t pixcol = get_pixel_color(p[0], p[1], p[2], p[3]);
-				if (side == 1)
+				int idx = (texY * tex->width + texX) * tex->bytes_per_pixel; // Index into texture pixel buffer (RGBA)
+				uint8_t *p = &tex->pixels[idx]; // Pointer to sampled pixel bytes
+				uint32_t pixcol = get_pixel_color(p[0], p[1], p[2], p[3]); // Pack sampled RGBA into a 32-bit color
+				if (side == 1) // Shade darker for Y-side hits to add depth
 					pixcol = darken_color(pixcol);
-				mlx_put_pixel(game->canvas, x, y, pixcol);
-				texPos += texStep;
-				y++;
+				mlx_put_pixel(game->canvas, x, y, pixcol); // Plot the pixel to the screen at column x, row y
+				texPos += texStep; // Advance texture Y position
+				y++; // Move to next screen row
 			}
-		}
-		else
-		{
-			int wall_color = color;
-			if (side == 1)
-				wall_color = 0x0000ff00;
-			while (y < draw_end)
-				mlx_put_pixel(game->canvas, x, ++y, wall_color);
-		}
+		} // End textured column drawing
+		// else
+		// {
+		// 	int wall_color = color;
+		// 	if (side == 1)
+		// 		wall_color = 0x0000ff00;
+		// 	while (y < draw_end)
+		// 		mlx_put_pixel(game->canvas, x, ++y, wall_color);
+		// }
 		x++;
 	}
 }

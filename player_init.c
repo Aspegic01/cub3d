@@ -48,10 +48,8 @@ int	find_player_position(t_map *map, t_player *player)
 	int		i;
 	int		j;
 	char	direction;
-	int		player_count;
 
 	i = 0;
-	player_count = 0;
 	while (i < map->height)
 	{
 		j = 0;
@@ -64,13 +62,13 @@ int	find_player_position(t_map *map, t_player *player)
 				player->position = vecf_new(j, i);
 				map->grid[i][j] = '0';
 				set_player_direction(player, direction);
-				player_count++;
+				map->player_count++;
 			}
 			j++;
 		}
 		i++;
 	}
-	return (player_count);
+	return (map->player_count);
 }
 
 int	init_player(t_map *map, t_player *player)

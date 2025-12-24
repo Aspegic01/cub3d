@@ -22,6 +22,9 @@ t_map	*init_map(void)
 	map->grid = NULL;
 	map->width = 0;
 	map->height = 0;
+	map->map_line_index = 0;
+	map->line_count = 0;
+	map->player_count = 0;
 	map->elements_count = 0;
 	map->textures.north = NULL;
 	map->textures.south = NULL;
@@ -38,11 +41,11 @@ t_map	*init_map(void)
 
 int	is_valid_element(char *line)
 {
-	if ((ft_strncmp(line, "NO ", 3) == 0) || 
+	if ((ft_strncmp(line, "NO ", 3) == 0) ||
 		(ft_strncmp(line, "SO ", 3) == 0) ||
-		(ft_strncmp(line, "WE ", 3) == 0) || 
+		(ft_strncmp(line, "WE ", 3) == 0) ||
 		(ft_strncmp(line, "EA ", 3) == 0) ||
-		(ft_strncmp(line, "F ", 2) == 0) || 
+		(ft_strncmp(line, "F ", 2) == 0) ||
 		(ft_strncmp(line, "C ", 2) == 0))
 		return (1);
 	return (0);
@@ -64,46 +67,47 @@ int	validate_map_line(char *line)
 	return (1);
 }
 
-int	process_line(char *line, t_map *map, int fd)
+int	free_tex_map(t_map *map, int fd, char *error)
+{
+	return (free_textures(map), free(map), close(fd)
+		, ft_putstr_fd(error, 2), -1);
+}
+
+static int	is_empty_line(char *line)
 {
 	int	i;
 
 	i = 0;
 	while (line[i] == ' ' || line[i] == '\t')
 		i++;
-	printf("%d\n", i);
 	if (ft_strncmp(line, "\n", ft_strlen(line)) == 0)
+		return (0);
+	return (1);
+}
+
+int	process_line(char *line, t_map *map, int fd)
+{
+
+	if (!is_empty_line(line))
 		return (0);
 	if (map->elements_count < 6)
 	{
 		if (is_valid_element(line))
 		{
 			if (!load_texture(line, map))
-			{
-				free_textures(map);
-				free(map);
-				close(fd);
-				return (ft_putstr_fd("Error\nInvalid texture or color format\n", 2), -1);
-			}
+				return (free_tex_map(map, fd
+						, "Error\nInvalid texture or color format\n"));
 			map->elements_count++;
 		}
 		else if (line[0] != ' ' && line[0] != '\t')
-		{
-			free_textures(map);
-			free(map);
-			close(fd);
-			return (ft_putstr_fd("Error\nInvalid element in configuration\n", 2), -1);
-		}
+			return (free_tex_map(map, fd
+					, "Error\nInvalid element in configuration\n"));
 	}
 	else
 	{
 		if (!validate_map_line(line))
-		{
-			free_textures(map);
-			free(map);
-			close(fd);
-			return (ft_putstr_fd("Error\nInvalid character in map\n", 2), -1);
-		}
+			return (free_tex_map(map, fd
+					, "Error\nInvalid character in map\n"));
 		map->height++;
 	}
 	return (0);

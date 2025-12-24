@@ -88,8 +88,7 @@ t_map	*read_map(char *map_file)
 		free_textures(map);
 		return (free(map), NULL);
 	}
-	map->player = player;
-	return (map);
+	return (map->player = player, map);
 }
 
 int	main(int ac, char *av[])
@@ -99,7 +98,7 @@ int	main(int ac, char *av[])
 
 	if (ac != 2)
 		return (ft_putstr_fd("Error\nInvalid number of arguments\n", 2), 1);
-	if (strcmp(av[1] + ft_strlen(av[1]) - 4, ".cub") != 0)
+	if (ft_strcmp(av[1] + ft_strlen(av[1]) - 4, ".cub") != 0)
 		return (ft_putstr_fd("Error\nInvalid file extension\n", 2), 1);
 	map = read_map(av[1]);
 	if (!map)

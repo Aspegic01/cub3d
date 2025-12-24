@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 10:00:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/17 11:23:23 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/12/19 17:16:26 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,15 @@
 
 # define WIN_WIDTH 16 * 80
 # define WIN_HEIGHT 9 * 80
+# define WIDTH WIN_WIDTH
+# define HEIGHT WIN_HEIGHT
 # define CELL_SIZE (uint32_t)(WIN_WIDTH * 0.01)
 # define PLAYER_SIZE (uint32_t)(CELL_SIZE / 4)
 # define PLAYER_HALF (uint32_t)(PLAYER_SIZE / 2)
 # define WIN_TITLE "Cub3D"
 # define ROT_SPEED 3.0
 # define MOVE_SPEED 0.025
+# define MOUSE_SENSITIVITY 0.002
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
 
@@ -74,6 +77,9 @@ typedef struct s_map
     char        **grid;
     int         width;
     int         height;
+    int		line_count;
+    int		player_count;
+    int		map_line_index;
     int         elements_count;
     mlx_texture_t *tex_north;
     mlx_texture_t *tex_south;
@@ -91,6 +97,11 @@ typedef struct s_game
     mlx_t *mlx;
     mlx_image_t *canvas;
     t_map   *map;
+    int32_t last_mouse_x;
+    int32_t last_mouse_y;
+    bool    first_mouse;
+    bool    pause_game;
+    double  player_angle;
 }               t_game;
 
 int     init_game(char *map_file);
@@ -103,7 +114,7 @@ int     validate_map_line(char *line);
 int     process_line(char *line, t_map *map, int fd);
 int     validate_final_map(t_map *map);
 int     allocate_map_grid(t_map *map);
-int     store_map_line(char *line, t_map *map, int line_index);
+int     store_map_line(char *line, t_map *map);
 int     load_map_data(char *map_file, t_map *map);
 int     is_valid_map_char(char c);
 int     check_first_last_row(t_map *map, int row);

@@ -28,7 +28,7 @@ int allocate_map_grid(t_map *map)
 	return (1);
 }
 
-int store_map_line(char *line, t_map *map, int line_index)
+int store_map_line(char *line, t_map *map)
 {
 	int len;
 	int i;
@@ -36,16 +36,16 @@ int store_map_line(char *line, t_map *map, int line_index)
 	len = ft_strlen(line);
 	if (line[len - 1] == '\n')
 		len--;
-	map->grid[line_index] = malloc(sizeof(char) * (len + 1));
-	if (!map->grid[line_index])
+	map->grid[map->map_line_index] = malloc(sizeof(char) * (len + 1));
+	if (!map->grid[map->map_line_index])
 		return (0);
 	i = 0;
 	while (i < len)
 	{
-		map->grid[line_index][i] = line[i];
+		map->grid[map->map_line_index][i] = line[i];
 		i++;
 	}
-	map->grid[line_index][len] = '\0';
+	map->grid[map->map_line_index][len] = '\0';
 	if (len > map->width)
 		map->width = len;
 	return (1);
@@ -138,9 +138,8 @@ int validate_walkable_spaces(t_map *map)
 					!is_valid_neighbor(map, i + 1, j) ||
 					!is_valid_neighbor(map, i, j - 1) ||
 					!is_valid_neighbor(map, i, j + 1))
-				{
-					return (ft_putstr_fd("Error\nMap not valid: walkable space not properly enclosed\n", 2), 0);
-				}
+					return (ft_putstr_fd("Error\nMap not valid: \
+							walkable space not properly enclosed\n", 2), 0);
 			}
 			j++;
 		}
@@ -168,36 +167,27 @@ int load_map_data(char *map_file, t_map *map)
 {
 	int fd;
 	char *line;
-	int line_count;
-	int map_line_index;
 
 	fd = open(map_file, O_RDONLY);
 	if (fd < 0)
 		return (0);
-	line_count = 0;
-	map_line_index = 0;
 	line = get_next_line(fd);
 	while (line)
 	{
 		if (ft_strncmp(line, "\n", ft_strlen(line)) != 0)
 		{
-			if (line_count >= 6)
+			if (map->line_count >= 6)
 			{
-				if (!store_map_line(line, map, map_line_index))
-				{
-					free(line);
-					close(fd);
-					return (0);
-				}
-				map_line_index++;
+				if (!store_map_line(line, map))
+					return (free(line), close(fd), 0);
+				map->map_line_index++;
 			}
-			line_count++;
+			map->line_count++;
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
-	close(fd);
-	return (1);
+	return (close(fd), 1);
 }
 
 static int is_walkable_char(char c)
