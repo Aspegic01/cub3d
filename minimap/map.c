@@ -303,7 +303,7 @@ int	minimap_setup(t_game *game)
 	int32_t	img_idx;
 
 	grid_dimensions = veci_new(game->map->width, game->map->height);
-	map_size = veci_new(456, 168);
+	map_size = veci_scale(grid_dimensions, CELL_SIZE);
 	game->map->img = mlx_new_image(game->mlx, map_size.x, map_size.y);
 	if (!game->map->img)
 		return (ft_putstr_fd("Error\nFailed to initialize image\n", 2), -1);
