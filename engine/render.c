@@ -66,6 +66,6 @@ void	render_game(t_game *game)
 {
 	render_ceiling(game);
 	render_floor(game);
-	draw_fov(game, game->map, &game->map->player, 0xff00ffff);
+	draw_fov(game, game->map, &game->map->player);
 	minimap_render(game);
 }
