@@ -136,13 +136,15 @@ void    free_player(void);
 void    fix_zero_space_to_zero(t_map *map);
 
 // Mini map
+int32_t	clamp(int32_t value, int32_t min, int32_t max);
 int minimap_setup(t_game *game);
 void	minimap_render(t_game *game);
+void	render_player(t_map *scene, uint32_t color);
 
 // Engine
 void	render_game(t_game *game);
 void	draw_line(mlx_image_t *grid, t_v2f start, t_v2f end, uint32_t color);
-void	draw_fov(t_game *game, t_map *scene, t_player *player, uint32_t color);
+void	draw_fov(t_game *game, t_map *scene, t_player *player);
 
 // Vector functions
 t_v2i    veci_new(int32_t x, int32_t y);

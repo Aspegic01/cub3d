@@ -22,7 +22,7 @@ SRCS = main.c \
        ./get_next_line/get_next_line.c \
        ./get_next_line/get_next_line_utils.c \
        ./vector/vecf_init.c ./vector/vecf_ops.c ./vector/veci_init.c ./vector/veci_ops.c \
-       ./minimap/map.c ./engine/render.c ./engine/drawline.c ./engine/raycast.c
+       ./minimap/setup.c ./minimap/map.c ./minimap/player.c ./engine/render.c ./engine/drawline.c ./engine/raycast.c
 
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
