@@ -22,7 +22,7 @@ static void	renderCell(t_map *scene, t_v2i pos, uint32_t color)
 	}
 }
 
-void	minimap_render(t_game *game)
+void	minimap_render_orig(t_game *game)
 {
 	t_v2i	grid_pos;
 	t_v2i	grid_start;
@@ -50,6 +50,34 @@ void	minimap_render(t_game *game)
 			cell.x++;
 		}
 		grid_pos.y++;
+		cell.y++;
+	}
+	render_player(game->map, 0x0000FFFF);
+}
+
+void	minimap_render(t_game *game)
+{
+	t_v2i	cell;
+	t_v2i	offset;
+	uint32_t color;
+
+	offset.x = clamp(game->map->player.position.x - CELL_COUNT_HALF, 0, game->map->width - CELL_COUNT);
+	offset.y = clamp(game->map->player.position.y - CELL_COUNT_HALF, 0, game->map->height - CELL_COUNT);
+	cell.y = 0;
+	while (cell.y < CELL_COUNT)
+	{
+		cell.x = 0;
+		while (cell.x < CELL_COUNT)
+		{
+			int map_x = offset.x + cell.x;
+			int map_y = offset.y + cell.y;
+			color = MAPBG;
+			if (map_x < (int)ft_strlen(game->map->grid[map_y]))
+				if (game->map->grid[map_y][map_x] == '0')
+					color = MAPFG;
+			renderCell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), color);
+			cell.x++;
+		}
 		cell.y++;
 	}
 	render_player(game->map, 0x0000FFFF);
