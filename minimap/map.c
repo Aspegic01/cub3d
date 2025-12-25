@@ -87,32 +87,32 @@ void	render_player(t_map *scene, uint32_t color)
 void	minimap_render(t_game *game)
 {
 	t_v2i	grid_pos;
-	t_v2i	minimap_pos;
 	t_v2i	grid_start;
+	t_v2i	cell;
 	int		line_len;
 
 	grid_pos = veci_fromf(game->map->player.position);
 	grid_start = veci_new(grid_pos.x - CELL_COUNT_HALF, grid_pos.y - CELL_COUNT_HALF);
 	grid_start.x = clamp(grid_start.x, 0, game->map->width - 1);
 	grid_start.y = clamp(grid_start.y, 0, game->map->height - 1);
-	minimap_pos.y = 0;
+	cell.y = 0;
 	grid_pos.y = grid_start.y;
-	while (minimap_pos.y < CELL_COUNT && grid_pos.y < game->map->height)
+	while (cell.y < CELL_COUNT && grid_pos.y < game->map->height)
 	{
-		minimap_pos.x = 0;
+		cell.x = 0;
 		grid_pos.x = grid_start.x;
 		line_len = ft_strlen(game->map->grid[grid_pos.y]);
-		while (minimap_pos.x < CELL_COUNT && grid_pos.x < game->map->width)
+		while (cell.x < CELL_COUNT && grid_pos.x < game->map->width)
 		{
 			if (grid_pos.x < line_len && game->map->grid[grid_pos.y][grid_pos.x] == '0')
-				render_cell(game->map, veci_new(minimap_pos.x * CELL_SIZE, minimap_pos.y * CELL_SIZE), MAPFG);
+				render_cell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), MAPFG);
 			else
-				render_cell(game->map, veci_new(minimap_pos.x * CELL_SIZE, minimap_pos.y * CELL_SIZE), MAPBG);
+				render_cell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), MAPBG);
 			grid_pos.x++;
-			minimap_pos.x++;
+			cell.x++;
 		}
 		grid_pos.y++;
-		minimap_pos.y++;
+		cell.y++;
 	}
 	render_player(game->map, 0x0000FFFF);
 }
