@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: klaayoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/25 19:22:56 by klaayoun          #+#    #+#             */
+/*   Updated: 2025/12/25 19:22:59 by klaayoun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 static int	get_rgba(int r, int g, int b, int a)
@@ -49,6 +61,7 @@ void	render_ceiling(t_game *game)
 		y++;
 	}
 }
+
 void	render_game(t_game *game)
 {
 	render_ceiling(game);
