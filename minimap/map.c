@@ -1,24 +1,24 @@
 #include "../cub3d.h"
 
-void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
+static void	renderCell(t_map *scene, t_v2i pos, uint32_t color)
 {
-	t_v2i	start;
-	t_v2i	end;
+	uint32_t drawColor;
+	uint32_t x;
+	uint32_t y;
 
-	start = veci_new(pos.x, pos.y);
-	end = veci_new(pos.x + CELL_SIZE, pos.y + CELL_SIZE);
-	while (start.y < end.y && end.y < scene->size.y)
+	y = 0;
+	while (y < CELL_SIZE)
 	{
-		start.x = pos.x;
-		while (start.x < end.x && end.x < scene->size.x)
+		x = 0;
+		while (x < CELL_SIZE)
 		{
-			if (end.y - start.y == CELL_SIZE || end.x - start.x == CELL_SIZE)
-				mlx_put_pixel(scene->img, start.x, start.y, color << 1);
-			else
-				mlx_put_pixel(scene->img, start.x, start.y, color);
-			start.x++;
+			drawColor = color;
+			if (x == 0 || y == 0 || x == CELL_SIZE - 1 || y == CELL_SIZE - 1)
+				drawColor = color << 1;
+			mlx_put_pixel(scene->img, pos.x + x, pos.y + y, drawColor);
+			x++;
 		}
-		start.y++;
+		y++;
 	}
 }
 
@@ -43,9 +43,9 @@ void	minimap_render(t_game *game)
 		while (cell.x < CELL_COUNT && grid_pos.x < game->map->width)
 		{
 			if (grid_pos.x < line_len && game->map->grid[grid_pos.y][grid_pos.x] == '0')
-				render_cell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), MAPFG);
+				renderCell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), MAPFG);
 			else
-				render_cell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), MAPBG);
+				renderCell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), MAPBG);
 			grid_pos.x++;
 			cell.x++;
 		}
