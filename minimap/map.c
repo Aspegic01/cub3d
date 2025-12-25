@@ -22,21 +22,6 @@ void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
 	}
 }
 
-void load_map_textures(t_map *map)
-{
-	map->tex_north = mlx_load_png(map->textures.north);
-	map->tex_south = mlx_load_png(map->textures.south);
-	map->tex_west  = mlx_load_png(map->textures.west);
-	map->tex_east  = mlx_load_png(map->textures.east);
-
-	if (!map->tex_north || !map->tex_south ||
-		!map->tex_west || !map->tex_east)
-	{
-		ft_putstr_fd("Texture load error\n", 2);
-		exit(1);
-	}
-}
-
 int32_t	clamp(int32_t value, int32_t min, int32_t max)
 {
 	if (value < min)
@@ -134,6 +119,18 @@ static void	map_print(t_map *map)
 	}
 }
 
+int	load_map_textures(t_map *map)
+{
+	map->tex_north = mlx_load_png(map->textures.north);
+	map->tex_south = mlx_load_png(map->textures.south);
+	map->tex_west  = mlx_load_png(map->textures.west);
+	map->tex_east  = mlx_load_png(map->textures.east);
+
+	if (!map->tex_north || !map->tex_south || !map->tex_west || !map->tex_east)
+		return (ft_putstr_fd("Error\nFailed to load textures\n", 2), -1);
+	return (0);
+}
+
 int	minimap_setup(t_game *game)
 {
 	t_v2i	grid_dimensions;
@@ -149,15 +146,8 @@ int	minimap_setup(t_game *game)
 			       game->map->position.x, game->map->position.y);
 	if (img_idx < 0)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
-	game->map->tex_north = mlx_load_png(game->map->textures.north);
-	game->map->tex_south = mlx_load_png(game->map->textures.south);
-	game->map->tex_west  = mlx_load_png(game->map->textures.west);
-	game->map->tex_east  = mlx_load_png(game->map->textures.east);
-	if (!game->map->tex_north || !game->map->tex_south ||
-		!game->map->tex_west || !game->map->tex_east)
-	{
-		return (ft_putstr_fd("Error\nFailed to load textures\n", 2), -1);
-	}
+	if (load_map_textures(game->map) < 0)
+		return (-1);
 	map_print(game->map);
 	veci_print("canvas", veci_new(WIN_WIDTH, WIN_HEIGHT));
 	veci_print("grid", grid_dimensions);
