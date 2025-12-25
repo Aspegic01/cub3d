@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vecf_init.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: klaayoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/25 19:04:59 by klaayoun          #+#    #+#             */
+/*   Updated: 2025/12/25 19:05:05 by klaayoun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 t_v2f	vecf_new(float_t x, float_t y)
@@ -9,7 +21,7 @@ t_v2f	vecf_new(float_t x, float_t y)
 	return (this);
 }
 
-t_v2f    vecf_from(t_v2f that)
+t_v2f	vecf_from(t_v2f that)
 {
 	t_v2f	this;
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   veci_init.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: klaayoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/25 19:04:59 by klaayoun          #+#    #+#             */
+/*   Updated: 2025/12/25 19:05:05 by klaayoun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
 t_v2i	veci_new(int32_t x, int32_t y)
@@ -9,7 +21,7 @@ t_v2i	veci_new(int32_t x, int32_t y)
 	return (this);
 }
 
-t_v2i    veci_from(t_v2i that)
+t_v2i	veci_from(t_v2i that)
 {
 	t_v2i	this;
 
@@ -18,7 +30,7 @@ t_v2i    veci_from(t_v2i that)
 	return (this);
 }
 
-t_v2i    veci_fromf(t_v2f that)
+t_v2i	veci_fromf(t_v2f that)
 {
 	t_v2i	this;
 
@@ -43,5 +55,3 @@ void	veci_print(char *label, t_v2i this)
 	else
 		printf("v{x = %d, y = %d}\n", this.x, this.y);
 }
-
-
