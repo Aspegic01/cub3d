@@ -155,6 +155,12 @@ void				render_game(t_game *game);
 void				draw_line(mlx_image_t *grid, t_v2f start, t_v2f end,
 						uint32_t color);
 void				draw_fov(t_game *game, t_map *scene, t_player *player);
+bool				ft_at_wall(t_map *map, float_t offsetx, float_t offsety);
+mlx_texture_t		*ft_get_texture(t_map *scene, uint32_t side, t_v2f step);
+uint32_t			ft_darken_color(uint32_t color);
+uint32_t			ft_get_pixel_color(uint8_t r, uint8_t g, uint8_t b,
+						uint8_t a);
+int32_t				ft_get_lineheight(float_t distance);
 
 // Vector functions
 t_v2i				veci_new(int32_t x, int32_t y);
