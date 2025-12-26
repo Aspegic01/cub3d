@@ -28,6 +28,8 @@
 # define WIDTH WIN_WIDTH
 # define HEIGHT WIN_HEIGHT
 # define CELL_SIZE (uint32_t)(WIN_WIDTH * 0.01)
+# define CELL_COUNT 10
+# define CELL_COUNT_HALF (uint32_t)(CELL_COUNT / 2)
 # define PLAYER_SIZE (uint32_t)(CELL_SIZE / 4)
 # define PLAYER_HALF (uint32_t)(PLAYER_SIZE / 2)
 # define WIN_TITLE "Cub3D"
@@ -89,6 +91,7 @@ typedef struct s_map
     t_colors    colors;
     mlx_image_t *img;
     t_v2i position;
+    t_v2i size;
     t_player player;
 }               t_map;
 
@@ -142,17 +145,21 @@ void    free_player(void);
 void    fix_zero_space_to_zero(t_map *map);
 
 // Mini map
+int32_t	clamp(int32_t value, int32_t min, int32_t max);
 int minimap_setup(t_game *game);
 void	minimap_render(t_game *game);
+void	render_player(t_map *scene, uint32_t color);
 
 // Engine
 void	render_game(t_game *game);
 void	draw_line(mlx_image_t *grid, t_v2f start, t_v2f end, uint32_t color);
+void	draw_fov(t_game *game, t_map *scene, t_player *player);
 
 // Vector functions
 t_v2i    veci_new(int32_t x, int32_t y);
 t_v2i    veci_zero(void);
 t_v2i    veci_from(t_v2i that);
+t_v2i    veci_fromf(t_v2f that);
 void    veci_print(char *label, t_v2i vec);
 t_v2i    veci_scale(t_v2i vec, float_t factor);
 t_v2i    veci_add(t_v2i vec, t_v2i that);
