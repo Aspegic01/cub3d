@@ -29,8 +29,8 @@ void	cursor_handler(double xpos, double ypos, void *param)
 	deltax = xpos - game->last_mouse_x;
 	game->last_mouse_x = xpos;
 	rotate_player(game, deltax * 0.001);
-	mlx_set_mouse_pos(game->mlx, WIDTH / 2, HEIGHT / 2);
-	game->last_mouse_x = WIDTH / 2;
+	mlx_set_mouse_pos(game->mlx, WIN_WIDTH / 2, WIN_HEIGHT / 2);
+	game->last_mouse_x = WIN_WIDTH / 2;
 }
 
 void	capture_keys(void *param)
