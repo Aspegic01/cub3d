@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 10:00:38 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/12/19 17:16:26 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/12/26 17:08:10 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,6 @@ typedef struct s_game
     int32_t last_mouse_x;
     int32_t last_mouse_y;
     bool    first_mouse;
-    bool    pause_game;
-    double  player_angle;
 }               t_game;
 
 int     init_game(char *map_file);
@@ -113,7 +111,7 @@ int     is_valid_element(char *line);
 int     validate_map_line(char *line);
 int     process_line(char *line, t_map *map, int fd);
 int     validate_final_map(t_map *map);
-int     allocate_map_grid(t_map *map);
+// int     allocate_map_grid(t_map *map);
 int     store_map_line(char *line, t_map *map);
 int     load_map_data(char *map_file, t_map *map);
 int     is_valid_map_char(char c);

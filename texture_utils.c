@@ -27,7 +27,8 @@ char	*extract_path(char *line)
 	while (line[start] && (line[start] == ' ' || line[start] == '\t'))
 		start++;
 	end = start;
-	while (line[end] && line[end] != '\n' && line[end] != ' ' && line[end] != '\t')
+	while (line[end] && line[end] != '\n'
+		&& line[end] != ' ' && line[end] != '\t')
 		end++;
 	len = end - start;
 	path = malloc(sizeof(char) * (len + 1));

@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 09:58:35 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/10/25 11:40:02 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/12/26 15:40:54 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,9 @@ static int	parse_map_file(char *map_file, t_map *map)
 
 static int	setup_map_grid(char *map_file, t_map *map)
 {
-	if (!allocate_map_grid(map))
+	map->grid = malloc(sizeof(char *) * (map->height + 1));
+	//allocate memory for the line in the grid
+	if (!map->grid)
 		return (ft_putstr_fd("Error\nMemory allocation failed\n", 2), -1);
 	if (!load_map_data(map_file, map))
 	{

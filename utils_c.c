@@ -6,32 +6,16 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 21:03:57 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/12/24 21:04:22 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/12/26 16:11:37 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int allocate_map_grid(t_map *map)
+int	store_map_line(char *line, t_map *map)
 {
-	int i;
-
-	map->grid = malloc(sizeof(char *) * (map->height + 1));
-	if (!map->grid)
-		return (0);
-	i = 0;
-	while (i <= map->height)
-	{
-		map->grid[i] = NULL;
-		i++;
-	}
-	return (1);
-}
-
-int store_map_line(char *line, t_map *map)
-{
-	int len;
-	int i;
+	int	len;
+	int	i;
 
 	len = ft_strlen(line);
 	if (line[len - 1] == '\n')
@@ -51,12 +35,12 @@ int store_map_line(char *line, t_map *map)
 	return (1);
 }
 
-void free_map_grid(t_map *map)
+void	free_map_grid(t_map *map)
 {
-	int i;
+	int	i;
 
 	if (!map || !map->grid)
-		return;
+		return ;
 	i = 0;
 	while (i < map->height && map->grid[i])
 	{
@@ -67,16 +51,16 @@ void free_map_grid(t_map *map)
 	map->grid = NULL;
 }
 
-int is_valid_map_char(char c)
+int	is_valid_map_char(char c)
 {
-	return (c == '1' || c == '0' || c == 'N' || c == 'S' ||
-			c == 'E' || c == 'W' || c == ' ');
+	return (c == '1' || c == '0' || c == 'N' || c == 'S'
+		|| c == 'E' || c == 'W' || c == ' ');
 }
 
-int load_map_data(char *map_file, t_map *map)
+int	load_map_data(char *map_file, t_map *map)
 {
-	int fd;
-	char *line;
+	int		fd;
+	char	*line;
 
 	fd = open(map_file, O_RDONLY);
 	if (fd < 0)

@@ -6,15 +6,15 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 21:00:48 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/12/24 21:04:22 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/12/26 16:21:01 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int check_first_last_row(t_map *map, int row)
+int	check_first_last_row(t_map *map, int row)
 {
-	int j;
+	int	j;
 
 	j = 0;
 	while (j < (int)ft_strlen(map->grid[row]))
@@ -26,10 +26,10 @@ int check_first_last_row(t_map *map, int row)
 	return (1);
 }
 
-int check_side_walls(t_map *map)
+int	check_side_walls(t_map *map)
 {
-	int i;
-	int len;
+	int	i;
+	int	len;
 
 	i = 0;
 	while (i < map->height)
@@ -47,21 +47,17 @@ int check_side_walls(t_map *map)
 	return (1);
 }
 
-int is_valid_neighbor(t_map *map, int row, int col)
+int	is_valid_neighbor(t_map *map, int row, int col)
 {
-	if (row < 0 || row >= map->height || col < 0)
-		return (0);
-	if (col >= (int)ft_strlen(map->grid[row]))
-		return (0);
 	return (map->grid[row][col] == '1' || map->grid[row][col] == '0' ||
 			map->grid[row][col] == 'N' || map->grid[row][col] == 'S' ||
 			map->grid[row][col] == 'E' || map->grid[row][col] == 'W');
 }
 
-int validate_walkable_spaces(t_map *map)
+int	validate_walkable_spaces(t_map *map)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < map->height)
@@ -73,10 +69,10 @@ int validate_walkable_spaces(t_map *map)
 				map->grid[i][j] == 'S' || map->grid[i][j] == 'E' ||
 				map->grid[i][j] == 'W')
 			{
-				if (!is_valid_neighbor(map, i - 1, j) ||
-					!is_valid_neighbor(map, i + 1, j) ||
-					!is_valid_neighbor(map, i, j - 1) ||
-					!is_valid_neighbor(map, i, j + 1))
+				if (!is_valid_neighbor(map, i - 1, j)
+					|| !is_valid_neighbor(map, i + 1, j)
+					|| !is_valid_neighbor(map, i, j - 1)
+					|| !is_valid_neighbor(map, i, j + 1))
 					return (ft_putstr_fd("Error\nMap not valid: \
 							walkable space not properly enclosed\n", 2), 0);
 			}
@@ -87,7 +83,7 @@ int validate_walkable_spaces(t_map *map)
 	return (1);
 }
 
-int check_map_surrounded_by_walls(t_map *map)
+int	check_map_surrounded_by_walls(t_map *map)
 {
 	if (!map || !map->grid || map->height == 0)
 		return (0);
