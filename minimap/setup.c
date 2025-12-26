@@ -42,8 +42,8 @@ int	load_map_textures(t_map *map)
 {
 	map->tex_north = mlx_load_png(map->textures.north);
 	map->tex_south = mlx_load_png(map->textures.south);
-	map->tex_west  = mlx_load_png(map->textures.west);
-	map->tex_east  = mlx_load_png(map->textures.east);
+	map->tex_west = mlx_load_png(map->textures.west);
+	map->tex_east = mlx_load_png(map->textures.east);
 	if (!map->tex_north || !map->tex_south || !map->tex_west || !map->tex_east)
 		return (ft_putstr_fd("Error\nFailed to load textures\n", 2), -1);
 	return (0);
@@ -56,12 +56,13 @@ int	minimap_setup(t_game *game)
 
 	grid_dimensions = veci_new(game->map->width, game->map->height);
 	game->map->size = veci_new(CELL_SIZE * CELL_COUNT, CELL_SIZE * CELL_COUNT);
-	game->map->img = mlx_new_image(game->mlx, game->map->size.x, game->map->size.y);
+	game->map->img = mlx_new_image(game->mlx, game->map->size.x,
+			game->map->size.y);
 	if (!game->map->img)
 		return (ft_putstr_fd("Error\nFailed to initialize image\n", 2), -1);
 	game->map->position = veci_new(WIN_WIDTH * 0.01, WIN_HEIGHT * 0.01);
 	img_idx = mlx_image_to_window(game->mlx, game->map->img,
-			       game->map->position.x, game->map->position.y);
+			game->map->position.x, game->map->position.y);
 	if (img_idx < 0)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
 	if (load_map_textures(game->map) < 0)

@@ -15,37 +15,52 @@
 void	draw_dirline(t_map *scene, t_v2f player_pos, uint32_t color)
 {
 	t_v2f	direction;
+
 	player_pos.x += PLAYER_HALF;
 	player_pos.y += PLAYER_HALF;
-
 	direction = vecf_scale(scene->player.dir, (float_t)CELL_SIZE / 1.5);
 	draw_line(scene->img, player_pos, vecf_add(player_pos, direction), color);
 }
 
-void	render_player(t_map *scene, uint32_t color)
+static t_v2i	clamp_view(t_v2i view, int width, int height)
 {
-	t_v2f	player_pos;
-	t_v2i	grid_pos;
-	t_v2i	pixel;
-	t_v2i	offset;
+	view.x = clamp(view.x, 0, width - 1);
+	view.y = clamp(view.y, 0, height - 1);
+	return (view);
+}
 
-	grid_pos = veci_new(scene->player.position.x - CELL_COUNT_HALF, scene->player.position.y - CELL_COUNT_HALF);
-	grid_pos.x = clamp(grid_pos.x, 0, scene->width - 1);
-	grid_pos.y = clamp(grid_pos.y, 0, scene->height - 1);
-	player_pos.x = (scene->player.position.x - grid_pos.x) * CELL_SIZE;
-	player_pos.y = (scene->player.position.y - grid_pos.y) * CELL_SIZE;
-	offset.y = 0;
+void	draw_player(t_map *scene, t_v2f *pos, uint32_t color)
+{
+	t_v2i	offset;
+	t_v2i	pixel;
+
+	offset = veci_zero();
 	while (offset.y < (int32_t)PLAYER_SIZE)
 	{
 		offset.x = 0;
 		while (offset.x < (int32_t)PLAYER_SIZE)
 		{
-			pixel = veci_new(player_pos.x + offset.x, player_pos.y + offset.y);
-			if (pixel.x >= 0 && pixel.x < scene->size.x && pixel.y >= 0 && pixel.y < scene->size.y)
+			pixel = veci_new(pos->x + offset.x, pos->y + offset.y);
+			if (pixel.x >= 0 && pixel.x < scene->size.x && pixel.y >= 0
+				&& pixel.y < scene->size.y)
 				mlx_put_pixel(scene->img, pixel.x, pixel.y, color);
 			offset.x++;
 		}
 		offset.y++;
 	}
+}
+
+void	render_player(t_map *scene, uint32_t color)
+{
+	t_v2f	player_pos;
+	t_v2i	map_pos;
+	t_v2i	view;
+
+	map_pos = veci_fromf(scene->player.position);
+	view = veci_new(map_pos.x - CELL_COUNT_HALF, map_pos.y - CELL_COUNT_HALF);
+	view = clamp_view(view, scene->width, scene->height);
+	player_pos.x = (scene->player.position.x - view.x) * CELL_SIZE;
+	player_pos.y = (scene->player.position.y - view.y) * CELL_SIZE;
+	draw_player(scene, &player_pos, color);
 	draw_dirline(scene, player_pos, color);
 }

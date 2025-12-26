@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: klaayoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/25 19:04:59 by klaayoun          #+#    #+#             */
+/*   Updated: 2025/12/25 19:05:05 by klaayoun         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub3d.h"
 
-static void	renderCell(t_map *scene, t_v2i pos, uint32_t color)
+static void	render_cell(t_map *scene, t_v2i pos, uint32_t color)
 {
-	uint32_t drawColor;
-	uint32_t x;
-	uint32_t y;
+	uint32_t	draw_color;
+	uint32_t	x;
+	uint32_t	y;
 
 	y = 0;
 	while (y < CELL_SIZE)
@@ -12,73 +24,64 @@ static void	renderCell(t_map *scene, t_v2i pos, uint32_t color)
 		x = 0;
 		while (x < CELL_SIZE)
 		{
-			drawColor = color;
+			draw_color = color;
 			if (x == 0 || y == 0 || x == CELL_SIZE - 1 || y == CELL_SIZE - 1)
-				drawColor = color << 1;
-			mlx_put_pixel(scene->img, pos.x + x, pos.y + y, drawColor);
+				draw_color = color << 1;
+			mlx_put_pixel(scene->img, pos.x + x, pos.y + y, draw_color);
 			x++;
 		}
 		y++;
 	}
 }
 
-void	minimap_render_orig(t_game *game)
+static t_v2i	clamp_view(t_v2i view, int width, int height)
 {
-	t_v2i	grid_pos;
-	t_v2i	grid_start;
-	t_v2i	cell;
-	int		line_len;
+	view.x = clamp(view.x, 0, width - 1);
+	view.y = clamp(view.y, 0, height - 1);
+	return (view);
+}
 
-	grid_pos = veci_fromf(game->map->player.position);
-	grid_start = veci_new(grid_pos.x - CELL_COUNT_HALF, grid_pos.y - CELL_COUNT_HALF);
-	grid_start.x = clamp(grid_start.x, 0, game->map->width - 1);
-	grid_start.y = clamp(grid_start.y, 0, game->map->height - 1);
-	cell.y = 0;
-	grid_pos.y = grid_start.y;
-	while (cell.y < CELL_COUNT && grid_pos.y < game->map->height)
+static uint32_t	get_cell_color(t_map *map, t_v2i *mapPos, int line_len)
+{
+	if (mapPos->x < line_len && map->grid[mapPos->y][mapPos->x++] == '0')
+		return (MAPFG);
+	return (MAPBG);
+}
+
+void	render_moveable_cell(t_game *game, t_v2i *map_pos, t_v2i *view)
+{
+	t_v2i		cell;
+	t_v2i		pos;
+	uint32_t	color;
+	int			line_len;
+
+	cell = veci_zero();
+	while (cell.y < CELL_COUNT && map_pos->y < game->map->height)
 	{
 		cell.x = 0;
-		grid_pos.x = grid_start.x;
-		line_len = ft_strlen(game->map->grid[grid_pos.y]);
-		while (cell.x < CELL_COUNT && grid_pos.x < game->map->width)
+		map_pos->x = view->x;
+		line_len = ft_strlen(game->map->grid[map_pos->y]);
+		while (cell.x < CELL_COUNT && map_pos->x < game->map->width)
 		{
-			if (grid_pos.x < line_len && game->map->grid[grid_pos.y][grid_pos.x] == '0')
-				renderCell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), MAPFG);
-			else
-				renderCell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), MAPBG);
-			grid_pos.x++;
+			color = get_cell_color(game->map, map_pos, line_len);
+			pos = veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE);
+			render_cell(game->map, pos, color);
 			cell.x++;
 		}
-		grid_pos.y++;
+		map_pos->y++;
 		cell.y++;
 	}
-	render_player(game->map, 0x0000FFFF);
 }
 
 void	minimap_render(t_game *game)
 {
-	t_v2i	cell;
-	t_v2i	offset;
-	uint32_t color;
+	t_v2i	map_pos;
+	t_v2i	view;
 
-	offset.x = clamp(game->map->player.position.x - CELL_COUNT_HALF, 0, game->map->width - CELL_COUNT);
-	offset.y = clamp(game->map->player.position.y - CELL_COUNT_HALF, 0, game->map->height - CELL_COUNT);
-	cell.y = 0;
-	while (cell.y < CELL_COUNT)
-	{
-		cell.x = 0;
-		while (cell.x < CELL_COUNT)
-		{
-			int map_x = offset.x + cell.x;
-			int map_y = offset.y + cell.y;
-			color = MAPBG;
-			if (map_x < (int)ft_strlen(game->map->grid[map_y]))
-				if (game->map->grid[map_y][map_x] == '0')
-					color = MAPFG;
-			renderCell(game->map, veci_new(cell.x * CELL_SIZE, cell.y * CELL_SIZE), color);
-			cell.x++;
-		}
-		cell.y++;
-	}
+	map_pos = veci_fromf(game->map->player.position);
+	view = veci_new(map_pos.x - CELL_COUNT_HALF, map_pos.y - CELL_COUNT_HALF);
+	view = clamp_view(view, game->map->width, game->map->height);
+	map_pos.y = view.y;
+	render_moveable_cell(game, &map_pos, &view);
 	render_player(game->map, 0x0000FFFF);
 }
