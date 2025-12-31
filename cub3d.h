@@ -95,6 +95,16 @@ typedef struct s_map
 	t_player		player;
 }					t_map;
 
+typedef struct s_ray
+{
+	t_v2f dir;
+	t_v2f length;
+	t_v2f step_size;
+	t_v2f step_dir;
+	uint32_t side;
+	float_t distance;
+}					t_ray;
+
 typedef struct s_game
 {
 	mlx_t			*mlx;
@@ -161,6 +171,7 @@ uint32_t			ft_darken_color(uint32_t color);
 uint32_t			ft_get_pixel_color(uint8_t r, uint8_t g, uint8_t b,
 						uint8_t a);
 int32_t				ft_get_lineheight(float_t distance);
+t_ray	ft_init_ray(t_map *scene, float_t angle);
 
 // Vector functions
 t_v2i				veci_new(int32_t x, int32_t y);
