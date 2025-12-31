@@ -62,7 +62,7 @@ int32_t	ft_get_lineheight(float_t distance)
 {
 	int32_t	line_height;
 
-	if (distance <= 0.1)
+	if (distance == 0)
 		line_height = WIN_HEIGHT;
 	else
 		line_height = WIN_HEIGHT / distance;
