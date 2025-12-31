@@ -12,29 +12,34 @@
 
 #include "../cub3d.h"
 
-void ft_compute_ray_initial_length(t_ray *ray, t_player *player, t_v2i *map) {
-	if (ray->dir.x < 0)
+void	ft_compute_ray_initial_length(t_ray *r, t_player *p, t_v2i *map)
+{
+	if (r->dir.x < 0)
 	{
-		ray->step_dir.x = -1;
-		ray->length.x = (player->position.x - map->x) * ray->step_size.x;
-	} else {
-		ray->step_dir.x = 1;
-		ray->length.x = ((map->x + 1.0) - player->position.x) * ray->step_size.x;
+		r->step_dir.x = -1;
+		r->length.x = (p->position.x - map->x) * r->step_size.x;
 	}
-	if (ray->dir.y < 0)
+	else
 	{
-		ray->step_dir.y = -1;
-		ray->length.y = (player->position.y - map->y) * ray->step_size.y;
-	} else {
-		ray->step_dir.y = 1;
-		ray->length.y = ((map->y + 1.0) - player->position.y) * ray->step_size.y;
+		r->step_dir.x = 1;
+		r->length.x = ((map->x + 1.0) - p->position.x) * r->step_size.x;
+	}
+	if (r->dir.y < 0)
+	{
+		r->step_dir.y = -1;
+		r->length.y = (p->position.y - map->y) * r->step_size.y;
+	}
+	else
+	{
+		r->step_dir.y = 1;
+		r->length.y = ((map->y + 1.0) - p->position.y) * r->step_size.y;
 	}
 }
 
-void ft_compute_ray_wall_distance(t_ray *ray, t_map *scene)
+void	ft_compute_ray_wall_distance(t_ray *ray, t_map *scene)
 {
-	t_v2i map;
-	uint32_t hit;
+	t_v2i		map;
+	uint32_t	hit;
 
 	map = veci_fromf(scene->player.position);
 	ft_compute_ray_initial_length(ray, &scene->player, &map);
@@ -47,7 +52,9 @@ void ft_compute_ray_wall_distance(t_ray *ray, t_map *scene)
 			ray->distance = ray->length.x;
 			ray->length.x += ray->step_size.x;
 			ray->side = 0;
-		} else {
+		}
+		else
+		{
 			map.y += ray->step_dir.y;
 			ray->distance = ray->length.y;
 			ray->length.y += ray->step_size.y;
@@ -61,13 +68,18 @@ void ft_compute_ray_wall_distance(t_ray *ray, t_map *scene)
 t_ray	ft_init_ray(t_map *scene, float_t angle)
 {
 	t_ray	ray;
+	t_v2f	camera_offset;
+	t_v2f	ray_offset;
 
-	ray.dir = vecf_add(scene->player.dir, vecf_scale(scene->player.plane, angle));
+	camera_offset = vecf_scale(scene->player.plane, angle);
+	ray.dir = vecf_add(scene->player.dir, camera_offset);
 	ray.step_size = vecf_new(fabs(1 / ray.dir.x), fabs(1 / ray.dir.y));
 	ray.step_dir = vecf_zero();
 	ray.length = vecf_zero();
 	ray.distance = 0.0;
 	ray.side = 0;
 	ft_compute_ray_wall_distance(&ray, scene);
+	ray_offset = vecf_scale(ray.dir, ray.distance);
+	ray.hit_pos = vecf_add(scene->player.position, ray_offset);
 	return (ray);
 }

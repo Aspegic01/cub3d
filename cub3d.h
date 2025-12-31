@@ -101,9 +101,27 @@ typedef struct s_ray
 	t_v2f length;
 	t_v2f step_size;
 	t_v2f step_dir;
+	t_v2f hit_pos;
 	uint32_t side;
 	float_t distance;
 }					t_ray;
+
+typedef struct s_wall_stripe
+{
+	int32_t height;
+	int32_t start;
+	int32_t end;
+	t_ray ray;
+}					t_wall_stripe;
+
+typedef struct s_wall_texture
+{
+	mlx_texture_t		*tex;
+	float_t				wallx;
+	float_t				tex_step;
+	float_t				tex_pos;
+	int32_t				texx;
+}						t_wall_texture;
 
 typedef struct s_game
 {
@@ -164,7 +182,7 @@ void				render_player(t_map *scene, uint32_t color);
 void				render_game(t_game *game);
 void				draw_line(mlx_image_t *grid, t_v2f start, t_v2f end,
 						uint32_t color);
-void				draw_fov(t_game *game, t_map *scene, t_player *player);
+void				draw_fov(t_game *game, t_map *scene);
 bool				ft_at_wall(t_map *map, float_t offsetx, float_t offsety);
 mlx_texture_t		*ft_get_texture(t_map *scene, uint32_t side, t_v2f step);
 uint32_t			ft_darken_color(uint32_t color);
@@ -172,6 +190,7 @@ uint32_t			ft_get_pixel_color(uint8_t r, uint8_t g, uint8_t b,
 						uint8_t a);
 int32_t				ft_get_lineheight(float_t distance);
 t_ray	ft_init_ray(t_map *scene, float_t angle);
+t_wall_stripe	ft_compute_wall_stripe(t_map *scene, float_t camerax);
 
 // Vector functions
 t_v2i				veci_new(int32_t x, int32_t y);
