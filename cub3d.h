@@ -33,7 +33,7 @@
 # define WIN_TITLE "Cub3D"
 # define ROT_SPEED 3.0
 # define MOVE_SPEED 0.025
-# define MOUSE_SENSITIVITY 0.002
+# define MOUSE_SENSITIVITY 0.01
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
 
