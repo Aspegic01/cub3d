@@ -65,13 +65,13 @@ void	ft_compute_ray_wall_distance(t_ray *ray, t_map *scene)
 	}
 }
 
-t_ray	ft_init_ray(t_map *scene, float angle)
+t_ray	ft_init_ray(t_map *scene, float camerax)
 {
 	t_ray	ray;
 	t_v2f	camera_offset;
 	t_v2f	ray_offset;
 
-	camera_offset = vecf_scale(scene->player.plane, angle);
+	camera_offset = vecf_scale(scene->player.plane, camerax);
 	ray.dir = vecf_add(scene->player.dir, camera_offset);
 	ray.step_size = vecf_new(fabs(1 / ray.dir.x), fabs(1 / ray.dir.y));
 	ray.step_dir = vecf_zero();
