@@ -49,17 +49,15 @@ bool	is_valid_move(t_map *map, t_v2f pos, t_v2f dir, bool check_x)
 void	move_player_in_dir(t_game *game, t_v2f dir)
 {
 	t_v2f	new_pos;
-	float	speedx;
-	float	speedy;
+	t_v2f	speed;
 
-	speedx = (dir.x * MOVE_SPEED) * game->mlx->delta_time;
-	new_pos.x = game->map->player.position.x + speedx;
+	speed = vecf_scale(vecf_scale(dir, MOVE_SPEED), game->mlx->delta_time);
+	new_pos.x = game->map->player.position.x + speed.x;
 	new_pos.y = game->map->player.position.y;
 	if (is_valid_move(game->map, new_pos, dir, true))
 		game->map->player.position.x = new_pos.x;
-	speedy = (dir.y * MOVE_SPEED) * game->mlx->delta_time;
 	new_pos.x = game->map->player.position.x;
-	new_pos.y = game->map->player.position.y + speedy;
+	new_pos.y = game->map->player.position.y + speed.y;
 	if (is_valid_move(game->map, new_pos, dir, false))
 		game->map->player.position.y = new_pos.y;
 }
