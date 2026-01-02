@@ -68,4 +68,5 @@ void	render_game(t_game *game)
 	render_floor(game);
 	draw_fov(game, game->map);
 	minimap_render(game);
+	update_gun(game);
 }

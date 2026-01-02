@@ -36,6 +36,7 @@
 # define MOUSE_SENSITIVITY 0.001f
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
+# define GUN_FRAMES 15
 
 typedef struct s_v2f
 {
@@ -123,12 +124,22 @@ typedef struct s_wall_texture
 	int32_t			texx;
 }					t_wall_texture;
 
+typedef struct s_gun
+{
+	mlx_image_t		*frames[GUN_FRAMES];
+	int				curr_frame;
+	bool			is_active;
+	double			timer;
+}					t_gun;
+
 typedef struct s_game
 {
 	mlx_t			*mlx;
 	mlx_image_t		*canvas;
 	t_map			*map;
+	mlx_texture_t	*tex;
 	double			last_mouse;
+	t_gun			gun;
 }					t_game;
 
 int					init_game(char *map_file);
@@ -175,6 +186,8 @@ int32_t				clamp(int32_t value, int32_t min, int32_t max);
 int					minimap_setup(t_game *game);
 void				minimap_render(t_game *game);
 void				render_player(t_map *scene, uint32_t color);
+int					init_gun(t_game *game);
+void				update_gun(t_game *game);
 
 // Engine
 void				render_game(t_game *game);

@@ -79,6 +79,8 @@ int	init_window(t_game *game)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
 	if (minimap_setup(game) != 0)
 		return (-1);
+	if (init_gun(game) != 0)
+		return (-1);
 	game->last_mouse = -1;
 	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_DISABLED);
 	mlx_cursor_hook(game->mlx, cursor_handler, game);
