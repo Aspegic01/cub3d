@@ -26,11 +26,15 @@ void	cursor_handler(double xpos, double ypos, void *param)
 
 	(void)ypos;
 	game = (t_game *)param;
-	deltax = (xpos - game->last_mouse_x) * MOUSE_SENSITIVITY;
-	game->last_mouse_x = xpos;
-	rotate_player(game, deltax);
-	mlx_set_mouse_pos(game->mlx, WIN_WIDTH / 2, WIN_HEIGHT / 2);
-	game->last_mouse_x = WIN_WIDTH / 2;
+	if (game->last_mouse == -1)
+	{
+		game->last_mouse = xpos;
+		return ;
+	}
+	deltax = xpos - game->last_mouse;
+	game->last_mouse = xpos;
+	if (deltax != 0)
+		rotate_player_mouse(game, deltax * MOUSE_SENSITIVITY);
 }
 
 void	capture_keys(void *param)
@@ -75,8 +79,8 @@ int	init_window(t_game *game)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
 	if (minimap_setup(game) != 0)
 		return (-1);
-	game->last_mouse_x = WIN_WIDTH / 2;
-	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_HIDDEN);
+	game->last_mouse = -1;
+	mlx_set_cursor_mode(game->mlx, MLX_MOUSE_DISABLED);
 	mlx_cursor_hook(game->mlx, cursor_handler, game);
 	mlx_loop_hook(game->mlx, capture_keys, game);
 	mlx_loop_hook(game->mlx, start, game);

@@ -33,7 +33,7 @@
 # define WIN_TITLE "Cub3D"
 # define ROT_SPEED 3.0f
 # define MOVE_SPEED 1.5f
-# define MOUSE_SENSITIVITY 0.01f
+# define MOUSE_SENSITIVITY 0.001f
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
 
@@ -128,9 +128,7 @@ typedef struct s_game
 	mlx_t			*mlx;
 	mlx_image_t		*canvas;
 	t_map			*map;
-	int32_t			last_mouse_x;
-	int32_t			last_mouse_y;
-	bool			first_mouse;
+	double			last_mouse;
 }					t_game;
 
 int					init_game(char *map_file);
@@ -224,5 +222,6 @@ void				render_frame(t_game *game);
 int					game_loop(t_game *game);
 void				move_player_in_dir(t_game *game, t_v2f dir);
 void				rotate_player(t_game *game, float rot_speed);
+void				rotate_player_mouse(t_game *game, float rot_speed);
 
 #endif

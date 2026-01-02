@@ -70,3 +70,9 @@ void	rotate_player(t_game *game, float rot_speed)
 	game->map->player.dir = vecf_rot(game->map->player.dir, speed);
 	game->map->player.plane = vecf_rot(game->map->player.plane, speed);
 }
+
+void	rotate_player_mouse(t_game *game, float rot_speed)
+{
+	game->map->player.dir = vecf_rot(game->map->player.dir, rot_speed);
+	game->map->player.plane = vecf_rot(game->map->player.plane, rot_speed);
+}
