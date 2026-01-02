@@ -2,9 +2,9 @@ F 105,105,105
 C 135,206,235
 
 NO textures/greystone.png
-SO textures/greystone.png
-WE textures/greystone.png
-EA textures/greystone.png
+SO textures/sky_1.png
+WE textures/wall_4.png
+EA textures/wall_1.png
 
         1111111111111111111111111
         100000000110000000000001
