@@ -23,24 +23,26 @@ static bool	can_walk(t_map *map, int32_t x, int32_t y)
 
 bool	is_valid_move(t_map *map, t_v2f pos, t_v2f dir, bool check_x)
 {
-	t_v2f	l;
-	t_v2f	r;
+	float	left;
+	float	right;
+	float	top;
+	float	bottom;
 
-	l = vecf_new(pos.x * CELL_SIZE, pos.y * CELL_SIZE);
-	r = vecf_new(l.x + PLAYER_SIZE, l.y + PLAYER_SIZE);
-	l = vecf_scale(l, (1.0 / CELL_SIZE));
-	r = vecf_scale(r, (1.0 / CELL_SIZE));
+	left = pos.x - PLAYER_BUFFER;
+	right = pos.x + PLAYER_BUFFER;
+	top = pos.y - PLAYER_BUFFER;
+	bottom = pos.y + PLAYER_BUFFER;
 	if (check_x)
 	{
 		if (dir.x > 0)
-			return (can_walk(map, r.x, l.y) && can_walk(map, r.x, r.y));
+			return (can_walk(map, right, top) && can_walk(map, right, bottom));
 		if (dir.x < 0)
-			return (can_walk(map, l.x, l.y) && can_walk(map, l.x, r.y));
+			return (can_walk(map, left, top) && can_walk(map, left, bottom));
 	}
 	if (dir.y > 0)
-		return (can_walk(map, l.x, r.y) && can_walk(map, r.x, r.y));
+		return (can_walk(map, left, bottom) && can_walk(map, right, bottom));
 	if (dir.y < 0)
-		return (can_walk(map, l.x, l.y) && can_walk(map, r.x, l.y));
+		return (can_walk(map, left, top) && can_walk(map, right, top));
 	return (true);
 }
 
