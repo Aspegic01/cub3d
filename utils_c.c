@@ -54,11 +54,11 @@ void	free_map_grid(t_map *map)
 
 int	is_valid_map_char(char c)
 {
-	return (c == '1' || c == '0' || c == 'N' || c == 'S'
-		|| c == 'E' || c == 'W' || c == ' ');
+	return (c == '1' || c == '0' || c == 'N' || c == 'S' || c == 'E' || c == 'W'
+		|| c == ' ');
 }
 
-int line_to_map(char *line, t_map *map)
+int	line_to_map(char *line, t_map *map)
 {
 	if (ft_strncmp(line, "\n", ft_strlen(line)) != 0)
 	{

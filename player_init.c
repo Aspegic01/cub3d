@@ -12,12 +12,6 @@
 
 #include "cub3d.h"
 
-	/*
-	 dir x negative we looking left;
-	 dir x positive we looking right;
-	 dir y posivite we looking down
-	 dir y negative we looking up
-	 * */
 void	set_player_direction(t_player *player, char direction)
 {
 	if (direction == 'N')
@@ -58,7 +52,7 @@ int	find_player_position(t_map *map, t_player *player)
 				|| map->grid[i][j] == 'E' || map->grid[i][j] == 'W')
 			{
 				direction = map->grid[i][j];
-				player->position = vecf_new(j + 0.5 , i + 0.5);
+				player->position = vecf_new(j + 0.5, i + 0.5);
 				map->grid[i][j] = '0';
 				set_player_direction(player, direction);
 				map->player_count++;
@@ -76,10 +70,14 @@ int	init_player(t_map *map, t_player *player)
 
 	player_count = find_player_position(map, player);
 	if (player_count == 0)
-		return (ft_putstr_fd("Error\nNo player \
-			starting position found\n", 2), -1);
+	{
+		ft_putstr_fd("Error\nNo player starting position found\n", 2);
+		return (-1);
+	}
 	if (player_count > 1)
-		return (ft_putstr_fd("Error\nMultiple \
-			player positions found\n", 2), -1);
+	{
+		ft_putstr_fd("Error\nMultiple player positions found\n", 2);
+		return (-1);
+	}
 	return (0);
 }

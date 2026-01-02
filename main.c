@@ -17,7 +17,7 @@ static int	parse_map_file(char *map_file, t_map *map)
 	int		fd;
 	char	*line;
 	int		result;
-	ssize_t bytes;
+	ssize_t	bytes;
 
 	fd = open(map_file, O_RDONLY);
 	if (fd < 0)
