@@ -28,7 +28,7 @@ void	cursor_handler(double xpos, double ypos, void *param)
 	game = (t_game *)param;
 	deltax = (xpos - game->last_mouse_x) * MOUSE_SENSITIVITY;
 	game->last_mouse_x = xpos;
-	rotate_player(game, deltax * game->mlx->delta_time);
+	rotate_player(game, deltax);
 	mlx_set_mouse_pos(game->mlx, WIN_WIDTH / 2, WIN_HEIGHT / 2);
 	game->last_mouse_x = WIN_WIDTH / 2;
 }
@@ -49,9 +49,9 @@ void	capture_keys(void *param)
 	if (mlx_is_key_down(game->mlx, MLX_KEY_D))
 		move_player_in_dir(game, game->map->player.plane);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_LEFT))
-		rotate_player(game, -ROT_SPEED * game->mlx->delta_time);
+		rotate_player(game, -ROT_SPEED);
 	if (mlx_is_key_down(game->mlx, MLX_KEY_RIGHT))
-		rotate_player(game, ROT_SPEED * game->mlx->delta_time);
+		rotate_player(game, ROT_SPEED);
 }
 
 static void	start(void *param)
