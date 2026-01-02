@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 09:58:35 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/12/26 15:40:54 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/12/26 19:16:28 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,27 @@ static int	parse_map_file(char *map_file, t_map *map)
 	int		fd;
 	char	*line;
 	int		result;
+	ssize_t bytes;
 
 	fd = open(map_file, O_RDONLY);
 	if (fd < 0)
 		return (ft_putstr_fd("Error\nCannot open file\n", 2), -1);
-	line = get_next_line(fd);
-	if (!line)
+	bytes = get_next_line(fd, &line);
+	if (!bytes)
 		return (close(fd), ft_putstr_fd("Error\nEmpty file\n", 2), -1);
-	while (line)
+	while (bytes)
 	{
 		result = process_line(line, map, fd);
 		if (result == -1)
 		{
 			free(line);
 			close(fd);
-			gnl_free_buffer();
 			return (-1);
 		}
 		free(line);
-		line = get_next_line(fd);
+		bytes = get_next_line(fd, &line);
+		if (bytes == -1)
+			return (close(fd), ft_putstr_fd("Error\nmalformed file\n", 2), -1);
 	}
 	return (close(fd), 0);
 }
@@ -43,7 +45,6 @@ static int	parse_map_file(char *map_file, t_map *map)
 static int	setup_map_grid(char *map_file, t_map *map)
 {
 	map->grid = malloc(sizeof(char *) * (map->height + 1));
-	//allocate memory for the line in the grid
 	if (!map->grid)
 		return (ft_putstr_fd("Error\nMemory allocation failed\n", 2), -1);
 	if (!load_map_data(map_file, map))

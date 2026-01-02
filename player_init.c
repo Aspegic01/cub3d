@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/28 13:10:00 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/12/24 21:12:41 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/12/26 19:19:32 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	find_player_position(t_map *map, t_player *player)
 				|| map->grid[i][j] == 'E' || map->grid[i][j] == 'W')
 			{
 				direction = map->grid[i][j];
-				player->position = vecf_new(j + 0.5, i + 0.5);
+				player->position = vecf_new(j + 0.5 , i + 0.5);
 				map->grid[i][j] = '0';
 				set_player_direction(player, direction);
 				map->player_count++;

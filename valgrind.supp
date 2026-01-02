@@ -1,0 +1,84 @@
+{
+   ignore_all_mlx
+   Memcheck:Leak
+   ...
+   obj:*/libmlx*
+}
+
+{
+   ignore_all_glfw
+   Memcheck:Leak
+   ...
+   obj:*/libglfw*
+}
+
+{
+   ignore_all_GL
+   Memcheck:Leak
+   ...
+   obj:*/libGL*
+}
+
+{
+   ignore_all_X11
+   Memcheck:Leak
+   ...
+   obj:*/libX11*
+}
+
+{
+   ignore_all_xcb
+   Memcheck:Leak
+   ...
+   obj:*/libxcb*
+}
+
+{
+   ignore_all_dri
+   Memcheck:Leak
+   ...
+   obj:*/dri/*
+}
+
+{
+   ignore_mlx_functions
+   Memcheck:Leak
+   ...
+   fun:mlx_*
+}
+
+{
+   ignore_dl_init
+   Memcheck:Leak
+   ...
+   fun:_dl_*
+}
+
+{
+   ignore_pthread
+   Memcheck:Leak
+   ...
+   fun:pthread_*
+}
+
+{
+   ignore_calloc_mlx
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   ...
+}
+
+{
+   ignore_malloc_mlx
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+}
+{
+   ignore_glibc_loader
+   Memcheck:Addr8
+   ...
+   obj:*/ld-*.so*
+}

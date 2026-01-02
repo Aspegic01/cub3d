@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include <stdio.h>
 
 int	store_map_line(char *line, t_map *map)
 {
@@ -61,12 +62,13 @@ int	load_map_data(char *map_file, t_map *map)
 {
 	int		fd;
 	char	*line;
+	ssize_t	bytes;
 
 	fd = open(map_file, O_RDONLY);
 	if (fd < 0)
 		return (0);
-	line = get_next_line(fd);
-	while (line)
+	bytes = get_next_line(fd, &line);
+	while (bytes)
 	{
 		if (ft_strncmp(line, "\n", ft_strlen(line)) != 0)
 		{
@@ -79,7 +81,7 @@ int	load_map_data(char *map_file, t_map *map)
 			map->line_count++;
 		}
 		free(line);
-		line = get_next_line(fd);
+		bytes = get_next_line(fd, &line);
 	}
 	return (close(fd), 1);
 }

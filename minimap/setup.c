@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   setup.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klaayoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 19:04:59 by klaayoun          #+#    #+#             */
-/*   Updated: 2025/12/25 19:05:05 by klaayoun         ###   ########.fr       */
+/*   Updated: 2025/12/26 20:09:51 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,22 +21,22 @@ int32_t	clamp(int32_t value, int32_t min, int32_t max)
 	return (value);
 }
 
-static void	map_print(t_map *map)
-{
-	size_t	i;
-	size_t	j;
+// static void	map_print(t_map *map)
+// {
+// 	size_t	i;
+// 	size_t	j;
 
-	i = 0;
-	while (map->grid[i])
-	{
-		j = 0;
-		while (map->grid[i][j])
-			j++;
-		write(1, map->grid[i], j);
-		write(1, "\n", 1);
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (map->grid[i])
+// 	{
+// 		j = 0;
+// 		while (map->grid[i][j])
+// 			j++;
+// 		write(1, map->grid[i], j);
+// 		write(1, "\n", 1);
+// 		i++;
+// 	}
+// }
 
 int	load_map_textures(t_map *map)
 {
@@ -67,7 +67,7 @@ int	minimap_setup(t_game *game)
 		return (ft_putstr_fd("Error\nFailed to put image to window\n", 2), -1);
 	if (load_map_textures(game->map) < 0)
 		return (-1);
-	map_print(game->map);
+	// map_print(game->map);
 	veci_print("canvas", veci_new(WIN_WIDTH, WIN_HEIGHT));
 	veci_print("grid", grid_dimensions);
 	veci_print("map_size", game->map->size);
