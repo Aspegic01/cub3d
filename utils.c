@@ -43,8 +43,8 @@ static int	process_spaces_once(t_map *map)
 		j = 0;
 		while (j < map->width && map->grid[i][j])
 		{
-			if (map->grid[i][j] == ' '
-				&& is_space_adjacent_to_walkable(map, i, j))
+			if (map->grid[i][j] == ' ' && is_space_adjacent_to_walkable(map, i,
+					j))
 			{
 				map->grid[i][j] = '0';
 				changed = 1;

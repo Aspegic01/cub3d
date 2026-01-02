@@ -58,6 +58,21 @@ int	is_valid_map_char(char c)
 		|| c == 'E' || c == 'W' || c == ' ');
 }
 
+int line_to_map(char *line, t_map *map)
+{
+	if (ft_strncmp(line, "\n", ft_strlen(line)) != 0)
+	{
+		if (map->line_count >= 6)
+		{
+			if (!store_map_line(line, map))
+				return (0);
+			map->map_line_index++;
+		}
+		map->line_count++;
+	}
+	return (1);
+}
+
 int	load_map_data(char *map_file, t_map *map)
 {
 	int		fd;
@@ -68,20 +83,16 @@ int	load_map_data(char *map_file, t_map *map)
 	if (fd < 0)
 		return (0);
 	bytes = get_next_line(fd, &line);
+	if (bytes == -1)
+		return (close(fd), 0);
 	while (bytes)
 	{
-		if (ft_strncmp(line, "\n", ft_strlen(line)) != 0)
-		{
-			if (map->line_count >= 6)
-			{
-				if (!store_map_line(line, map))
-					return (free(line), close(fd), 0);
-				map->map_line_index++;
-			}
-			map->line_count++;
-		}
+		if (!line_to_map(line, map))
+			return (close(fd), free(line), 0);
 		free(line);
 		bytes = get_next_line(fd, &line);
+		if (bytes == -1)
+			return (close(fd), 0);
 	}
 	return (close(fd), 1);
 }

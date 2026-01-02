@@ -29,11 +29,7 @@ static int	parse_map_file(char *map_file, t_map *map)
 	{
 		result = process_line(line, map, fd);
 		if (result == -1)
-		{
-			free(line);
-			close(fd);
-			return (-1);
-		}
+			return (close(fd), free(line), -1);
 		free(line);
 		bytes = get_next_line(fd, &line);
 		if (bytes == -1)
