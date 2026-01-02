@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-bool	ft_at_wall(t_map *map, float_t offsetx, float_t offsety)
+bool	ft_at_wall(t_map *map, float offsetx, float offsety)
 {
 	int32_t	x;
 	int32_t	y;
@@ -58,7 +58,7 @@ uint32_t	ft_darken_color(uint32_t color)
 	return (ft_get_pixel_color(r / 2, g / 2, b / 2, a));
 }
 
-int32_t	ft_get_lineheight(float_t distance)
+int32_t	ft_get_lineheight(float distance)
 {
 	int32_t	line_height;
 

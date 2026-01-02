@@ -47,8 +47,8 @@ bool	is_valid_move(t_map *map, t_v2f pos, t_v2f dir, bool check_x)
 void	move_player_in_dir(t_game *game, t_v2f dir)
 {
 	t_v2f	new_pos;
-	float_t	speedx;
-	float_t	speedy;
+	float	speedx;
+	float	speedy;
 
 	speedx = (dir.x * MOVE_SPEED) * game->mlx->delta_time;
 	new_pos.x = game->map->player.position.x + speedx;
@@ -62,9 +62,9 @@ void	move_player_in_dir(t_game *game, t_v2f dir)
 		game->map->player.position.y = new_pos.y;
 }
 
-void	rotate_player(t_game *game, float_t rot_speed)
+void	rotate_player(t_game *game, float rot_speed)
 {
-	float_t	speed;
+	float	speed;
 
 	speed = rot_speed * game->mlx->delta_time;
 	game->map->player.dir = vecf_rot(game->map->player.dir, speed);

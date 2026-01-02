@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-t_v2i	veci_scale(t_v2i this, float_t factor)
+t_v2i	veci_scale(t_v2i this, float factor)
 {
 	t_v2i	v;
 

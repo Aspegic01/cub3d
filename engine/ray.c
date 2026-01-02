@@ -65,7 +65,7 @@ void	ft_compute_ray_wall_distance(t_ray *ray, t_map *scene)
 	}
 }
 
-t_ray	ft_init_ray(t_map *scene, float_t angle)
+t_ray	ft_init_ray(t_map *scene, float angle)
 {
 	t_ray	ray;
 	t_v2f	camera_offset;

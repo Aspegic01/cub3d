@@ -23,9 +23,9 @@ void	ft_compute_tex(t_wall_texture *wall, t_map *scene,
 	wall->wallx -= floor(wall->wallx);
 	wall->texx = clamp(wall->wallx * (float)wall->tex->width, 0,
 			wall->tex->width - 1);
-	wall->tex_step = (float_t)wall->tex->height / (float_t)stripe->height;
-	wall->tex_pos = (stripe->start - (float_t)WIN_HEIGHT / 2
-			+ (float_t)stripe->height / 2) * wall->tex_step;
+	wall->tex_step = (float)wall->tex->height / (float)stripe->height;
+	wall->tex_pos = (stripe->start - (float)WIN_HEIGHT / 2
+			+ (float)stripe->height / 2) * wall->tex_step;
 }
 
 void	ft_apply_texture(t_game *game, int32_t x, t_wall_texture *wall,
@@ -50,14 +50,14 @@ void	ft_apply_texture(t_game *game, int32_t x, t_wall_texture *wall,
 void	draw_fov(t_game *game, t_map *scene)
 {
 	uint32_t		x;
-	float_t			camerax;
+	float			camerax;
 	t_wall_stripe	stripe;
 	t_wall_texture	wall;
 
 	x = 0;
 	while (x < game->canvas->width)
 	{
-		camerax = 2.0 * (x / (float_t)game->canvas->width) - 1.0;
+		camerax = 2.0f * (x / (float)game->canvas->width) - 1.0f;
 		stripe = ft_compute_wall_stripe(scene, camerax);
 		ft_compute_tex(&wall, scene, &stripe);
 		while (stripe.start < stripe.end)

@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-t_v2f	vecf_scale(t_v2f this, float_t factor)
+t_v2f	vecf_scale(t_v2f this, float factor)
 {
 	t_v2f	v;
 

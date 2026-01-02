@@ -30,16 +30,16 @@
 # define PLAYER_SIZE 3
 # define PLAYER_HALF 1
 # define WIN_TITLE "Cub3D"
-# define ROT_SPEED 3.0
-# define MOVE_SPEED 1.5
-# define MOUSE_SENSITIVITY 0.01
+# define ROT_SPEED 3.0f
+# define MOVE_SPEED 1.5f
+# define MOUSE_SENSITIVITY 0.01f
 # define MAPFG 0xFFFFFFFF
 # define MAPBG 0x333333FF
 
 typedef struct s_v2f
 {
-	float_t			x;
-	float_t			y;
+	float			x;
+	float			y;
 }					t_v2f;
 
 typedef struct s_v2i
@@ -102,7 +102,7 @@ typedef struct s_ray
 	t_v2f			step_dir;
 	t_v2f			hit_pos;
 	uint32_t		side;
-	float_t			distance;
+	float			distance;
 }					t_ray;
 
 typedef struct s_wall_stripe
@@ -116,9 +116,9 @@ typedef struct s_wall_stripe
 typedef struct s_wall_texture
 {
 	mlx_texture_t	*tex;
-	float_t			wallx;
-	float_t			tex_step;
-	float_t			tex_pos;
+	float			wallx;
+	float			tex_step;
+	float			tex_pos;
 	int32_t			texx;
 }					t_wall_texture;
 
@@ -182,14 +182,14 @@ void				render_game(t_game *game);
 void				draw_line(mlx_image_t *grid, t_v2f start, t_v2f end,
 						uint32_t color);
 void				draw_fov(t_game *game, t_map *scene);
-bool				ft_at_wall(t_map *map, float_t offsetx, float_t offsety);
+bool				ft_at_wall(t_map *map, float offsetx, float offsety);
 mlx_texture_t		*ft_get_texture(t_map *scene, uint32_t side, t_v2f step);
 uint32_t			ft_darken_color(uint32_t color);
 uint32_t			ft_get_pixel_color(uint8_t r, uint8_t g, uint8_t b,
 						uint8_t a);
-int32_t				ft_get_lineheight(float_t distance);
-t_ray				ft_init_ray(t_map *scene, float_t angle);
-t_wall_stripe		ft_compute_wall_stripe(t_map *scene, float_t camerax);
+int32_t				ft_get_lineheight(float distance);
+t_ray				ft_init_ray(t_map *scene, float angle);
+t_wall_stripe		ft_compute_wall_stripe(t_map *scene, float camerax);
 
 // Vector functions
 t_v2i				veci_new(int32_t x, int32_t y);
@@ -197,19 +197,19 @@ t_v2i				veci_zero(void);
 t_v2i				veci_from(t_v2i that);
 t_v2i				veci_fromf(t_v2f that);
 void				veci_print(char *label, t_v2i vec);
-t_v2i				veci_scale(t_v2i vec, float_t factor);
+t_v2i				veci_scale(t_v2i vec, float factor);
 t_v2i				veci_add(t_v2i vec, t_v2i that);
 t_v2i				veci_sub(t_v2i vec, t_v2i that);
 t_v2i				veci_div(t_v2i vec, t_v2i that);
 t_v2i				veci_mul(t_v2i vec, t_v2i that);
-t_v2f				vecf_rot(t_v2f vec, float_t angle);
+t_v2f				vecf_rot(t_v2f vec, float angle);
 
-t_v2f				vecf_new(float_t x, float_t y);
+t_v2f				vecf_new(float x, float y);
 t_v2f				vecf_zero(void);
 t_v2f				vecf_from(t_v2f that);
 void				vecf_print(char *label, t_v2f vec);
-t_v2f				vecf_scale(t_v2f vec, float_t factor);
-t_v2f				vecf_scale(t_v2f vec, float_t factor);
+t_v2f				vecf_scale(t_v2f vec, float factor);
+t_v2f				vecf_scale(t_v2f vec, float factor);
 t_v2f				vecf_add(t_v2f vec, t_v2f that);
 t_v2f				vecf_sub(t_v2f vec, t_v2f that);
 t_v2f				vecf_div(t_v2f vec, t_v2f that);
@@ -222,6 +222,6 @@ int					handle_keypress(int keycode, t_game *game);
 void				render_frame(t_game *game);
 int					game_loop(t_game *game);
 void				move_player_in_dir(t_game *game, t_v2f dir);
-void				rotate_player(t_game *game, float_t rot_speed);
+void				rotate_player(t_game *game, float rot_speed);
 
 #endif

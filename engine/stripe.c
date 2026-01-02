@@ -26,7 +26,7 @@ static inline int32_t	ft_max(int32_t a, int32_t b)
 	return (b);
 }
 
-t_wall_stripe	ft_compute_wall_stripe(t_map *scene, float_t camerax)
+t_wall_stripe	ft_compute_wall_stripe(t_map *scene, float camerax)
 {
 	t_wall_stripe	stripe;
 	int32_t			sheight;

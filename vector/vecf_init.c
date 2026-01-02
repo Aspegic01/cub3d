@@ -12,7 +12,7 @@
 
 #include "../cub3d.h"
 
-t_v2f	vecf_new(float_t x, float_t y)
+t_v2f	vecf_new(float x, float y)
 {
 	t_v2f	this;
 
@@ -47,10 +47,10 @@ void	vecf_print(char *label, t_v2f this)
 		printf("v{x = %f, y = %f}\n", this.x, this.y);
 }
 
-t_v2f	vecf_rot(t_v2f that, float_t angle)
+t_v2f	vecf_rot(t_v2f that, float angle)
 {
-	float_t	cos_a;
-	float_t	sin_a;
+	float	cos_a;
+	float	sin_a;
 	t_v2f	this;
 
 	cos_a = cosf(angle);

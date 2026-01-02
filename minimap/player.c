@@ -18,7 +18,7 @@ void	draw_dirline(t_map *scene, t_v2f player_pos, uint32_t color)
 
 	player_pos.x += PLAYER_HALF;
 	player_pos.y += PLAYER_HALF;
-	direction = vecf_scale(scene->player.dir, (float_t)CELL_SIZE / 1.5);
+	direction = vecf_scale(scene->player.dir, (float)CELL_SIZE / 1.5f);
 	draw_line(scene->img, player_pos, vecf_add(player_pos, direction), color);
 }
 
