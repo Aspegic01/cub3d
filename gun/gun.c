@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gun.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klaayoun <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/25 19:04:59 by klaayoun          #+#    #+#             */
-/*   Updated: 2025/12/25 19:05:05 by klaayoun         ###   ########.fr       */
+/*   Updated: 2026/01/03 15:54:47 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,24 +81,28 @@ int	init_gun(t_game *game)
 	return (0);
 }
 
+void	activate_gun(t_gun *gun)
+{
+	gun->is_active = true;
+	gun->curr_frame = 0;
+	gun->timer = 0;
+}
+
 void	update_gun(t_game *game)
 {
 	double	frame_time;
 
 	frame_time = 0.05;
 	if (mlx_is_key_down(game->mlx, MLX_KEY_R) && !game->gun.is_active)
-	{
-		game->gun.is_active = true;
-		game->gun.curr_frame = 0;
-		game->gun.timer = 0;
-	}
+		activate_gun(&game->gun);
 	if (game->gun.is_active)
 	{
 		game->gun.timer += game->mlx->delta_time;
 		if (game->gun.timer >= frame_time)
 		{
 			game->gun.timer = 0;
-			game->gun.frames[game->gun.curr_frame]->instances[0].enabled = false;
+			game->gun.frames[game->gun.curr_frame]
+				->instances[0].enabled = false;
 			game->gun.curr_frame++;
 			if (game->gun.curr_frame >= GUN_FRAMES)
 			{
