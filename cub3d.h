@@ -186,6 +186,8 @@ int32_t				clamp(int32_t value, int32_t min, int32_t max);
 int					minimap_setup(t_game *game);
 void				minimap_render(t_game *game);
 void				render_player(t_map *scene, uint32_t color);
+void				make_gun_path(char *buffer, int i);
+void				free_gun_frames(t_game *game, int count);
 int					init_gun(t_game *game);
 void				update_gun(t_game *game);
 

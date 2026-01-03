@@ -12,34 +12,6 @@
 
 #include "../cub3d.h"
 
-static void	make_gun_path(char *buffer, int i)
-{
-	char	*prefix;
-	int		j;
-	char	*suffix;
-	int		k;
-
-	prefix = "textures/shitgun_animation/shitgun_animation_";
-	j = 0;
-	while (prefix[j])
-	{
-		buffer[j] = prefix[j];
-		j++;
-	}
-	if (i < 10)
-		buffer[j++] = i + '0';
-	else
-	{
-		buffer[j++] = (i / 10) + '0';
-		buffer[j++] = (i % 10) + '0';
-	}
-	suffix = ".png";
-	k = 0;
-	while (suffix[k])
-		buffer[j++] = suffix[k++];
-	buffer[j] = '\0';
-}
-
 static void	setup_gun_img(t_game *game, int i)
 {
 	int	x;
@@ -52,6 +24,20 @@ static void	setup_gun_img(t_game *game, int i)
 		game->gun.frames[i]->instances[0].enabled = true;
 	else
 		game->gun.frames[i]->instances[0].enabled = false;
+}
+
+static void	init_gun_state(t_gun *gun)
+{
+	gun->curr_frame = 0;
+	gun->is_active = false;
+	gun->timer = 0.0;
+}
+
+static void	activate_gun(t_gun *gun)
+{
+	gun->is_active = true;
+	gun->curr_frame = 0;
+	gun->timer = 0;
 }
 
 int	init_gun(t_game *game)
@@ -68,48 +54,44 @@ int	init_gun(t_game *game)
 		if (!tex)
 		{
 			ft_putstr_fd("Error: Could not load gun texture\n", 2);
-			return (1);
+			return (free_gun_frames(game, i), 1);
 		}
 		game->gun.frames[i] = mlx_texture_to_image(game->mlx, tex);
 		mlx_delete_texture(tex);
+		if (!game->gun.frames[i])
+		{
+			ft_putstr_fd("Error: Could not convert texture to image\n", 2);
+			return (free_gun_frames(game, i), 1);
+		}
 		setup_gun_img(game, i);
 		i++;
 	}
-	game->gun.curr_frame = 0;
-	game->gun.is_active = false;
-	game->gun.timer = 0.0;
-	return (0);
-}
-
-void	activate_gun(t_gun *gun)
-{
-	gun->is_active = true;
-	gun->curr_frame = 0;
-	gun->timer = 0;
+	return (init_gun_state(&game->gun), 0);
 }
 
 void	update_gun(t_game *game)
 {
 	double	frame_time;
+	t_gun	*gun;
 
 	frame_time = 0.05;
-	if (mlx_is_key_down(game->mlx, MLX_KEY_R) && !game->gun.is_active)
-		activate_gun(&game->gun);
-	if (game->gun.is_active)
+	gun = &game->gun;
+	if (mlx_is_key_down(game->mlx, MLX_KEY_R) && !gun->is_active)
+		activate_gun(gun);
+	if (gun->is_active)
 	{
-		game->gun.timer += game->mlx->delta_time;
-		if (game->gun.timer >= frame_time)
+		gun->timer += game->mlx->delta_time;
+		if (gun->timer >= frame_time)
 		{
-			game->gun.timer = 0;
-			game->gun.frames[game->gun.curr_frame]
-				->instances[0].enabled = false;
-			game->gun.curr_frame++;
-			if (game->gun.curr_frame >= GUN_FRAMES)
+			gun->timer = 0;
+			gun->frames[gun->curr_frame]->instances[0].enabled = false;
+			gun->curr_frame++;
+			if (gun->curr_frame >= GUN_FRAMES)
 			{
-				game->gun.curr_frame = 0;
-				game->gun.is_active = false;
+				gun->curr_frame = 0;
+				gun->is_active = false;
 			}
-			game->gun.frames[game->gun.curr_frame]->instances[0].enabled = true;
+			gun->frames[gun->curr_frame]->instances[0].enabled = true;
 		}
 	}
 }
