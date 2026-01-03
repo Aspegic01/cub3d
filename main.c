@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/27 09:58:35 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/12/26 19:16:28 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2026/01/03 18:07:56 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	parse_map_file(char *map_file, t_map *map)
 		free(line);
 		bytes = get_next_line(fd, &line);
 		if (bytes == -1)
-			return (close(fd), ft_putstr_fd("Error\nmalformed file\n", 2), -1);
+			return (free_tex_map(map, fd, "Error\nmalformed file\n"));
 	}
 	return (close(fd), 0);
 }
